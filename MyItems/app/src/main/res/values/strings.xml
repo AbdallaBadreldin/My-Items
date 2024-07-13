@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">My Items</string>
+    <string name="action_go">Go</string>
+    <string name="baking_title">Baking with Gemini</string>
+    <string name="label_prompt">Prompt</string>
+    <string name="prompt_placeholder">Provide a recipe for the baked goods in the image</string>
+    <string name="image1_description">Cupcake</string>
+    <string name="image2_description">Cookies</string>
+    <string name="image3_description">Cake</string>
+    <string name="human1">human 1</string>
+    <string name="human2">human 2</string>
+    <string name="human3">human 3</string>
+    <string name="results_placeholder">(Results will appear here)</string>
+    <string name="human4">human4</string>
+    <string name="human5">human5</string>
+</resources>
