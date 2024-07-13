@@ -13,4 +13,5 @@
     <string name="results_placeholder">(Results will appear here)</string>
     <string name="human4">human4</string>
     <string name="human5">human5</string>
+    <string name="title_activity_home_screen">HomeScreen</string>
 </resources>
