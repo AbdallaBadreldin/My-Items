@@ -13,11 +13,11 @@ fun NavGraph(
 
         composable(route = Screen.MainScreen.route) { HomeScreen(navController) }
 
-        composable(route = Screen.DetailsScreen.route) { BakingScreen(navController=navController)  }
+        composable(route = Screen.DetailsScreen.route) { BakingScreen(navController = navController) }
 
-        composable(route = Screen.WelcomeScreen.route) { WelcomeScreen(navController=navController)  }
+        composable(route = Screen.WelcomeScreen.route) { WelcomeScreen(navController = navController) }
 
-        composable(route = Screen.MapScreen.route) { BakingScreen(navController=navController)  }
+        composable(route = Screen.MapScreen.route) { BakingScreen(navController = navController) }
 
 
     }
