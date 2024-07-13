@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background,
                 ) {
                     navController = rememberNavController()
-                    NavGraph(navController =navController )
+                    NavGraph(navController = navController)
 //                    BakingScreen()
                 }
             }

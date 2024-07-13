@@ -18,7 +18,7 @@ fun HomeScreen(navController: NavHostController) {
             Text(text = "Android", modifier = Modifier
                 .padding(innerPadding)
                 .clickable {
-                    navController.navigate(Screen.DetailsScreen.route) {
+                    navController.navigate(Screen.BakingScreen.route) {
                         popUpTo(Screen.MainScreen.route) {
                             inclusive = true
                         }

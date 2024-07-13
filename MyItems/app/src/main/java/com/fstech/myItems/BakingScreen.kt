@@ -36,7 +36,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 
 val images = arrayOf(
@@ -65,8 +64,7 @@ val imageDescriptions = arrayOf(
 
 @Composable
 fun BakingScreen(
-    bakingViewModel: BakingViewModel = viewModel(),
-     navController: NavHostController
+    bakingViewModel: BakingViewModel = viewModel(), navController: NavHostController
 ) {
     val selectedImage = remember { mutableIntStateOf(0) }
     val placeholderPrompt = stringResource(R.string.prompt_placeholder)
@@ -110,8 +108,7 @@ fun BakingScreen(
         Row(
             modifier = Modifier.padding(all = 16.dp)
         ) {
-            TextField(
-                value = prompt,
+            TextField(value = prompt,
                 label = { Text(stringResource(R.string.label_prompt)) },
                 onValueChange = { prompt = it },
                 modifier = Modifier
@@ -123,14 +120,12 @@ fun BakingScreen(
             Button(
                 onClick = {
                     val bitmap = BitmapFactory.decodeResource(
-                        context.resources,
-                        images[selectedImage.intValue]
+                        context.resources, images[selectedImage.intValue]
                     )
                     bakingViewModel.sendPrompt(bitmap, prompt)
                 },
                 enabled = prompt.isNotEmpty(),
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
+                modifier = Modifier.align(Alignment.CenterVertically)
             ) {
                 Text(text = stringResource(R.string.action_go))
             }

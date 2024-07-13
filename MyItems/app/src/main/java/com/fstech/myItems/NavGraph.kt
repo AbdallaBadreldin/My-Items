@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.fstech.myItems.welcome.WelcomeScreen
 
 @Composable
 fun NavGraph(
@@ -13,7 +14,9 @@ fun NavGraph(
 
         composable(route = Screen.MainScreen.route) { HomeScreen(navController) }
 
-        composable(route = Screen.DetailsScreen.route) { BakingScreen(navController = navController) }
+        composable(route = Screen.MapScreen.route) { MapScreen(navController) }
+
+        composable(route = Screen.BakingScreen.route) { BakingScreen(navController = navController) }
 
         composable(route = Screen.WelcomeScreen.route) { WelcomeScreen(navController = navController) }
 
