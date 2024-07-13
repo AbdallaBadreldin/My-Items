@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -20,6 +21,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -47,7 +49,7 @@ fun WelcomeScreen(
         modifier = Modifier
 //            .fillMaxWidth()
             .verticalScroll(rememberScrollState())
-            .padding(64.dp, 64.dp, 64.dp, 0.dp)
+            .padding(64.dp, 64.dp, 64.dp, 64.dp)
     ) {
         Text(
             textAlign = TextAlign.Center,
@@ -57,6 +59,7 @@ fun WelcomeScreen(
                 .align(Alignment.CenterHorizontally),
         )
         Image(
+            modifier = Modifier.clip(RoundedCornerShape(16.dp)),
             painter = painterResource(id = R.drawable.welcome_screen),
             contentDescription = stringResource(id = R.string.welcome)
         )
@@ -64,15 +67,26 @@ fun WelcomeScreen(
             viewModel.sendPrompt("generate only one random quote to help people to take care of their items or money that can lose it or being stole for my Items finder androdi app")
         }
         when (uiState) {
-            is UiState.Error -> Text(text = (uiState as UiState.Error).errorMessage)
-            UiState.Initial -> Text(text = "")
-            UiState.Loading -> Text(text = "generating today's quote :)")
-            is UiState.Success -> Text(text = (uiState as UiState.Success).outputText)
+            is UiState.Error -> Text(
+                textAlign = TextAlign.Center, text = (uiState as UiState.Error).errorMessage
+            )
+
+            UiState.Initial -> Text(
+                textAlign = TextAlign.Center, text = ""
+            )
+
+            UiState.Loading -> Text(
+                textAlign = TextAlign.Center, text = "generating today's quote :)"
+            )
+
+            is UiState.Success -> Text(
+                textAlign = TextAlign.Center, text = (uiState as UiState.Success).outputText
+            )
         }
 
 
     }
-    Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(64.dp))
 
     Box(modifier = Modifier.fillMaxSize()) {
         // add your column here (with align modifier)
