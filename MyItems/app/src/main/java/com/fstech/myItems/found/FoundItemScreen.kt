@@ -24,6 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberAsyncImagePainter
@@ -35,7 +36,7 @@ import java.util.Objects
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun FoundItemScreen(navController: NavController) {
+fun FoundItemScreen(navController: NavController, viewModel: FoundItemViewModel = viewModel()) {
 
     val context = LocalContext.current
     val file = context.createImageFile()
@@ -51,6 +52,7 @@ fun FoundItemScreen(navController: NavController) {
     val cameraLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
             capturedImageUri = uri
+            viewModel.capturedImageUri.value = (uri)
         }
 
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -84,11 +86,11 @@ fun FoundItemScreen(navController: NavController) {
         }
     }
 
-    if (capturedImageUri.path?.isNotEmpty() == true) {
+    if (viewModel.capturedImageUri.value.path != null) {
         Image(
             modifier = Modifier
                 .padding(16.dp, 8.dp),
-            painter = rememberAsyncImagePainter(capturedImageUri),
+            painter = rememberAsyncImagePainter(viewModel.capturedImageUri.value),
             contentDescription = null
         )
     }

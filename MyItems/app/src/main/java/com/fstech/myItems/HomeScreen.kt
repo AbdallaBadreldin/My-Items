@@ -1,12 +1,10 @@
 package com.fstech.myItems
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -20,13 +18,18 @@ import androidx.navigation.NavHostController
 fun HomeScreen(navController: NavHostController) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement =  Arrangement.SpaceEvenly,
+        verticalArrangement = Arrangement.SpaceEvenly,
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        Text(text = "Pickup a Service")
+        Box {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(text = "Welcome To My Items Finder")
+                Text(text = "Pickup a Service")
+            }
+        }
 
         Button(onClick = { navController.navigate(Screen.FoundItemScreen.route) }) {
             Text(text = "I Found An Item")
@@ -35,6 +38,7 @@ fun HomeScreen(navController: NavHostController) {
         Button(onClick = { navController.navigate(Screen.LostItemScreen.route) }) {
             Text(text = "I Lost An Item")
         }
+
         Button(onClick = { navController.navigate(Screen.MapScreen.route) }) {
             Text(text = "Search Items Casually")
         }
