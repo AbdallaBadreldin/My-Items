@@ -70,7 +70,6 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
@@ -90,4 +89,11 @@ dependencies {
 
     implementation(libs.maps.compose)
 
+    //For rememberLauncherForActivityResult()
+    implementation(libs.androidx.activity.compose)
+
+    //For PickVisualMedia contract
+    implementation (libs.androidx.activity.ktx)
+
+    implementation(libs.coil.compose)
 }

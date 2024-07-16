@@ -64,7 +64,7 @@ fun WelcomeScreen(
             contentDescription = stringResource(id = R.string.welcome)
         )
         if (uiState is UiState.Initial) {
-            viewModel.sendPrompt("generate only one random quote to help people to take care of their items or money that can lose it or being stole for my Items finder androdi app")
+            viewModel.sendPrompt("generate only one random quote to help people to take care of their items or money that can lose it or being stole for my Items finder android app")
         }
         when (uiState) {
             is UiState.Error -> Text(
@@ -91,7 +91,7 @@ fun WelcomeScreen(
     Box(modifier = Modifier.fillMaxSize()) {
         // add your column here (with align modifier)
         Column(modifier = Modifier.align(Alignment.BottomCenter)) {
-            Button(onClick = { navController.navigate(Screen.MapScreen.route) }) {
+            Button(onClick = { navController.navigate(Screen.HomeScreen.route) }) {
                 Text(text = stringResource(R.string.start_using_the_app))
             }
             Spacer(modifier = Modifier.height(16.dp))
