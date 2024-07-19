@@ -12,10 +12,9 @@ import android.os.Bundle
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.navigation.NavDeepLinkBuilder
-import androidx.navigation.Navigation.findNavController
+import com.fstech.myItems.R
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import store.msolapps.flamingo.R
 import store.msolapps.flamingo.presentation.home.MainActivity
 
 
@@ -44,18 +43,19 @@ class FirebaseMessageReceiver : FirebaseMessagingService() {
             Log.d(TAG, "onMessageReceived body: ${p0.data.getValue("url")}")
             if (p0.data.getValue("url").toString()
                     .isNullOrEmpty()
-            ) generateNotification(p0.notification!!.title!!, p0.notification!!.body!!)
+            )
+//                generateNotification(p0.notification!!.title!!, p0.notification!!.body!!)
             else {
-                generateNotificationWithUrl(
-                    p0.notification!!.title!!,
-                    p0.notification!!.body!!,
-                    p0.data.getValue("url").toString()
-                )
+//                generateNotificationWithUrl(
+//                    p0.notification!!.title!!,
+//                    p0.notification!!.body!!,
+//                    p0.data.getValue("url").toString()
+//                )
             }
         }
     }
 
-    private fun generateNotificationWithUrl(title: String, message: String, url: String) {
+ /*   private fun generateNotificationWithUrl(title: String, message: String, url: String) {
         //we need to get the order id number from the url
         val orderId = url.substringAfterLast("/")
         Log.d("TAG", "generateNotificationWithUrl: $orderId")
@@ -130,5 +130,5 @@ class FirebaseMessageReceiver : FirebaseMessagingService() {
         }
 
         notificationManager.notify(notificationCounter, builder.build())
-    }
+    }*/
 }
