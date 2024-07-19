@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "My Items"
 include(":app")
- 
+include(":data")
+include(":domain")

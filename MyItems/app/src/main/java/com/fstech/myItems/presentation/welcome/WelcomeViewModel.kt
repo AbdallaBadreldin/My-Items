@@ -3,7 +3,7 @@ package com.fstech.myItems.presentation.welcome
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstech.myItems.BuildConfig.apiKey
-import com.fstech.myItems.presentation.UiState
+import com.jetawy.domain.utils.UiState
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
 import kotlinx.coroutines.Dispatchers

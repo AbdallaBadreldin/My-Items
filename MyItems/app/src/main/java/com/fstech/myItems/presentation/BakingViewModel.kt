@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.fstech.myItems.BuildConfig.apiKey
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
+import com.jetawy.domain.utils.UiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

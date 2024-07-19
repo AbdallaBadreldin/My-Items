@@ -1,4 +1,4 @@
-package com.fstech.myItems.presentation
+package com.jetawy.domain.utils
 
 /**
  * A sealed hierarchy describing the state of the text generation.

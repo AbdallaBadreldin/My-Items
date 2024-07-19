@@ -75,6 +75,9 @@ secrets {
 }
 
 dependencies {
+    //importing the rest of project
+    implementation(project(":data"))
+    implementation(project(":domain"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -121,6 +124,7 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
 
+    implementation ("com.hbb20:ccp:2.6.0")
     /* //retrofit
      implementation(libs.retrofit)
      implementation(libs.converter.gson)

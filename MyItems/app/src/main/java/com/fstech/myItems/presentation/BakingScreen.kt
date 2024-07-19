@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.fstech.myItems.R
+import com.jetawy.domain.utils.UiState
 
 val images = arrayOf(
     // Image generated using Gemini from the prompt "cupcake image"

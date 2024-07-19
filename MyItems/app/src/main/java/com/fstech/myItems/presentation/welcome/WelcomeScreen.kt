@@ -31,7 +31,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.fstech.myItems.R
 import com.fstech.myItems.presentation.Screen
-import com.fstech.myItems.presentation.UiState
+import com.jetawy.domain.utils.UiState
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
