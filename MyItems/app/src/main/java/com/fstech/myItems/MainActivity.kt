@@ -10,11 +10,13 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.fstech.myItems.ui.theme.MyItemsTheme
+import com.google.firebase.FirebaseApp
 
 class MainActivity : ComponentActivity() {
     lateinit var navController: NavHostController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseApp.initializeApp(this)
         setContent {
             MyItemsTheme {
                 // A surface container using the 'background' color from the theme

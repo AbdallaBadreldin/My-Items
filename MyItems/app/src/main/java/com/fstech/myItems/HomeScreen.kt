@@ -1,5 +1,7 @@
 package com.fstech.myItems
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,10 +14,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
+import com.fstech.myItems.auth.AuthActivity
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
+    val context = LocalContext.current
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly,
@@ -31,20 +39,37 @@ fun HomeScreen(navController: NavHostController) {
             }
         }
 
-        Button(onClick = { navController.navigate(Screen.FoundItemScreen.route) }) {
+        Button(onClick = {
+            if (Firebase.auth.currentUser == null)
+                goToAuthentication(context)
+            else
+                navController.navigate(Screen.FoundItemScreen.route)
+        }) {
             Text(text = "I Found An Item")
         }
 
-        Button(onClick = { navController.navigate(Screen.LostItemScreen.route) }) {
+        Button(onClick = {
+            if (Firebase.auth.currentUser == null)
+                goToAuthentication(context)
+            else   navController.navigate(Screen.LostItemScreen.route)
+        }) {
             Text(text = "I Lost An Item")
         }
 
-        Button(onClick = { navController.navigate(Screen.MapScreen.route) }) {
+        Button(onClick = {
+            if (Firebase.auth.currentUser == null)
+                goToAuthentication(context)
+            else   navController.navigate(Screen.MapScreen.route)
+        }) {
             Text(text = "Search Items Casually")
         }
-    }
 
+    }
 }
+fun goToAuthentication(context: Context) {
+    context.startActivity(Intent(context, AuthActivity::class.java))
+}
+
 
 
 
