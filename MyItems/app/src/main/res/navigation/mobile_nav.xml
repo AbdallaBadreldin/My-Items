@@ -6,6 +6,6 @@
 
     <activity
         android:id="@+id/mainActivity"
-        android:name="com.fstech.myItems.MainActivity"
+        android:name="com.fstech.myItems.presentation.MainActivity"
         android:label="MainActivity" />
 </navigation>
