@@ -1,4 +1,4 @@
-package store.msolapps.flamingo
+package com.fstech.myItems
 
 import android.os.Bundle
 import android.view.View

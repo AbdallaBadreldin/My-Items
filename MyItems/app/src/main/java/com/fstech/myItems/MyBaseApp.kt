@@ -1,15 +1,7 @@
-package store.msolapps.flamingo
+package com.fstech.myItems
 
 import android.app.Application
-import android.content.Intent
 import android.content.res.Resources
-import android.net.Uri
-import android.widget.Toast
-import androidx.fragment.app.Fragment
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.ktx.remoteConfig
-import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import dagger.hilt.android.HiltAndroidApp
 
 
@@ -21,37 +13,37 @@ class MyBaseApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        isAppUpdated()
+//        isAppUpdated()
         res = resources
 //        createNotificationChannel()
     }
 
-    private fun isAppUpdated() {
-        val localVersionCode = BuildConfig.VERSION_CODE.toLong()
+    /*    private fun isAppUpdated() {
+            val localVersionCode = BuildConfig.VERSION_CODE.toLong()
 
-        val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig
-        remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
-        val configSettings = remoteConfigSettings {
-            minimumFetchIntervalInSeconds = 3600
-        }
-        remoteConfig.setConfigSettingsAsync(configSettings)
-        remoteConfig.fetchAndActivate()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val remoteVersionCode = remoteConfig.getLong("androidVersionCode")
-                    if (remoteVersionCode > localVersionCode) {
-                        Toast.makeText(this, getString(R.string.need_update), Toast.LENGTH_LONG)
-                            .show()
-                        val packageName =
-                            this.javaClass.getPackage()?.name ?: "store.msolapps.flamingo"
-                        val intent = Intent(Intent.ACTION_VIEW)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        intent.data = Uri.parse("market://details?id=$packageName")
-                        startActivity(intent)
+            val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig
+            remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
+            val configSettings = remoteConfigSettings {
+                minimumFetchIntervalInSeconds = 3600
+            }
+            remoteConfig.setConfigSettingsAsync(configSettings)
+            remoteConfig.fetchAndActivate()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val remoteVersionCode = remoteConfig.getLong("androidVersionCode")
+                        if (remoteVersionCode > localVersionCode) {
+                            Toast.makeText(this, getString(R.string.need_update), Toast.LENGTH_LONG)
+                                .show()
+                            val packageName =
+                                this.javaClass.getPackage()?.name ?: "store.msolapps.flamingo"
+                            val intent = Intent(Intent.ACTION_VIEW)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            intent.data = Uri.parse("market://details?id=$packageName")
+                            startActivity(intent)
+                        }
                     }
                 }
-            }
-    }
+        }*/
 //    private fun createNotificationChannel() {
 //                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 //            val notificationManager =

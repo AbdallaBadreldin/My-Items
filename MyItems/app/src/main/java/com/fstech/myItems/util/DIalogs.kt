@@ -1,13 +1,13 @@
-package store.msolapps.flamingo.util
+package com.fstech.myItems.util
 
 import android.app.AlertDialog
 import android.content.Context
-import store.msolapps.flamingo.R
+import com.fstech.myItems.R
 
 class Dialogs(
     private val context: Context
 ) {
-    fun showOkDialog(title: String, message: String) {
+ /*   fun showOkDialog(title: String, message: String) {
         val alertDialog: AlertDialog = AlertDialog.Builder(context).create()
         alertDialog.setTitle(title)
         alertDialog.setMessage(message)
@@ -17,6 +17,6 @@ class Dialogs(
             dialog.dismiss()
         }
         alertDialog.show()
-    }
+    }*/
 
 }

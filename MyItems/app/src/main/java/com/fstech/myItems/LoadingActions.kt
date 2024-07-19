@@ -1,4 +1,4 @@
-package store.msolapps.flamingo
+package com.fstech.myItems
 
 interface LoadingActions {
     fun showLoading()

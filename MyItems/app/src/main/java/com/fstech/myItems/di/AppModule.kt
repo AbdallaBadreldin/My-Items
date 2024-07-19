@@ -6,8 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import store.msolapps.flamingo.MyBaseApp
-import store.msolapps.flamingo.util.ConnectionStatus
+import com.fstech.myItems.util.ConnectionStatus
 
 @Module
 @InstallIn(SingletonComponent::class)

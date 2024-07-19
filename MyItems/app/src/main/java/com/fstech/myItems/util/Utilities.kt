@@ -1,7 +1,7 @@
 /*Author ِAbdalla Badr
 @abdalla-badreldin
 Abdalla.badr852@gmail.com*/
-package store.msolapps.flamingo.util
+package com.fstech.myItems.util
 
 import android.app.AlertDialog
 import android.content.Context

@@ -1,4 +1,4 @@
-package store.msolapps.flamingo.util
+package com.fstech.myItems.util
 
 import android.content.Context
 import android.net.ConnectivityManager

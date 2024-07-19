@@ -1,4 +1,4 @@
-package store.msolapps.flamingo
+package com.fstech.myItems
 
 import androidx.fragment.app.Fragment
 
