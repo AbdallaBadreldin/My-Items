@@ -1,9 +1,11 @@
 [versions]
 activityKtx = "1.9.0"
-agp = "8.5.0"
+agp = "8.5.1"
 coilCompose = "2.6.0"
 firebaseBom = "33.1.2"
 googleServices = "4.4.2"
+hiltAndroidCompiler = "2.51.1"
+hiltAndroid = "2.51.1"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -12,17 +14,20 @@ espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.3"
 lifecycleViewmodelCompose = "2.8.3"
 activityCompose = "1.9.0"
-composeBom = "2024.04.01"
-generativeai = "0.2.2"
+composeBom = "2024.06.00"
+generativeai = "0.9.0"
 googleAndroidLibrariesMapsplatformSecretsGradlePlugin = "2.0.1"
 mapsCompose = "4.3.3"
 navigationCompose = "2.7.7"
 secretsGradlePlugin = "2.0.1"
 constraintlayout = "2.1.4"
+firebaseCrashlyticsGradle = "3.0.2"
 material = "1.12.0"
 appcompat = "1.7.0"
 navigationFragmentKtx = "2.7.7"
 navigationUiKtx = "2.7.7"
+pinview = "1.4.4"
+googleGmsGoogleServices = "4.4.2"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
@@ -34,6 +39,8 @@ firebase-auth = { module = "com.google.firebase:firebase-auth" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-database = { module = "com.google.firebase:firebase-database" }
 google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -56,9 +63,15 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
+pinview = { module = "io.github.chaosleung:pinview", version.ref = "pinview" }
+androidx-navigation-safe-args-gradle-plugin = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigationFragmentKtx" }
+firebase-crashlytics-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsGradle" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 google-android-libraries-mapsplatform-secrets-gradle-plugin = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "googleAndroidLibrariesMapsplatformSecretsGradlePlugin" }
+androidLibrary = { id = "com.android.library", version.ref = "agp" }
+googleGmsGoogleServices = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
+
 

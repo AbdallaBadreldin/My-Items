@@ -2,6 +2,13 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
+    id("kotlinx-serialization")
+    id("kotlin-parcelize")
+    id("androidx.navigation.safeargs.kotlin")
+    id("com.google.dagger.hilt.android")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
+    kotlin("kapt")
 }
 
 android {
@@ -109,7 +116,33 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.database)
 
+    //hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
+
+    /* //retrofit
+     implementation(libs.retrofit)
+     implementation(libs.converter.gson)
+     implementation(group = "com.squareup.okhttp3", name = "okhttp", version = "4.12.0")
+
+     //interceptor
+     implementation(libs.logging.interceptor)
+ */
+    //room database
+//    implementation(libs.androidx.room.ktx)
+//    kapt(libs.androidx.room.compiler)
+//    androidTestImplementation(libs.androidx.room.testing)
+//    annotationProcessor(libs.compiler)
+
+    //pinview for verifying otp
+    implementation(libs.pinview)
+
+    //shimmer and glide and glide compiler
+//    implementation(libs.shimmer)
+//    implementation(libs.glide)
+//    annotationProcessor(libs.glide.compiler)
 }
-apply{
+/*apply{
     plugin("com.google.gms.google-services")
-}
+}*/
+
