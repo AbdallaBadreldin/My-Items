@@ -1,39 +1,40 @@
 package com.fstech.myItems.presentation.auth
 
-import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.FirebaseException
-import com.google.firebase.FirebaseTooManyRequestsException
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthMissingActivityForRecaptchaException
-import com.google.firebase.auth.PhoneAuthCredential
-import com.google.firebase.auth.PhoneAuthProvider
+import androidx.lifecycle.viewModelScope
 import com.jetawy.data.firebase.FirebaseService
+import com.jetawy.domain.utils.AuthState
+import com.jetawy.domain.utils.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 const val TAG = "AuthViewModel"
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(private val firebase: FirebaseService) : ViewModel() {
-    /* val callbacks= object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-            override fun onVerificationCompleted(p0: PhoneAuthCredential) {
-    //            TODO("Not yet implemented")
-                Log.e("TAG", "onVerificationCompleted: ")
-            }
+    private val _codeSent = MutableLiveData<AuthState>()
+    val codeSent: LiveData<AuthState> get() = _codeSent
 
-            override fun onVerificationFailed(p0: FirebaseException) {
-    //            TODO("Not yet implemented")
-                Log.e("TAG", "FirebaseException: ")
+    fun signIn(phoneNumber: String, language: String) {
+        viewModelScope.launch {
+            firebase.signIn(phoneNumber, language).collect { req ->
+                _codeSent.postValue(req)
             }
-        }*/
+        }
+    }
 
+    fun verifyCode(code: String) {
+        viewModelScope.launch {
+            firebase.verifyCode(code).collect { req ->
+                _codeSent.postValue(req)
+            }
+        }
+    }
 
     fun isLoggedIn() = firebase.isLoggedIn()
-
-    fun signIn(phoneNumber: String, language:String) {
-
-    }
 
     fun signOut() = firebase.signOut()
 

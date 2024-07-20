@@ -1,6 +1,7 @@
 [versions]
 activityKtx = "1.9.0"
 agp = "8.5.1"
+ccp = "2.7.0"
 coilCompose = "2.6.0"
 firebaseBom = "33.1.2"
 googleServices = "4.4.2"
@@ -33,6 +34,7 @@ googleGmsGoogleServices = "4.4.2"
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+ccp = { module = "com.hbb20:ccp", version.ref = "ccp" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }

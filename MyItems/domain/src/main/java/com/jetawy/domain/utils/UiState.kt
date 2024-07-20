@@ -18,7 +18,7 @@ sealed interface UiState {
     /**
      * Text has been generated
      */
-    data class Success(val outputText: String) : UiState
+    data class Success<out T>(val outputData: T) : UiState
 
     /**
      * There was an error generating text

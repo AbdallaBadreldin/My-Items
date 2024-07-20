@@ -31,6 +31,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.fstech.myItems.R
 import com.fstech.myItems.presentation.Screen
+import com.google.firebase.ktx.Firebase
 import com.jetawy.domain.utils.UiState
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -79,8 +80,8 @@ fun WelcomeScreen(
                 textAlign = TextAlign.Center, text = "generating today's quote :)"
             )
 
-            is UiState.Success -> Text(
-                textAlign = TextAlign.Center, text = (uiState as UiState.Success).outputText
+            is UiState.Success<*> -> Text(
+                textAlign = TextAlign.Center, text = (uiState as UiState.Success<*>).outputData as String
             )
         }
 

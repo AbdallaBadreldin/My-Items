@@ -19,7 +19,9 @@ class AuthActivity : AppCompatActivity() {
     private val authViewModel: AuthViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        if (authViewModel.isLoggedIn()) {
+            finish()
+        }
         binding = ActivityAuthBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

@@ -124,7 +124,11 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
 
-    implementation ("com.hbb20:ccp:2.6.0")
+    implementation (libs.ccp)
+
+    //pinview for verifying otp
+    implementation(libs.pinview)
+
     /* //retrofit
      implementation(libs.retrofit)
      implementation(libs.converter.gson)

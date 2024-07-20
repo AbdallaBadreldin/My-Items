@@ -140,9 +140,9 @@ fun BakingScreen(
             if (uiState is UiState.Error) {
                 textColor = MaterialTheme.colorScheme.error
                 result = (uiState as UiState.Error).errorMessage
-            } else if (uiState is UiState.Success) {
+            } else if (uiState is UiState.Success<*>) {
                 textColor = MaterialTheme.colorScheme.onSurface
-                result = (uiState as UiState.Success).outputText
+                result = (uiState as UiState.Success<*>).outputData as String
             }
             val scrollState = rememberScrollState()
             Text(
