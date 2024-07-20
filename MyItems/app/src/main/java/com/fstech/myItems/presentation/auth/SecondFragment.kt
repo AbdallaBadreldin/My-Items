@@ -78,6 +78,7 @@ class SecondFragment : Fragment() {
 
                 is AuthState.Initial -> {
                     findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+                    viewModel.codeSent.removeObservers(viewLifecycleOwner)
                 }
 
                 is AuthState.Loading -> {
