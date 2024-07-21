@@ -8,19 +8,18 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -59,6 +58,7 @@ fun FoundItemScreen(navController: NavController, viewModel: FoundItemViewModel 
     val cameraLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
             if (viewModel.list.size < maxImages) {
+                if (uri!=null)
                 viewModel.addItem(uri)
             }
         }
@@ -108,15 +108,27 @@ fun FoundItemScreen(navController: NavController, viewModel: FoundItemViewModel 
         }) {
             Text(text = "Capture Image From Camera")
         }
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight(),
-        ) {
-            itemsIndexed(viewModel.list) { index, item ->
-                ImageOfUri(item, index, viewModel)
+        if (viewModel.list.isEmpty()) {
+            Image(
+                painterResource(id = R.drawable.round_add_circle_outline_24),
+                contentDescription = "add Image",
+                modifier = Modifier
+                    .padding(16.dp)
+                    .width(128.dp)
+                    .height(128.dp)
+                    .wrapContentHeight()
+                    .clickable { cameraLauncher.launch(uri) },
+            )
+        } else
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
+            ) {
+                itemsIndexed(viewModel.list) { index, item ->
+                    ImageOfUri(item, index, viewModel)
+                }
             }
-        }
     }
 //    val capturedImages = remember { viewModel.capturedImageUri.value }
 
@@ -156,9 +168,12 @@ fun ImageOfUri(uri: Uri, uriId: Int, viewModel: FoundItemViewModel = viewModel()
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(8.dp), // Adjust padding as needed
-            onClick = {  viewModel.list.removeAt(uriId)}
+            onClick = { viewModel.list.removeAt(uriId) }
         ) {
-            Icon(painterResource(id = R.drawable.close), contentDescription = "Close Image") // Replace with your desired icon
+            Image(
+                painterResource(id = R.drawable.close),
+                contentDescription = "Close Image"
+            ) // Replace with your desired icon
         }
     }
 }
