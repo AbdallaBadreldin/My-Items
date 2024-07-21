@@ -8,23 +8,21 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -32,7 +30,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.fstech.myItems.BuildConfig
 import java.io.File
@@ -55,8 +52,7 @@ fun FoundItemScreen(navController: NavController, viewModel: FoundItemViewModel 
 
     val cameraLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
-            if (viewModel.list.size < maxImages)
-            {
+            if (viewModel.list.size < maxImages) {
                 viewModel.addItem(uri)
             }
         }
@@ -66,7 +62,15 @@ fun FoundItemScreen(navController: NavController, viewModel: FoundItemViewModel 
     ) {
         if (it) {
             Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
-            cameraLauncher.launch(uri)
+            if (viewModel.list.size < maxImages)
+                cameraLauncher.launch(uri)
+            else {
+                Toast.makeText(
+                    context,
+                    "You can only take $maxImages images",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         } else {
             Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
         }
@@ -82,7 +86,15 @@ fun FoundItemScreen(navController: NavController, viewModel: FoundItemViewModel 
             val permissionCheckResult =
                 ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
             if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
-                cameraLauncher.launch(uri)
+                if (viewModel.list.size < maxImages)
+                    cameraLauncher.launch(uri)
+                else {
+                    Toast.makeText(
+                        context,
+                        "You can only take $maxImages images",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             } else {
                 // Request a permission
                 permissionLauncher.launch(Manifest.permission.CAMERA)
@@ -90,20 +102,21 @@ fun FoundItemScreen(navController: NavController, viewModel: FoundItemViewModel 
         }) {
             Text(text = "Capture Image From Camera")
         }
-    }
-//    val capturedImages = remember { viewModel.capturedImageUri.value }
-
-    if (viewModel.list.isNotEmpty()) {
-        LazyColumn(
+        LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(),
         ) {
-            items(viewModel.list) {
-                ImageOfUri(it)
+            itemsIndexed(viewModel.list) { index, item ->
+                ImageOfUri(item, index, viewModel)
             }
         }
     }
+//    val capturedImages = remember { viewModel.capturedImageUri.value }
+
+//    if (viewModel.list.isNotEmpty()) {
+
+//    }
 }
 
 fun Context.createImageFile(): File {
@@ -119,13 +132,25 @@ fun Context.createImageFile(): File {
 }
 
 @Composable
-fun ImageOfUri(uri:Uri) {
-    AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(uri)
-            .crossfade(true)
-            .build(),
-        contentDescription = "Image from URI"
-    )
+fun ImageOfUri(uri: Uri, uriId: Int, viewModel: FoundItemViewModel = viewModel()) {
+    Box(modifier = Modifier.padding(5.dp)) {
+        Button(onClick = {
+            viewModel.list.removeAt(uriId)
+        }) {
+//           I want to create X above the AsyncImage
+//            Image(painter =, contentDescription =)
+        }
 
+        AsyncImage(
+            modifier = Modifier
+                .padding(5.dp)
+                .width(128.dp)
+                .wrapContentHeight(),
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(uri)
+                .crossfade(true)
+                .build(),
+            contentDescription = "Image from URI"
+        )
+    }
 }
