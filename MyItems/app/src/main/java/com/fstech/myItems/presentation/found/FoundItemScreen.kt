@@ -17,12 +17,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -32,6 +37,7 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.fstech.myItems.BuildConfig
+import com.fstech.myItems.R
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -133,14 +139,7 @@ fun Context.createImageFile(): File {
 
 @Composable
 fun ImageOfUri(uri: Uri, uriId: Int, viewModel: FoundItemViewModel = viewModel()) {
-    Box(modifier = Modifier.padding(5.dp)) {
-        Button(onClick = {
-            viewModel.list.removeAt(uriId)
-        }) {
-//           I want to create X above the AsyncImage
-//            Image(painter =, contentDescription =)
-        }
-
+    Box(modifier = Modifier.fillMaxSize()) {
         AsyncImage(
             modifier = Modifier
                 .padding(5.dp)
@@ -152,5 +151,14 @@ fun ImageOfUri(uri: Uri, uriId: Int, viewModel: FoundItemViewModel = viewModel()
                 .build(),
             contentDescription = "Image from URI"
         )
+        // Add close button on top left
+        IconButton(
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(8.dp), // Adjust padding as needed
+            onClick = {  viewModel.list.removeAt(uriId)}
+        ) {
+            Icon(painterResource(id = R.drawable.close), contentDescription = "Close Image") // Replace with your desired icon
+        }
     }
 }
