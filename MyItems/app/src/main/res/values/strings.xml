@@ -60,4 +60,7 @@
     </string>
     <string name="phone">Phone</string>
     <string name="enter_phone_number">Enter phone number</string>
+    <string name="add_at_least_three_images_for_found_item">Add At least Three Images for found item</string>
+    <string name="delete_image">Delete Image</string>
+    <string name="captured_image">Captured Image</string>
 </resources>
