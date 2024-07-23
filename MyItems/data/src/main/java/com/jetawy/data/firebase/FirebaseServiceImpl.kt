@@ -1,5 +1,7 @@
 package com.jetawy.data.firebase
 
+import android.app.Activity
+import android.content.Context
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
@@ -19,8 +21,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class FirebaseServiceImpl(private val auth: FirebaseAuth) : FirebaseService {
+class FirebaseServiceImpl @Inject constructor(private val auth: FirebaseAuth) : FirebaseService {
     var storedVerificationId: String? = null
     var credential: PhoneAuthCredential? = null
     var resendToken: PhoneAuthProvider.ForceResendingToken? = null
@@ -87,6 +90,7 @@ class FirebaseServiceImpl(private val auth: FirebaseAuth) : FirebaseService {
         val options = PhoneAuthOptions.newBuilder(Firebase.auth)
             .setPhoneNumber(phoneNumber) // Phone number to verify
             .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+//            .setActivity(context.applicationContext as Activity) // Activity (for callback binding)
             .setCallbacks(callbacks) // OnVerificationStateChangedCallbacks
             .build()
         PhoneAuthProvider.verifyPhoneNumber(options)

@@ -1,8 +1,10 @@
 [versions]
 activityKtx = "1.9.0"
 agp = "8.5.1"
+browser = "1.8.0"
 ccp = "2.7.0"
 coilCompose = "2.6.0"
+firebaseAppcheckSafetynet = "16.1.2"
 firebaseBom = "33.1.2"
 googleServices = "4.4.2"
 hiltAndroidCompiler = "2.51.1"
@@ -20,6 +22,7 @@ generativeai = "0.9.0"
 googleAndroidLibrariesMapsplatformSecretsGradlePlugin = "2.0.1"
 mapsCompose = "4.3.3"
 navigationCompose = "2.7.7"
+playServicesSafetynet = "18.1.0"
 secretsGradlePlugin = "2.0.1"
 constraintlayout = "2.1.4"
 firebaseCrashlyticsGradle = "3.0.2"
@@ -32,11 +35,14 @@ googleGmsGoogleServices = "4.4.2"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
+androidx-browser = { module = "androidx.browser:browser", version.ref = "browser" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 ccp = { module = "com.hbb20:ccp", version.ref = "ccp" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-appcheck-playintegrity = { module = "com.google.firebase:firebase-appcheck-playintegrity" }
+firebase-appcheck-safetynet = { module = "com.google.firebase:firebase-appcheck-safetynet", version.ref = "firebaseAppcheckSafetynet" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-database = { module = "com.google.firebase:firebase-database" }
@@ -60,6 +66,7 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 generativeai = { group = "com.google.ai.client.generativeai", name = "generativeai", version.ref = "generativeai" }
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
+play-services-safetynet = { module = "com.google.android.gms:play-services-safetynet", version.ref = "playServicesSafetynet" }
 secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secretsGradlePlugin" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }

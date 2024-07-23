@@ -31,7 +31,7 @@
             app:ccp_autoDetectCountry="true"
             app:ccp_defaultNameCode="EG"
             app:ccp_showFlag="true"
-            app:ccp_showFullName="true"
+            app:ccp_showFullName="false"
             app:ccp_showNameCode="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -43,6 +43,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/phone"
             android:imeOptions="actionSend"
+            android:maxLines="1"
             android:nextFocusDown="@id/button_first"
             app:layout_constraintBottom_toBottomOf="@+id/country_code"
             app:layout_constraintEnd_toEndOf="parent"
@@ -53,7 +54,10 @@
                 android:id="@+id/textInputEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
                 android:imeOptions="actionSend"
+                android:inputType="phone"
+                android:maxEms="16"
                 android:maxLines="1"
                 android:nextFocusDown="@id/button_first" />
         </com.google.android.material.textfield.TextInputLayout>

@@ -47,7 +47,6 @@ const val maxImages = 5
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 fun FoundItemScreen(navController: NavController, viewModel: FoundItemViewModel = viewModel()) {
-
     val context = LocalContext.current
     val file = context.createImageFile()
     val uri = FileProvider.getUriForFile(
@@ -58,8 +57,8 @@ fun FoundItemScreen(navController: NavController, viewModel: FoundItemViewModel 
     val cameraLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
             if (viewModel.list.size < maxImages) {
-                if (uri!=null)
-                viewModel.addItem(uri)
+                if (it)
+                    viewModel.addItem(uri)
             }
         }
 
@@ -88,6 +87,10 @@ fun FoundItemScreen(navController: NavController, viewModel: FoundItemViewModel 
             .padding(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Text(
+            modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally).padding(16.dp),
+            text = "Add At least Three Images for found item")
+
         Button(onClick = {
             val permissionCheckResult =
                 ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)

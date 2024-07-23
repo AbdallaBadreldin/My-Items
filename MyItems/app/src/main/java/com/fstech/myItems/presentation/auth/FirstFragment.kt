@@ -1,9 +1,11 @@
 package com.fstech.myItems.presentation.auth
 
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -41,11 +43,31 @@ class FirstFragment : Fragment() {
     }
 
     private fun setupListeners() {
+        binding.textInputEdit.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE ||
+                (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN)
+            ) {
+                // Trigger the button click
+                binding.buttonFirst.performClick()
+                true // Consume the event
+            } else {
+                false // Let the system handle other actions
+            }
+        }
         binding.buttonFirst.setOnClickListener {
-            viewModel.signIn(
-                "+${binding.countryCode.defaultCountryCode}${binding.textInputEdit.text}",
-                Locale.getDefault().language
-            )
+            val phone = binding.textInputEdit.text.toString().trim()
+            if (phone.isEmpty()) {
+                Snackbar.make(
+                    binding.root,
+                    getString(R.string.enter_phone_number), Snackbar.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            } else {
+                viewModel.signIn(
+                    "+${binding.countryCode.defaultCountryCode}${phone}",
+                    Locale.getDefault().language
+                )
+            }
         }
     }
 

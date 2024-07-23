@@ -2,17 +2,25 @@ package com.fstech.myItems
 
 import android.app.Application
 import android.content.res.Resources
+import com.google.firebase.appcheck.ktx.appCheck
+import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.ktx.initialize
 import dagger.hilt.android.HiltAndroidApp
 
 
 @HiltAndroidApp
-class MyBaseApp : Application() {
+class Application : Application() {
     companion object {
         lateinit var res: Resources
     }
 
     override fun onCreate() {
         super.onCreate()
+        Firebase.initialize(context = this)
+        Firebase.appCheck.installAppCheckProviderFactory(
+            PlayIntegrityAppCheckProviderFactory.getInstance(),
+        )
 //        isAppUpdated()
         res = resources
 //        createNotificationChannel()

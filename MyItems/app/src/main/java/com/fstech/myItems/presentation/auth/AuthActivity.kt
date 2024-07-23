@@ -9,6 +9,8 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.fstech.myItems.R
 import com.fstech.myItems.databinding.ActivityAuthBinding
+import com.google.firebase.Firebase
+import com.google.firebase.initialize
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -19,6 +21,7 @@ class AuthActivity : AppCompatActivity() {
     private val authViewModel: AuthViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Firebase.initialize(this)
         if (authViewModel.isLoggedIn()) {
             finish()
         }

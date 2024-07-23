@@ -48,4 +48,9 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.database)
     implementation(libs.firebase.messaging)
+    implementation(libs.firebase.appcheck.playintegrity)
+    implementation(libs.play.services.safetynet)
+    implementation (libs.androidx.browser)
+    implementation (libs.firebase.appcheck.safetynet)
+
 }

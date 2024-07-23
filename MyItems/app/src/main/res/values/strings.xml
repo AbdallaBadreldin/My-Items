@@ -59,4 +59,5 @@
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
     <string name="phone">Phone</string>
+    <string name="enter_phone_number">Enter phone number</string>
 </resources>
