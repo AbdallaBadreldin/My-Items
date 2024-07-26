@@ -133,6 +133,7 @@ dependencies {
     //pinview for verifying otp
     implementation(libs.pinview)
 
+    implementation (libs.google.gson)
     /* //retrofit
      implementation(libs.retrofit)
      implementation(libs.converter.gson)

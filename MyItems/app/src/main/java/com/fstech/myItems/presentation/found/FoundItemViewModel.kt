@@ -2,12 +2,15 @@ package com.fstech.myItems.presentation.found
 
 import android.graphics.Bitmap
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstech.myItems.BuildConfig.apiKey
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
+import com.google.gson.Gson
+import com.jetawy.domain.models.ItemResponse
 import com.jetawy.domain.utils.UiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,7 +31,7 @@ class FoundItemViewModel : ViewModel() {
 
     private val _uiState: MutableStateFlow<UiState> =
         MutableStateFlow(UiState.Initial)
-    val uiState: StateFlow<UiState> =
+    var uiState: StateFlow<UiState> =
         _uiState.asStateFlow()
 
     private val generativeModel = GenerativeModel(
@@ -51,11 +54,38 @@ class FoundItemViewModel : ViewModel() {
                     }
                 )
                 response.text?.let { outputContent ->
-                    _uiState.value = UiState.Success(outputContent)
+                    Log.e("outputContent", outputContent)
+                    val data = convertJsonToDataClass(outputContent)
+                    if (data == null)
+                        _uiState.value = UiState.Error("null")
+                    if (data?.name == null)
+                        _uiState.value = UiState.Error("null")
+                    if (data?.name == "null")
+                        _uiState.value = UiState.Error("null")
+                    else
+                        _uiState.value = UiState.Success(
+                            data
+                        )
                 }
             } catch (e: Exception) {
                 _uiState.value = UiState.Error(e.localizedMessage ?: "")
             }
         }
+    }
+
+    fun convertJsonToDataClass(jsonString: String): ItemResponse? {
+        var string = jsonString.trimIndent().trim()
+
+        if (string.isEmpty()) {
+            return null
+        }
+        string = string.removePrefix("```json").removeSuffix("```")
+        val gson = Gson()
+        val jsonObject = gson.fromJson(string, ItemResponse::class.java)
+        return jsonObject
+    }
+
+    fun resetStates() {
+        _uiState.value = UiState.Initial
     }
 }

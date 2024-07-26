@@ -14,6 +14,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,7 +26,9 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -48,7 +51,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.fstech.myItems.BuildConfig
 import com.fstech.myItems.R
-import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.jetawy.domain.models.ItemResponse
 import com.jetawy.domain.utils.UiState
 import java.io.File
 import java.text.SimpleDateFormat
@@ -74,9 +77,11 @@ fun FoundItemScreen(navController: NavController, viewModel: FoundItemViewModel 
 
     val cameraLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
+            if (!it)
+                return@rememberLauncherForActivityResult
+            viewModel.resetStates()
             if (viewModel.list.size < maxImagesToScan) {
-                if (it)
-                    viewModel.addItem(uri)
+                viewModel.addItem(uri)
             }
         }
 
@@ -113,13 +118,17 @@ fun FoundItemScreen(navController: NavController, viewModel: FoundItemViewModel 
         val permissionCheckResult =
             ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
         if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
-            if (viewModel.list.size < maxImagesToScan)
+            if (viewModel.list.size < maxImagesToScan) {
                 cameraLauncher.launch(uri)
-            else {
+            } else {
                 Toast.makeText(
-                    context,
-                    "You can only take $maxImagesToScan images",
-                    Toast.LENGTH_SHORT
+                    /* context = */ context,
+                    /* text = */
+                    context.getString(
+                        R.string.you_can_only_take_images,
+                        maxImagesToScan.toString()
+                    ),
+                    /* duration = */ Toast.LENGTH_SHORT
                 ).show()
             }
         } else {
@@ -143,8 +152,8 @@ fun FoundItemScreen(navController: NavController, viewModel: FoundItemViewModel 
         )
         Button(onClick = {
             openCameraRoutine()
-        }) {
-            Text(text = "Capture Image From Camera")
+        }, modifier = Modifier.padding(16.dp)) {
+            Text(text = stringResource(R.string.capture_image_from_camera))
         }
 
         if (viewModel.list.isEmpty()) {
@@ -161,6 +170,7 @@ fun FoundItemScreen(navController: NavController, viewModel: FoundItemViewModel 
         } else {
             LazyRow(
                 modifier = Modifier
+                    .padding(16.dp)
                     .fillMaxWidth()
                     .wrapContentHeight(),
             ) {
@@ -169,46 +179,61 @@ fun FoundItemScreen(navController: NavController, viewModel: FoundItemViewModel 
                 }
             }
         }
-
-        if (viewModel.list.size >= minimumImagesToDetect) {
-            Button(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth(),
-                onClick = {
-                    val contentResolver = context.contentResolver
-                    val bitmapList = mutableListOf<Bitmap>()
-                    viewModel.list.forEach {
-                        if (it != null) {
-                            uriToBitmap(contentResolver, it)?.let { it1 -> bitmapList.add(it1) }
-                        } else {
-                            // Handle the error (e.g., display an error message)
-                        }
-                    }
-                    viewModel.sendPrompt(
-                        bitmapList,
-                        "can you return what is the object in this images in one word"
-                    )
-                }) {
-                Text(text = "Detect Object")
-            }
-        }
-        when (uiState) {
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        )
+        if (viewModel.list.size >= minimumImagesToDetect) when (uiState) {
             is UiState.Error -> {
-                Text(text = (uiState as UiState.Error).errorMessage)
+                val errorString = (uiState as UiState.Error).errorMessage
+                if (errorString == "null")
+                    Text(text = stringResource(R.string.please_try_again))
+                else
+                    Text(text = (uiState as UiState.Error).errorMessage)
             }
 
-            UiState.Initial -> {}
+            UiState.Initial -> {
+                Button(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth(),
+                    onClick = {
+                        val contentResolver = context.contentResolver
+                        val bitmapList = mutableListOf<Bitmap>()
+                        viewModel.list.forEach {
+                            if (it != null) {
+                                uriToBitmap(contentResolver, it)?.let { it1 ->
+                                    bitmapList.add(
+                                        it1
+                                    )
+                                }
+                            } else {
+                                // Handle the error (e.g., display an error message)
+                            }
+                        }
+                        viewModel.sendPrompt(
+                            bitmapList,
+                            "can you return the name as String of the object in images and description as String of the main object in images and color as list of the main object in images and brand as String and category as String of the object in the images in Json object Format"
+                        )
+                    }) {
+                    Text(text = stringResource(R.string.detect_object))
+                }
+            }
+
             UiState.Loading -> {
                 CircularProgressIndicator(
-                    context
+                    modifier = Modifier.width(64.dp),
+                    color = MaterialTheme.colorScheme.secondary,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
                 )
             }
 
             is UiState.Success<*> -> {
-                Text(text = (uiState as UiState.Success<*>).outputData as String)
+                val response = (uiState as UiState.Success<*>).outputData as ItemResponse
+                Text(text = response.name.toString())
             }
-        }
+        } else viewModel.resetStates()
     }
 }
 
@@ -244,7 +269,10 @@ fun ImageOfUri(uri: Uri, uriId: Int, viewModel: FoundItemViewModel = viewModel()
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(8.dp), // Adjust padding as needed
-            onClick = { viewModel.list.removeAt(uriId) }
+            onClick = {
+                viewModel.list.removeAt(uriId)
+                viewModel.resetStates()
+            }
         ) {
             Image(
                 painterResource(id = R.drawable.close),

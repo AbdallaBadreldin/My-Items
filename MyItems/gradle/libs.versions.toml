@@ -7,6 +7,7 @@ coilCompose = "2.6.0"
 firebaseAppcheckSafetynet = "16.1.2"
 firebaseBom = "33.1.2"
 googleServices = "4.4.2"
+gsonVersion = "2.10.1"
 hiltAndroidCompiler = "2.51.1"
 hiltAndroid = "2.51.1"
 kotlin = "1.9.0"
@@ -47,6 +48,7 @@ firebase-auth = { module = "com.google.firebase:firebase-auth" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-database = { module = "com.google.firebase:firebase-database" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
+google-gson = { module = "com.google.code.gson:gson", version.ref = "gsonVersion" }
 google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }

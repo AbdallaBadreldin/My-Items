@@ -3,13 +3,6 @@
 Abdalla.badr852@gmail.com*/
 package com.fstech.myItems.util
 
-import android.app.AlertDialog
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.os.Build
-import androidx.fragment.app.FragmentActivity
-
 class Utilities {
     companion object {
 
@@ -34,8 +27,6 @@ class Utilities {
             }
             return result
         }
-
-
 
     }
 }
