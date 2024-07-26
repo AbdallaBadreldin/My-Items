@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.fstech.myItems.presentation.found.EnterDataOfFoundItemScreen
 import com.fstech.myItems.presentation.found.FoundItemScreen
 import com.fstech.myItems.presentation.lost.LostItemScreen
 import com.fstech.myItems.presentation.welcome.WelcomeScreen
@@ -25,6 +26,8 @@ fun NavGraph(
         composable(route = Screen.FoundItemScreen.route) { FoundItemScreen(navController = navController) }
 
         composable(route = Screen.LostItemScreen.route) { LostItemScreen(navController = navController) }
+
+        composable(route = Screen.EnterDataOfFoundItemScreen.route) { EnterDataOfFoundItemScreen(navController = navController) }
 
     }
 }

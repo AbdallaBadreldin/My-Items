@@ -8,4 +8,5 @@ object MainScreen : Screen("main_screen")
 object BakingScreen : Screen("backing_screen")
 object FoundItemScreen : Screen("found_item_screen")
 object LostItemScreen : Screen("lost_item_screen")
+object EnterDataOfFoundItemScreen : Screen("enter_data_of_found_item_screen")
 }
