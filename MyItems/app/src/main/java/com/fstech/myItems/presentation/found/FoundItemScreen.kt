@@ -14,6 +14,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -46,7 +47,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import coil.annotation.ExperimentalCoilApi
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.fstech.myItems.BuildConfig
@@ -61,7 +61,6 @@ import java.util.Objects
 const val maxImagesToScan = 5
 const val minimumImagesToDetect = 3
 
-@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun FoundItemScreen(navController: NavController, viewModel: FoundItemViewModel = viewModel()) {
 
@@ -231,7 +230,25 @@ fun FoundItemScreen(navController: NavController, viewModel: FoundItemViewModel 
 
             is UiState.Success<*> -> {
                 val response = (uiState as UiState.Success<*>).outputData as ItemResponse
-                Text(text = response.name.toString())
+                Column {
+                    Text(text = stringResource(R.string.the_item_is, response.name.toString()))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    ) {
+                        Image(
+                            modifier = Modifier.clickable { },
+                            painter = painterResource(id = R.drawable.close),
+                            contentDescription = stringResource(R.string.the_item_is_wrong)
+                        ) // Replace with your desired icon
+                        Image(
+                            modifier = Modifier.clickable { },
+                            painter = painterResource(id = R.drawable.icon_true),
+                            contentDescription = stringResource(R.string.the_item_is_correct)
+                        ) // Replace with your desired icon
+                    }
+                }
             }
         } else viewModel.resetStates()
     }

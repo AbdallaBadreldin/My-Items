@@ -31,4 +31,7 @@
     <string name="capture_image_from_camera">Capture Image From Camera</string>
     <string name="please_try_again">Please try again</string>
     <string name="detect_object">Detect Object</string>
+    <string name="the_item_is">The Item is %1$s</string>
+    <string name="the_item_is_wrong">The Item Is Wrong</string>
+    <string name="the_item_is_correct">The Item Is Correct</string>
 </resources>
