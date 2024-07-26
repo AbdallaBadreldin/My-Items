@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
     id("kotlinx-serialization")
     id("kotlin-parcelize")
+    id ("org.jetbrains.kotlin.plugin.serialization")
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.dagger.hilt.android")
     id("com.google.gms.google-services")
@@ -156,6 +157,7 @@ dependencies {
 //    implementation(libs.glide)
 //    annotationProcessor(libs.glide.compiler)
 
+    implementation (libs.kotlinx.serialization.json)
 
 }
 /*apply{

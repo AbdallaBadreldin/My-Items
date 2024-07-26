@@ -1,4 +1,4 @@
-package com.fstech.myItems.presentation
+package com.fstech.myItems.navigation
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize

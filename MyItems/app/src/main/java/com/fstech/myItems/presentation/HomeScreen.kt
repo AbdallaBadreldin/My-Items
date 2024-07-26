@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
+import com.fstech.myItems.navigation.Screen
 import com.fstech.myItems.presentation.auth.AuthActivity
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase

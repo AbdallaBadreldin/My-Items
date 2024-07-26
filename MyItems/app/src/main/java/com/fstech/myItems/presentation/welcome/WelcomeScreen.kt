@@ -30,8 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.fstech.myItems.R
-import com.fstech.myItems.presentation.Screen
-import com.google.firebase.ktx.Firebase
+import com.fstech.myItems.navigation.Screen
 import com.jetawy.domain.utils.UiState
 
 @OptIn(ExperimentalLayoutApi::class)

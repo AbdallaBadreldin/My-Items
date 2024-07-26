@@ -1,9 +1,11 @@
-package com.fstech.myItems.presentation
+package com.fstech.myItems.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.fstech.myItems.presentation.BakingScreen
+import com.fstech.myItems.presentation.HomeScreen
 import com.fstech.myItems.presentation.found.EnterDataOfFoundItemScreen
 import com.fstech.myItems.presentation.found.FoundItemScreen
 import com.fstech.myItems.presentation.lost.LostItemScreen
@@ -31,3 +33,7 @@ fun NavGraph(
 
     }
 }
+
+
+
+///////

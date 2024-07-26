@@ -1,4 +1,4 @@
-package com.fstech.myItems.presentation
+package com.fstech.myItems.navigation
 
 sealed class Screen(val route :String) {
 object WelcomeScreen : Screen("welcome_screen")
