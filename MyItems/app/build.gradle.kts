@@ -135,6 +135,10 @@ dependencies {
     implementation(libs.pinview)
 
     implementation(libs.google.gson)
+
+
+    implementation(libs.androidx.hilt.navigation.fragment)
+
     /* //retrofit
      implementation(libs.retrofit)
      implementation(libs.converter.gson)

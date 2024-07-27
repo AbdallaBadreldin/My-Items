@@ -62,9 +62,7 @@ const val minimumImagesToDetect = 3
 
 @Composable
 fun FoundItemScreen(
-    goToEnterDataOfFoundItemScreen: (name:
-        String, description: String, color: List<String>, brand: String, category: String
-    ) -> Unit, viewModel: FoundItemViewModel = viewModel()
+    goToEnterDataOfFoundItemScreen: (viewModel: FoundItemViewModel) -> Unit, viewModel: FoundItemViewModel
 ) {
 
     var result by rememberSaveable { mutableStateOf("") }
@@ -248,11 +246,7 @@ fun FoundItemScreen(
                         Image(
                             modifier = Modifier.clickable {
                                 goToEnterDataOfFoundItemScreen(
-                                    response.name,
-                                    response.description,
-                                    response.color,
-                                    response.brand,
-                                    response.category
+                                  viewModel
                                 )
                             },
                             painter = painterResource(id = R.drawable.icon_true),

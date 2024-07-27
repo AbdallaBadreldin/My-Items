@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import com.fstech.myItems.navigation.NavRoute
 import com.fstech.myItems.presentation.auth.AuthActivity
+import com.fstech.myItems.presentation.found.FoundItemActivity
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -44,7 +45,7 @@ fun HomeScreen(navController: NavHostController) {
             if (Firebase.auth.currentUser == null)
                 goToAuthentication(context)
             else
-                navController.navigate(NavRoute.FoundItemNavRoute.path)
+                goToFoundItemActivity(context)
         }) {
             Text(text = "I Found An Item")
         }
@@ -67,6 +68,11 @@ fun HomeScreen(navController: NavHostController) {
 
     }
 }
+
+fun goToFoundItemActivity(context: Context) {
+    context.startActivity(Intent(context, FoundItemActivity::class.java))
+}
+
 fun goToAuthentication(context: Context) {
     context.startActivity(Intent(context, AuthActivity::class.java))
 }

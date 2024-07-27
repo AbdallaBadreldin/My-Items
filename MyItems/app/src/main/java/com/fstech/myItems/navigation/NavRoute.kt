@@ -9,11 +9,11 @@ sealed class NavRoute(val path: String) {
     object FoundItemNavRoute : NavRoute("found_item_screen")
     object LostItemNavRoute : NavRoute("lost_item_screen")
     object EnterDataOfFoundItemNavRoute : NavRoute("enter_data_of_found_item_screen") {
-        val name= "name"
+       /* val name= "name"
         val description= "description"
         val color= "color"
         val brand= "brand"
-        val category= "category"
+        val category= "category"*/
     }
 
     // build navigation path (for screen navigation)

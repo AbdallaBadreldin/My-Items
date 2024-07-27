@@ -10,6 +10,7 @@ googleServices = "4.4.2"
 gsonVersion = "2.10.1"
 hiltAndroidCompiler = "2.51.1"
 hiltAndroid = "2.51.1"
+hiltNavigationFragment = "1.2.0"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -40,6 +41,7 @@ googleGmsGoogleServices = "4.4.2"
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
 androidx-browser = { module = "androidx.browser:browser", version.ref = "browser" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-hilt-navigation-fragment = { module = "androidx.hilt:hilt-navigation-fragment", version.ref = "hiltNavigationFragment" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 ccp = { module = "com.hbb20:ccp", version.ref = "ccp" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
