@@ -3,8 +3,8 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
     id("kotlinx-serialization")
+    id("org.jetbrains.kotlin.plugin.serialization")
     id("kotlin-parcelize")
-    id ("org.jetbrains.kotlin.plugin.serialization")
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.dagger.hilt.android")
     id("com.google.gms.google-services")
@@ -110,7 +110,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
 
     //For PickVisualMedia contract
-    implementation (libs.androidx.activity.ktx)
+    implementation(libs.androidx.activity.ktx)
 
     implementation(libs.coil.compose)
 
@@ -122,19 +122,19 @@ dependencies {
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.appcheck.playintegrity)
     implementation(libs.play.services.safetynet)
-    implementation (libs.androidx.browser)
-    implementation (libs.firebase.appcheck.safetynet)
+    implementation(libs.androidx.browser)
+    implementation(libs.firebase.appcheck.safetynet)
 
     //hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
 
-    implementation (libs.ccp)
+    implementation(libs.ccp)
 
     //pinview for verifying otp
     implementation(libs.pinview)
 
-    implementation (libs.google.gson)
+    implementation(libs.google.gson)
     /* //retrofit
      implementation(libs.retrofit)
      implementation(libs.converter.gson)
@@ -157,7 +157,7 @@ dependencies {
 //    implementation(libs.glide)
 //    annotationProcessor(libs.glide.compiler)
 
-    implementation (libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.serialization.json)
 
 }
 /*apply{

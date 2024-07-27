@@ -16,7 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
-import com.fstech.myItems.navigation.Screen
+import com.fstech.myItems.navigation.NavRoute
 import com.fstech.myItems.presentation.auth.AuthActivity
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -44,7 +44,7 @@ fun HomeScreen(navController: NavHostController) {
             if (Firebase.auth.currentUser == null)
                 goToAuthentication(context)
             else
-                navController.navigate(Screen.FoundItemScreen.route)
+                navController.navigate(NavRoute.FoundItemNavRoute.path)
         }) {
             Text(text = "I Found An Item")
         }
@@ -52,7 +52,7 @@ fun HomeScreen(navController: NavHostController) {
         Button(onClick = {
             if (Firebase.auth.currentUser == null)
                 goToAuthentication(context)
-            else   navController.navigate(Screen.LostItemScreen.route)
+            else   navController.navigate(NavRoute.LostItemNavRoute.path)
         }) {
             Text(text = "I Lost An Item")
         }
@@ -60,7 +60,7 @@ fun HomeScreen(navController: NavHostController) {
         Button(onClick = {
             if (Firebase.auth.currentUser == null)
                 goToAuthentication(context)
-            else   navController.navigate(Screen.MapScreen.route)
+            else   navController.navigate(NavRoute.MapNavRoute.path)
         }) {
             Text(text = "Search Items Casually")
         }

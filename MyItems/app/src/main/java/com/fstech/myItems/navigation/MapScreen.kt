@@ -28,7 +28,7 @@ fun MapScreen(navController: NavController) {
     )
     Row {
         Button(
-            onClick = { navController.navigate(Screen.BakingScreen.route) },
+            onClick = { navController.navigate(NavRoute.BakingNavRoute.path) },
             modifier = Modifier
                 .align(Alignment.Bottom)
                 .padding(64.dp,24.dp,64.dp,16.dp)

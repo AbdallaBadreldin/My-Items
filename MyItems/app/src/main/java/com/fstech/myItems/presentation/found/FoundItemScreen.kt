@@ -46,7 +46,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.fstech.myItems.BuildConfig
@@ -62,7 +61,11 @@ const val maxImagesToScan = 5
 const val minimumImagesToDetect = 3
 
 @Composable
-fun FoundItemScreen(navController: NavController, viewModel: FoundItemViewModel = viewModel()) {
+fun FoundItemScreen(
+    goToEnterDataOfFoundItemScreen: (name:
+        String, description: String, color: List<String>, brand: String, category: String
+    ) -> Unit, viewModel: FoundItemViewModel = viewModel()
+) {
 
     var result by rememberSaveable { mutableStateOf("") }
     val uiState by viewModel.uiState.collectAsState()
@@ -243,7 +246,15 @@ fun FoundItemScreen(navController: NavController, viewModel: FoundItemViewModel 
                             contentDescription = stringResource(R.string.the_item_is_wrong)
                         ) // Replace with your desired icon
                         Image(
-                            modifier = Modifier.clickable { },
+                            modifier = Modifier.clickable {
+                                goToEnterDataOfFoundItemScreen(
+                                    response.name,
+                                    response.description,
+                                    response.color,
+                                    response.brand,
+                                    response.category
+                                )
+                            },
                             painter = painterResource(id = R.drawable.icon_true),
                             contentDescription = stringResource(R.string.the_item_is_correct)
                         ) // Replace with your desired icon

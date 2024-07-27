@@ -3,6 +3,7 @@ package com.fstech.myItems.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -12,12 +13,14 @@ import androidx.navigation.compose.rememberNavController
 import com.fstech.myItems.navigation.NavGraph
 import com.fstech.myItems.presentation.theme.MyItemsTheme
 import com.google.firebase.FirebaseApp
+import kotlinx.serialization.Serializable
 
 class MainActivity : ComponentActivity() {
     lateinit var navController: NavHostController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this)
+        enableEdgeToEdge()
         setContent {
             MyItemsTheme {
                 // A surface container using the 'background' color from the theme
@@ -33,3 +36,11 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+@Serializable
+object ScreenA
+
+@Serializable
+data class ScreenB(
+    val name: String?,
+    val age: Int
+)

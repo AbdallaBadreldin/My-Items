@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("org.jetbrains.kotlin.plugin.serialization")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -52,5 +54,7 @@ dependencies {
     implementation(libs.play.services.safetynet)
     implementation (libs.androidx.browser)
     implementation (libs.firebase.appcheck.safetynet)
+
+    implementation(libs.kotlinx.serialization.json)
 
 }

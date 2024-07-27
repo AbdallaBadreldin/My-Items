@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.fstech.myItems.R
-import com.fstech.myItems.navigation.Screen
+import com.fstech.myItems.navigation.NavRoute
 import com.jetawy.domain.utils.UiState
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -80,7 +80,8 @@ fun WelcomeScreen(
             )
 
             is UiState.Success<*> -> Text(
-                textAlign = TextAlign.Center, text = (uiState as UiState.Success<*>).outputData as String
+                textAlign = TextAlign.Center,
+                text = (uiState as UiState.Success<*>).outputData as String
             )
         }
 
@@ -91,10 +92,10 @@ fun WelcomeScreen(
     Box(modifier = Modifier.fillMaxSize()) {
         // add your column here (with align modifier)
         Column(modifier = Modifier.align(Alignment.BottomCenter)) {
-            Button(onClick = { navController.navigate(Screen.HomeScreen.route) }) {
+            Button(onClick = { navController.navigate(NavRoute.HomeNavRoute.path) }) {
                 Text(text = stringResource(R.string.start_using_the_app))
             }
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(128.dp))
 
         }
     }
