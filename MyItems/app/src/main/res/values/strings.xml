@@ -38,4 +38,5 @@
     <string name="search_icon">Search Icon</string>
     <string name="tell_us_where_did_you_find_this_item">Tell us where did you find this item</string>
     <string name="upload_data">Upload Data</string>
+    <string name="can_you_tell_us_more_details_or_description_of_the_item_to_help_us_matching_it_to_it_s_owner_faster">Can you tell us more details or description of the item to help us matching it to it\'s owner faster?</string>
 </resources>

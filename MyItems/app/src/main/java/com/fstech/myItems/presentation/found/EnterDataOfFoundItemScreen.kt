@@ -1,5 +1,6 @@
 package com.fstech.myItems.presentation.found
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,16 +27,18 @@ fun EnterDataOfFoundItemScreen(
 ) {
     var inputText by remember { mutableStateOf("") }
 
-    StringInputTextField(
-        value = inputText,
-        onValueChange = { inputText = it },
-        label = "Can you tell us more details or description of the item to help us matching it to it's owner faster?"
-    )
-Button(
-    modifier = Modifier
-        .fillMaxWidth()
-        .padding(32.dp),
-    onClick = {viewModel.uploadItem() }) { Text(text = stringResource(R.string.upload_data)) }
+    Column {
+        StringInputTextField(
+            value = inputText,
+            onValueChange = { inputText = it },
+            label = stringResource(R.string.can_you_tell_us_more_details_or_description_of_the_item_to_help_us_matching_it_to_it_s_owner_faster)
+        )
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(32.dp),
+            onClick = { viewModel.uploadItem() }) { Text(text = stringResource(R.string.upload_data)) }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,9 +58,13 @@ fun StringInputTextField(
             .padding(16.dp),
         singleLine = true, // For single-line input
         shape = RoundedCornerShape(16.dp), // Rounded corners for a softer look
+        maxLines = Int.MAX_VALUE,
+        minLines = 1,
+        textStyle = MaterialTheme.typography.bodyMedium,
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = MaterialTheme.colorScheme.primary,
             unfocusedBorderColor = MaterialTheme.colorScheme.outline
-        )
+        ),
+
     )
 }

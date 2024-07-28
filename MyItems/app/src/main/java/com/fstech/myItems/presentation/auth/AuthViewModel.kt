@@ -4,9 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jetawy.data.firebase.FirebaseService
+import com.jetawy.data.firebase.FirebaseAuthService
 import com.jetawy.domain.utils.AuthState
-import com.jetawy.domain.utils.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -14,7 +13,7 @@ import javax.inject.Inject
 const val TAG = "AuthViewModel"
 
 @HiltViewModel
-class AuthViewModel @Inject constructor(private val firebase: FirebaseService) : ViewModel() {
+class AuthViewModel @Inject constructor(private val firebase: FirebaseAuthService) : ViewModel() {
     private val _codeSent = MutableLiveData<AuthState>()
     val codeSent: LiveData<AuthState> get() = _codeSent
 

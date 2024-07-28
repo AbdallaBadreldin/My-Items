@@ -125,7 +125,7 @@ dependencies {
     implementation(libs.play.services.safetynet)
     implementation(libs.androidx.browser)
     implementation(libs.firebase.appcheck.safetynet)
-
+    implementation (libs.firebase.storage)
     //hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)

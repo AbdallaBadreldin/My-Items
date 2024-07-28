@@ -1,7 +1,5 @@
 package com.jetawy.data.firebase
 
-import android.app.Activity
-import android.content.Context
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
@@ -13,7 +11,6 @@ import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.jetawy.domain.utils.AuthState
-import com.jetawy.domain.utils.UiState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -23,7 +20,7 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class FirebaseServiceImpl @Inject constructor(private val auth: FirebaseAuth) : FirebaseService {
+class FirebaseAuthServiceImpl @Inject constructor(private val auth: FirebaseAuth) : FirebaseAuthService {
     var storedVerificationId: String? = null
     var credential: PhoneAuthCredential? = null
     var resendToken: PhoneAuthProvider.ForceResendingToken? = null

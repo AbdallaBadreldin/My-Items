@@ -1,10 +1,9 @@
 package com.jetawy.data.firebase
 
 import com.jetawy.domain.utils.AuthState
-import com.jetawy.domain.utils.UiState
 import kotlinx.coroutines.flow.Flow
 
-interface FirebaseService {
+interface FirebaseAuthService {
     fun signIn(phoneNumber: String,lang:String): Flow<AuthState>
     fun signOut()
     fun isLoggedIn(): Boolean
