@@ -12,6 +12,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -58,11 +59,11 @@ import java.util.Date
 import java.util.Objects
 
 const val maxImagesToScan = 5
-const val minimumImagesToDetect = 3
+const val minimumImagesToDetect = 1
 
 @Composable
 fun FoundItemScreen(
-    goToEnterDataOfFoundItemScreen: (viewModel: FoundItemViewModel) -> Unit, viewModel: FoundItemViewModel
+    gotoLocationOfLostItems: (viewModel: FoundItemViewModel) -> Unit, viewModel: FoundItemViewModel
 ) {
 
     var result by rememberSaveable { mutableStateOf("") }
@@ -214,7 +215,7 @@ fun FoundItemScreen(
                         }
                         viewModel.sendPrompt(
                             bitmapList,
-                            "can you return the name as String of the object in images and description as String of the main object in images and color as list of the main object in images and brand as String and category as String of the object in the images in Json object Format"
+                            "can you return the name of the object in images as String in parameter called name and description as String of the main object in images in parameter called description and color as list of the main object in images in parameter called color and brand as String and category as String of the object in the images in parameter called images in Json object Format"
                         )
                     }) {
                     Text(text = stringResource(R.string.detect_object))
@@ -232,23 +233,34 @@ fun FoundItemScreen(
             is UiState.Success<*> -> {
                 val response = (uiState as UiState.Success<*>).outputData as ItemResponse
                 Column {
-                    Text(text = stringResource(R.string.the_item_is, response.name.toString()))
+                    Text(text = stringResource(R.string.the_item_is, response.name))
                     Row(
+                        horizontalArrangement = Arrangement.SpaceAround,
                         modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
                             .fillMaxWidth()
                             .padding(16.dp)
                     ) {
                         Image(
-                            modifier = Modifier.clickable { },
+                            modifier = Modifier
+                                .height(48.dp)
+                                .width(48.dp)
+                                .clickable {
+                                    viewModel.resetStates()
+                                    viewModel.list.clear()
+                                },
                             painter = painterResource(id = R.drawable.close),
                             contentDescription = stringResource(R.string.the_item_is_wrong)
                         ) // Replace with your desired icon
                         Image(
-                            modifier = Modifier.clickable {
-                                goToEnterDataOfFoundItemScreen(
-                                  viewModel
-                                )
-                            },
+                            modifier = Modifier
+                                .height(48.dp)
+                                .width(48.dp)
+                                .clickable {
+                                    gotoLocationOfLostItems(
+                                        viewModel
+                                    )
+                                },
                             painter = painterResource(id = R.drawable.icon_true),
                             contentDescription = stringResource(R.string.the_item_is_correct)
                         ) // Replace with your desired icon
@@ -298,7 +310,7 @@ fun ImageOfUri(uri: Uri, uriId: Int, viewModel: FoundItemViewModel = viewModel()
         ) {
             Image(
                 painterResource(id = R.drawable.close),
-                contentDescription = stringResource(R.string.delete_image)
+                contentDescription = stringResource(R.string.delete_image),
             ) // Replace with your desired icon
         }
     }

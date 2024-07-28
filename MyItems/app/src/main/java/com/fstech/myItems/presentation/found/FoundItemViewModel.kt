@@ -4,11 +4,14 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstech.myItems.BuildConfig.apiKey
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
+import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import com.jetawy.domain.models.ItemResponse
 import com.jetawy.domain.utils.UiState
@@ -20,6 +23,7 @@ import kotlinx.coroutines.launch
 
 class FoundItemViewModel : ViewModel() {
     val list = mutableStateListOf<Uri>()
+    val latLng =   mutableStateOf<LatLng?>(null)
 
     fun updateItem(itemIndex: Int, item: Uri) {
         list.set(itemIndex, item) // sets the element at 'itemIndex' to 'item'
@@ -87,5 +91,9 @@ class FoundItemViewModel : ViewModel() {
 
     fun resetStates() {
         _uiState.value = UiState.Initial
+    }
+
+    fun uploadItem() {
+//        TODO("Not yet implemented")
     }
 }

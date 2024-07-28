@@ -88,6 +88,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.places)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
@@ -105,7 +106,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
     implementation(libs.maps.compose)
-
+    implementation (libs.play.services.maps)
     //For rememberLauncherForActivityResult()
     implementation(libs.androidx.activity.compose)
 

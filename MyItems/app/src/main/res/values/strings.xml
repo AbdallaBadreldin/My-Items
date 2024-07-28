@@ -34,4 +34,8 @@
     <string name="the_item_is">The Item is %1$s</string>
     <string name="the_item_is_wrong">The Item Is Wrong</string>
     <string name="the_item_is_correct">The Item Is Correct</string>
+    <string name="enter_your_location_to_search">Enter your location to search</string>
+    <string name="search_icon">Search Icon</string>
+    <string name="tell_us_where_did_you_find_this_item">Tell us where did you find this item</string>
+    <string name="upload_data">Upload Data</string>
 </resources>
