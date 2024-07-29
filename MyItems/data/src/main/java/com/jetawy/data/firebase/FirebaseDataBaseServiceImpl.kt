@@ -60,6 +60,7 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
                     val downloadUrl = imageRef.downloadUrl.await() // Get the download URL
                     Log.d("FirebaseStorage", "Upload successful. Download URL: $downloadUrl")
                     Log.d("FirebaseStorage", "Upload successful. Download URL: ${downloadUrl.path}")
+                    Log.d("FirebaseStorage", "Upload successful. Download URL: ${downloadUrl}")
                     listOfDownloadUrls.add(downloadUrl.toString())
                     // Store the download URL in your database or use it as needed
                 } catch (e: Exception) {
@@ -71,11 +72,10 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
             //second we will upload data to firebase database
             val myRef = db.getReference("foundItems/${addresses.countryName}").push()
             try {
-                myRef.child("images").setValue(listOfDownloadUrls).await()
-                myRef.child("location").setValue("${addresses.latitude},${addresses.longitude}")
-                    .await()
+                myRef.child("location").setValue("${addresses.latitude},${addresses.longitude}").await()
+                myRef.child("images").setValue(listOfDownloadUrls.toList()).await()
                 myRef.child("addressUrl").setValue(addresses.url).await()
-                myRef.setValue(AiResponse).await()
+                myRef.child("aiResponse").setValue(AiResponse).await()
                 myRef.child("userDescription").setValue(userDescription).await()
                 myRef.child("user").setValue(FirebaseAuth.getInstance().currentUser?.uid).await()
                 myRef.child("timestamp").setValue(System.currentTimeMillis()).await()
