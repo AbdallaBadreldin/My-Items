@@ -1,4 +1,4 @@
-package com.jetawy.data.firebase
+package com.jetawy.domain.repository
 
 import android.location.Address
 import android.net.Uri
@@ -6,20 +6,12 @@ import com.jetawy.domain.models.ItemResponse
 import com.jetawy.domain.utils.UiState
 import kotlinx.coroutines.flow.Flow
 
-interface FirebaseDataBaseService {
-
-    suspend fun getLostItemData(): Flow<UiState>
-    suspend fun uploadLostItems(
-        imageUris: List<Uri>,
-        addresses: Address,
-        AiResponse: ItemResponse
-    ): Flow<UiState>
-
+interface FoundItemsRepository {
     suspend fun getFoundItemData(): Flow<UiState>
     suspend fun uploadFoundItems(
         imageUris: List<Uri>,
         addresses: Address,
         AiResponse: ItemResponse,
         userDescription: String
-    ): Flow<UiState>
+    ): Any
 }

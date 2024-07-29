@@ -15,7 +15,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import com.fstech.myItems.R
 import com.fstech.myItems.navigation.NavRoute
 import com.fstech.myItems.presentation.auth.AuthActivity
 import com.fstech.myItems.presentation.found.FoundItemActivity
@@ -36,8 +38,8 @@ fun HomeScreen(navController: NavHostController) {
     ) {
         Box {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(text = "Welcome To My Items Finder")
-                Text(text = "Pickup a Service")
+                Text(text = stringResource(R.string.welcome_to_my_items_finder))
+                Text(text = stringResource(R.string.pickup_a_service))
             }
         }
 
@@ -47,7 +49,7 @@ fun HomeScreen(navController: NavHostController) {
             else
                 goToFoundItemActivity(context)
         }) {
-            Text(text = "I Found An Item")
+            Text(text = stringResource(R.string.i_found_an_item))
         }
 
         Button(onClick = {
@@ -55,7 +57,7 @@ fun HomeScreen(navController: NavHostController) {
                 goToAuthentication(context)
             else   navController.navigate(NavRoute.LostItemNavRoute.path)
         }) {
-            Text(text = "I Lost An Item")
+            Text(text = stringResource(R.string.i_lost_an_item))
         }
 
         Button(onClick = {
@@ -63,7 +65,7 @@ fun HomeScreen(navController: NavHostController) {
                 goToAuthentication(context)
             else   navController.navigate(NavRoute.MapNavRoute.path)
         }) {
-            Text(text = "Search Items Casually")
+            Text(text = stringResource(R.string.search_items_casually))
         }
 
     }

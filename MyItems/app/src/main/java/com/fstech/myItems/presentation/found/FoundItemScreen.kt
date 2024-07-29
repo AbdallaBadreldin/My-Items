@@ -46,7 +46,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.fstech.myItems.BuildConfig
@@ -56,7 +55,6 @@ import com.jetawy.domain.utils.UiState
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Objects
 
 const val maxImagesToScan = 5
 const val minimumImagesToDetect = 1
@@ -65,24 +63,23 @@ const val minimumImagesToDetect = 1
 fun FoundItemScreen(
     gotoLocationOfLostItems: (viewModel: FoundItemViewModel) -> Unit, viewModel: FoundItemViewModel
 ) {
-
-    var result by rememberSaveable { mutableStateOf("") }
     val uiState by viewModel.uiState.collectAsState()
-
     val context = LocalContext.current
     val file = context.createImageFile()
     val uri = FileProvider.getUriForFile(
-        Objects.requireNonNull(context),
+        context,
         BuildConfig.APPLICATION_ID + ".provider", file
     )
 
     val cameraLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
-            if (!it)
+            if (!it || uri == null || uri == Uri.EMPTY || uri.path == null || uri.path?.isEmpty() == true || uri.path == "null" || uri.path == "content://" || uri.path == "file://" || uri.path == "android.resource://" || uri.path == "com.android.providers.media.documents")
                 return@rememberLauncherForActivityResult
-            viewModel.resetStates()
-            if (viewModel.list.size < maxImagesToScan) {
-                viewModel.addItem(uri)
+            else {
+                viewModel.resetStates()
+                if (viewModel.list.size < maxImagesToScan) {
+                    viewModel.addItem(uri)
+                }
             }
         }
 
@@ -176,7 +173,7 @@ fun FoundItemScreen(
                     .wrapContentHeight(),
             ) {
                 itemsIndexed(viewModel.list) { index, item ->
-                    ImageOfUri(item, index, viewModel)
+                    ImageOfUri(item, index, viewModel, context)
                 }
             }
         }
@@ -188,7 +185,7 @@ fun FoundItemScreen(
         if (viewModel.list.size >= minimumImagesToDetect) when (uiState) {
             is UiState.Error -> {
                 val errorString = (uiState as UiState.Error).errorMessage
-                if (errorString == "null")
+                if (errorString == "null" || errorString.isEmpty())
                     Text(text = stringResource(R.string.please_try_again))
                 else
                     Text(text = (uiState as UiState.Error).errorMessage)
@@ -203,7 +200,7 @@ fun FoundItemScreen(
                         val contentResolver = context.contentResolver
                         val bitmapList = mutableListOf<Bitmap>()
                         viewModel.list.forEach {
-                            if (it != null) {
+                            if (it != null || it != Uri.EMPTY) {
                                 uriToBitmap(contentResolver, it)?.let { it1 ->
                                     bitmapList.add(
                                         it1
@@ -244,7 +241,8 @@ fun FoundItemScreen(
                         Image(
                             modifier = Modifier
                                 .height(48.dp)
-                                .width(48.dp)
+                                .weight(1f) // Occupy the other half of the width
+                                .fillMaxWidth()
                                 .clickable {
                                     viewModel.resetStates()
                                     viewModel.list.clear()
@@ -255,7 +253,8 @@ fun FoundItemScreen(
                         Image(
                             modifier = Modifier
                                 .height(48.dp)
-                                .width(48.dp)
+                                .weight(1f) // Occupy the other half of the width
+                                .fillMaxWidth()
                                 .clickable {
                                     gotoLocationOfLostItems(
                                         viewModel
@@ -285,7 +284,7 @@ fun Context.createImageFile(): File {
 }
 
 @Composable
-fun ImageOfUri(uri: Uri, uriId: Int, viewModel: FoundItemViewModel = viewModel()) {
+fun ImageOfUri(uri: Uri, uriId: Int, viewModel: FoundItemViewModel, context: Context) {
     Box(modifier = Modifier.fillMaxSize()) {
         AsyncImage(
             modifier = Modifier
@@ -294,9 +293,17 @@ fun ImageOfUri(uri: Uri, uriId: Int, viewModel: FoundItemViewModel = viewModel()
                 .wrapContentHeight(),
             model = ImageRequest.Builder(LocalContext.current)
                 .data(uri)
+                .error(R.drawable.round_add_circle_outline_24)
                 .crossfade(true)
                 .build(),
             contentDescription = stringResource(R.string.captured_image),
+            onError = {
+                viewModel.list.removeAt(uriId)
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.error_loading_image), Toast.LENGTH_SHORT
+                ).show()
+            }
         )
         // Add close button on top left
         IconButton(

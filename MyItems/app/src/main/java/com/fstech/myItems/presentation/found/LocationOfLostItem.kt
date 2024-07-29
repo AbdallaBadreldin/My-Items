@@ -69,15 +69,6 @@ fun LocationOfLostItem(
                     locationTitle.value = place.name?.toString() ?: ""
                     viewModel.latLng.value =
                         LatLng(place.latLng?.latitude ?: 0.0, place.latLng?.longitude ?: 0.0)
-                    val geocoder = Geocoder(context, Locale.getDefault())
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        geocoder.getFromLocation(lat, lng, 1) { addresses ->
-
-                        }
-                    } else {
-                        geocoder.getFromLocation(lat, lng, 1)
-                    }
-
                 }
             }
 

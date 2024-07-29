@@ -1,11 +1,11 @@
 package com.fstech.myItems.presentation.found
 
 import android.graphics.Bitmap
+import android.location.Address
 import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstech.myItems.BuildConfig.apiKey
@@ -13,17 +13,23 @@ import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
+import com.jetawy.data.repositories.FoundItemsRepositoryImpl
 import com.jetawy.domain.models.ItemResponse
 import com.jetawy.domain.utils.UiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FoundItemViewModel : ViewModel() {
+@HiltViewModel
+class FoundItemViewModel @Inject constructor(private val foundItemsRepositoryImpl: FoundItemsRepositoryImpl) :
+    ViewModel() {
+    var addresses: MutableList<Address>? = null
     val list = mutableStateListOf<Uri>()
-    val latLng =   mutableStateOf<LatLng?>(null)
+    val latLng = mutableStateOf<LatLng?>(null)
 
     fun updateItem(itemIndex: Int, item: Uri) {
         list.set(itemIndex, item) // sets the element at 'itemIndex' to 'item'
@@ -37,6 +43,11 @@ class FoundItemViewModel : ViewModel() {
         MutableStateFlow(UiState.Initial)
     var uiState: StateFlow<UiState> =
         _uiState.asStateFlow()
+
+    private val _uploadItems: MutableStateFlow<UiState> =
+        MutableStateFlow(UiState.Initial)
+    var uploadItems: StateFlow<UiState> =
+        _uploadItems.asStateFlow()
 
     private val generativeModel = GenerativeModel(
         modelName = "gemini-1.5-flash",
@@ -89,11 +100,26 @@ class FoundItemViewModel : ViewModel() {
         return jsonObject
     }
 
+    fun uploadItems(
+        imageUris: List<Uri>,
+        addresses: Address,
+        AiResponse: ItemResponse,
+        userDescription: String
+    ) {
+        viewModelScope.launch {
+            foundItemsRepositoryImpl.uploadFoundItems(imageUris, addresses = addresses,AiResponse,userDescription).collect { req ->
+                _uploadItems.emit(req)
+            }
+        }
+    }
+
     fun resetStates() {
         _uiState.value = UiState.Initial
     }
 
-    fun uploadItem() {
-//        TODO("Not yet implemented")
+    fun resetUploadItems() {
+        viewModelScope.launch {
+            _uploadItems.emit(UiState.Initial)
+        }
     }
 }

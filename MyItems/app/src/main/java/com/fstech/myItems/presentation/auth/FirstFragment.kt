@@ -23,7 +23,6 @@ import java.util.Locale
 class FirstFragment : Fragment() {
     private val viewModel: AuthViewModel by activityViewModels()
     private var _binding: FragmentFirstBinding? = null
-
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!

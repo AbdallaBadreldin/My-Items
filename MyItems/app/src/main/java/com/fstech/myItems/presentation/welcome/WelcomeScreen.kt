@@ -64,7 +64,9 @@ fun WelcomeScreen(
             contentDescription = stringResource(id = R.string.welcome)
         )
         if (uiState is UiState.Initial) {
-            viewModel.sendPrompt("generate only one random quote to help people to take care of their items or money that can lose it or being stole for my Items finder android app")
+            viewModel.run {
+                sendPrompt("generate only one random quote to help people to take care of their items or money that can lose it or being stole for my Items finder android app")
+            }
         }
         when (uiState) {
             is UiState.Error -> Text(

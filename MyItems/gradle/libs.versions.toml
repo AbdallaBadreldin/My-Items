@@ -40,6 +40,7 @@ pinview = "1.4.4"
 googleGmsGoogleServices = "4.4.2"
 places = "3.5.0"
 firebaseStorageKtx = "21.0.0"
+benchmarkCommon = "1.2.4"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
@@ -92,6 +93,7 @@ androidx-navigation-safe-args-gradle-plugin = { module = "androidx.navigation:na
 firebase-crashlytics-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsGradle" }
 places = { group = "com.google.android.libraries.places", name = "places", version.ref = "places" }
 firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage-ktx", version.ref = "firebaseStorageKtx" }
+androidx-benchmark-common = { group = "androidx.benchmark", name = "benchmark-common", version.ref = "benchmarkCommon" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -39,4 +39,10 @@
     <string name="tell_us_where_did_you_find_this_item">Tell us where did you find this item</string>
     <string name="upload_data">Upload Data</string>
     <string name="can_you_tell_us_more_details_or_description_of_the_item_to_help_us_matching_it_to_it_s_owner_faster">Can you tell us more details or description of the item to help us matching it to it\'s owner faster?</string>
+    <string name="i_found_an_item">I Found An Item</string>
+    <string name="i_lost_an_item">I Lost An Item</string>
+    <string name="search_items_casually">Search Items Casually</string>
+    <string name="welcome_to_my_items_finder">Welcome To My Items Finder</string>
+    <string name="pickup_a_service">Pickup a Service</string>
+    <string name="error_loading_image">Error loading image</string>
 </resources>
