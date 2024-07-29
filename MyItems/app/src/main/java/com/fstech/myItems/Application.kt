@@ -18,7 +18,7 @@ class Application : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        Firebase.initialize(context = applicationContext)
+        Firebase.initialize(context = this)
         Firebase.appCheck.installAppCheckProviderFactory(
             PlayIntegrityAppCheckProviderFactory.getInstance(),
         )

@@ -9,7 +9,8 @@ sealed class NavRoute(val path: String) {
     object BakingNavRoute : NavRoute("backing_screen")
     object FoundItemNavRoute : NavRoute("found_item_screen")
     object LostItemNavRoute : NavRoute("lost_item_screen")
-    object EnterDataOfFoundItemNavRoute : NavRoute("enter_data_of_found_item_screen") {
+    object FoundItemUploadSuccessNavRoute : NavRoute("found_item_upload_success_screen")
+    object FoundItemEnterDataNavRoute : NavRoute("enter_data_of_found_item_screen") {
         /* val name= "name"
          val description= "description"
          val color= "color"

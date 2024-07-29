@@ -4,7 +4,6 @@ import android.content.Context
 import android.location.Geocoder
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -35,13 +35,14 @@ import java.util.Locale
 
 @Composable
 fun EnterDataOfFoundItemScreen(
-    navController: () -> Unit,
+    goToFountItemSuccessScreen: () -> Unit,
     viewModel: FoundItemViewModel
 ) {
     val context = LocalContext.current
     var userDescription by remember { mutableStateOf("") }
     var uploadingItems = viewModel.uploadItems.collectAsState()
-    val AiResponse = (viewModel.uiState.collectAsState().value as UiState.Success<*>).outputData as ItemResponse
+    val AiResponse =
+        (viewModel.uiState.collectAsState().value as UiState.Success<*>).outputData as ItemResponse
     Column {
         StringInputTextField(
             value = userDescription,
@@ -62,26 +63,37 @@ fun EnterDataOfFoundItemScreen(
                         .fillMaxWidth()
                         .padding(32.dp),
                     onClick = {
-                        uploadDataRoutine(context, viewModel, AiResponse,userDescription)
+                        uploadDataRoutine(context, viewModel, AiResponse, userDescription)
                     }) { Text(text = stringResource(R.string.upload_data)) }
             }
 
             UiState.Loading -> {
                 CircularProgressIndicator(
-                    modifier = Modifier.width(64.dp),
+                    modifier = Modifier
+                        .width(64.dp)
+                        .fillMaxWidth()
+                        .align(Alignment.CenterHorizontally),
                     color = MaterialTheme.colorScheme.secondary,
                     trackColor = MaterialTheme.colorScheme.surfaceVariant,
                 )
             }
+
             is UiState.Success<*> -> {
-//we need to navigate away from this screen and show toast
-                Toast.makeText(context, "Upload Successful", Toast.LENGTH_SHORT).show()
+                //we need to navigate away from this screen and show toast
+//                Toast.makeText(context, "Upload Successful", Toast.LENGTH_SHORT).show()
+                goToFountItemSuccessScreen.invoke()
+                goToFountItemSuccessScreen
             }
         }
     }
 }
 
-fun uploadDataRoutine(context: Context, viewModel: FoundItemViewModel, AiResponse: ItemResponse,userDescription:String) {
+fun uploadDataRoutine(
+    context: Context,
+    viewModel: FoundItemViewModel,
+    AiResponse: ItemResponse,
+    userDescription: String
+) {
     val lat = viewModel.latLng.value?.latitude ?: 0.0
     val lng = viewModel.latLng.value?.longitude ?: 0.0
     val geocoder = Geocoder(context, Locale.getDefault())
@@ -89,7 +101,12 @@ fun uploadDataRoutine(context: Context, viewModel: FoundItemViewModel, AiRespons
         geocoder.getFromLocation(lat, lng, 1) { addresses ->
             Log.e("addresses", addresses.toString())
             viewModel.addresses = addresses
-            viewModel.uploadItems(imageUris = viewModel.list, addresses = addresses[0], AiResponse,userDescription)
+            viewModel.uploadItems(
+                imageUris = viewModel.list,
+                addresses = addresses[0],
+                AiResponse,
+                userDescription
+            )
         }
     } else {
         val addresses = geocoder.getFromLocation(lat, lng, 1)

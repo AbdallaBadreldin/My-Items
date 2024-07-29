@@ -72,6 +72,7 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
             myRef.child("addressUrl").setValue(addresses.url).await()
             myRef.setValue(AiResponse).await()
             myRef.child("userDescription").setValue(userDescription).await()
+            myRef.child("user").setValue(FirebaseAuth.getInstance().currentUser?.uid).await()
             myRef.child("timestamp").setValue(System.currentTimeMillis()).await()
         } catch (e: Exception) {
             _uploadFoundItem.emit(UiState.Error(e.message.toString()))
@@ -84,6 +85,7 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
                 .push()
         try {
             myProfileRef.setValue(myRef).await()
+            _uploadFoundItem.emit(UiState.Success(myProfileRef.toString()))
         } catch (e: Exception) {
             _uploadFoundItem.emit(UiState.Error(e.message.toString()))
             return uploadFoundItem

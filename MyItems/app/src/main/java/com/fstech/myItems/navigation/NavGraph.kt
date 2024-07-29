@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import com.fstech.myItems.presentation.HomeScreen
 import com.fstech.myItems.presentation.found.EnterDataOfFoundItemScreen
 import com.fstech.myItems.presentation.found.FoundItemScreen
+import com.fstech.myItems.presentation.found.FoundItemUploadSuccessScreen
 import com.fstech.myItems.presentation.found.FoundItemViewModel
 import com.fstech.myItems.presentation.found.LocationOfLostItem
 import com.fstech.myItems.presentation.lost.LostItemScreen
@@ -23,7 +24,6 @@ fun NavGraph(
         openMainScreen(navController = navController, this)
         openHomeScreen(navController = navController, this)
         openMapScreen(navController = navController, this)
-//        composable(route = NavRoute.BakingNavRoute.path) { BakingScreen(navController = navController) }
     }
 }
 
@@ -35,10 +35,20 @@ fun NavGraph(
     NavHost(navController = navController, startDestination = NavRoute.FoundItemNavRoute.path) {
         openFoundItemScreen(navController = navController, this, viewModel = viewModel)
         openLocationFoFoundItemScreen(navController = navController, this, viewModel = viewModel)
-
-        openEnterDataOfFoundItemScreen(navController = navController, this, viewModel)
+        foundItemEnterDataScreen(navController = navController, this, viewModel)
+        openFoundItemUploadSuccessScreen(navController = navController, this)
     }
+}
 
+fun openFoundItemUploadSuccessScreen(
+    navController: NavHostController,
+    navGraphBuilder: NavGraphBuilder
+) {
+    navGraphBuilder.composable(
+        route = NavRoute.FoundItemUploadSuccessNavRoute.path
+    ) {
+        FoundItemUploadSuccessScreen()
+    }
 }
 
 fun openLocationFoFoundItemScreen(
@@ -50,63 +60,26 @@ fun openLocationFoFoundItemScreen(
         route = NavRoute.LocationOfLostItemNavRoute.path
     ) {
         LocationOfLostItem(
-            navigateToEnterDataOfFoundItemScreen = { navController.navigate(NavRoute.EnterDataOfFoundItemNavRoute.path) },
+            navigateToEnterDataOfFoundItemScreen = { navController.navigate(NavRoute.FoundItemEnterDataNavRoute.path) },
             viewModel = viewModel
         )
     }
 }
 
-fun openEnterDataOfFoundItemScreen(
+fun foundItemEnterDataScreen(
     navController: NavHostController,
     navGraphBuilder: NavGraphBuilder,
     viewModel: FoundItemViewModel
 ) {
     navGraphBuilder.composable(
-        route = NavRoute.EnterDataOfFoundItemNavRoute.path
+        route = NavRoute.FoundItemEnterDataNavRoute.path
     ) {
-        /* route = NavRoute.EnterDataOfFoundItemNavRoute.withArgsFormat(
-         NavRoute.EnterDataOfFoundItemNavRoute.name,
-           NavRoute.EnterDataOfFoundItemNavRoute.description,
-           NavRoute.EnterDataOfFoundItemNavRoute.color,
-           NavRoute.EnterDataOfFoundItemNavRoute.brand,
-           NavRoute.EnterDataOfFoundItemNavRoute.category
-        ),*/
-        /*   arguments = listOf
-               (
-               navArgument(NavRoute.EnterDataOfFoundItemNavRoute.name) {
-                   type = NavType.StringType
-               },
-               navArgument(NavRoute.EnterDataOfFoundItemNavRoute.description) {
-                   type = NavType.StringType
-               },
-               navArgument(NavRoute.EnterDataOfFoundItemNavRoute.color) {
-                   type = NavType.StringType
-               },
-               navArgument(NavRoute.EnterDataOfFoundItemNavRoute.brand) {
-                   type = NavType.StringType
-               },
-               navArgument(NavRoute.EnterDataOfFoundItemNavRoute.category) {
-                   type = NavType.StringType
-               },
-
-
-               )
-       ) {*/
-        /*   entry ->
-           val args = entry.arguments
-           val name = args?.getString(NavRoute.EnterDataOfFoundItemNavRoute.name).toString()
-           val description = args?.getString(NavRoute.EnterDataOfFoundItemNavRoute.description).toString()
-           val color = args?.getStringArrayList(NavRoute.EnterDataOfFoundItemNavRoute.color)
-           val brand = args?.getString(NavRoute.EnterDataOfFoundItemNavRoute.brand).toString()
-           val category = args?.getString(NavRoute.EnterDataOfFoundItemNavRoute.category).toString()*/
-
         EnterDataOfFoundItemScreen(
-            navController = { navController.navigate(NavRoute.MainNavRoute.path) },
-            /* name = name,
-             description = description,
-             color = color?: listOf<String>(),
-             brand = brand,
-             category = category*/
+            goToFountItemSuccessScreen = {
+                navController.navigate(NavRoute.FoundItemUploadSuccessNavRoute.path) {
+                    launchSingleTop = true
+                }
+            },
             viewModel = viewModel
         )
     }
