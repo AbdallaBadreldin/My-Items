@@ -35,9 +35,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -184,11 +181,11 @@ fun FoundItemScreen(
         )
         if (viewModel.list.size >= minimumImagesToDetect) when (uiState) {
             is UiState.Error -> {
-                val errorString = (uiState as UiState.Error).errorMessage
+                val errorString = (uiState as UiState.Error).message
                 if (errorString == "null" || errorString.isEmpty())
                     Text(text = stringResource(R.string.please_try_again))
                 else
-                    Text(text = (uiState as UiState.Error).errorMessage)
+                    Text(text = (uiState as UiState.Error).message)
             }
 
             UiState.Initial -> {

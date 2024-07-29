@@ -8,9 +8,12 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.jetawy.domain.models.ItemResponse
 import com.jetawy.domain.utils.UiState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -46,49 +49,53 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
     ): Flow<UiState> {
         //first we will upload photos to firebase storage
         _uploadFoundItem.emit(UiState.Loading)
-        val listOfDownloadUrls = mutableListOf<String>()
-        imageUris.forEach { uri ->
-            val fileName = uri.lastPathSegment ?: "image.jpg" // Get file name or use a default
-            val imageRef =
-                storage.reference.child("FoundItemsImages/$fileName")// Create a reference to the image in Firebase Storage
-            try {
-                imageRef.putFile(uri).await() // Upload the image
-                val downloadUrl = imageRef.downloadUrl.await() // Get the download URL
-                Log.d("FirebaseStorage", "Upload successful. Download URL: $downloadUrl")
-                Log.d("FirebaseStorage", "Upload successful. Download URL: ${downloadUrl.path}")
-                listOfDownloadUrls.add(downloadUrl.toString())
-                // Store the download URL in your database or use it as needed
-            } catch (e: Exception) {
-                // Handle upload errors
-                _uploadFoundItem.emit(UiState.Error(e.message.toString()))
-                return uploadFoundItem
+        CoroutineScope(Dispatchers.IO).launch {
+            val listOfDownloadUrls = mutableListOf<String>()
+            imageUris.forEach { uri ->
+                val fileName = uri.lastPathSegment ?: "image.jpg" // Get file name or use a default
+                val imageRef =
+                    storage.reference.child("FoundItemsImages/$fileName")// Create a reference to the image in Firebase Storage
+                try {
+                    imageRef.putFile(uri).await() // Upload the image
+                    val downloadUrl = imageRef.downloadUrl.await() // Get the download URL
+                    Log.d("FirebaseStorage", "Upload successful. Download URL: $downloadUrl")
+                    Log.d("FirebaseStorage", "Upload successful. Download URL: ${downloadUrl.path}")
+                    listOfDownloadUrls.add(downloadUrl.toString())
+                    // Store the download URL in your database or use it as needed
+                } catch (e: Exception) {
+                    // Handle upload errors
+                    _uploadFoundItem.emit(UiState.Error(e.message.toString()))
+                    return@launch
+                }
             }
-        }
-        //second we will upload data to firebase database
-        val myRef = db.getReference("foundItems/${addresses.countryName}").push()
-        try {
-            myRef.child("images").setValue(listOfDownloadUrls).await()
-            myRef.child("location").setValue("${addresses.latitude},${addresses.longitude}").await()
-            myRef.child("addressUrl").setValue(addresses.url).await()
-            myRef.setValue(AiResponse).await()
-            myRef.child("userDescription").setValue(userDescription).await()
-            myRef.child("user").setValue(FirebaseAuth.getInstance().currentUser?.uid).await()
-            myRef.child("timestamp").setValue(System.currentTimeMillis()).await()
-        } catch (e: Exception) {
-            _uploadFoundItem.emit(UiState.Error(e.message.toString()))
-            return uploadFoundItem
-        }
+            //second we will upload data to firebase database
+            val myRef = db.getReference("foundItems/${addresses.countryName}").push()
+            try {
+                myRef.child("images").setValue(listOfDownloadUrls).await()
+                myRef.child("location").setValue("${addresses.latitude},${addresses.longitude}")
+                    .await()
+                myRef.child("addressUrl").setValue(addresses.url).await()
+                myRef.setValue(AiResponse).await()
+                myRef.child("userDescription").setValue(userDescription).await()
+                myRef.child("user").setValue(FirebaseAuth.getInstance().currentUser?.uid).await()
+                myRef.child("timestamp").setValue(System.currentTimeMillis()).await()
+            } catch (e: Exception) {
+                _uploadFoundItem.emit(UiState.Error(e.message.toString()))
+                return@launch
+            }
 
-        //third we will upload reference to uploaded data in user profile
-        val myProfileRef =
-            db.getReference("profiles/${FirebaseAuth.getInstance().currentUser?.uid}/foundItems")
-                .push()
-        try {
-            myProfileRef.setValue(myRef).await()
-            _uploadFoundItem.emit(UiState.Success(myProfileRef.toString()))
-        } catch (e: Exception) {
-            _uploadFoundItem.emit(UiState.Error(e.message.toString()))
-            return uploadFoundItem
+            //third we will upload reference to uploaded data in user profile
+            val myProfileRef =
+                db.getReference("profiles/${FirebaseAuth.getInstance().currentUser?.uid}/foundItems")
+                    .push()
+            try {
+                myProfileRef.setValue(myRef.key).await()
+                _uploadFoundItem.emit(UiState.Success(myProfileRef.toString()))
+            } catch (e: Exception) {
+                _uploadFoundItem.emit(UiState.Error(e.message.toString()))
+                Log.e("uploadFoundItem", e.message.toString())
+                return@launch
+            }
         }
         return uploadFoundItem
     }

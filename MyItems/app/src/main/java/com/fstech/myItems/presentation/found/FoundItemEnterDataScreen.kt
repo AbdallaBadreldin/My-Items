@@ -4,6 +4,7 @@ import android.content.Context
 import android.location.Geocoder
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,7 +15,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -51,9 +51,11 @@ fun EnterDataOfFoundItemScreen(
         )
         when (uploadingItems.value) {
             is UiState.Error -> {
-                Snackbar {
-                    Text(text = (uploadingItems.value as UiState.Error).errorMessage)
-                }
+                Toast.makeText(
+                    context,
+                    (uploadingItems.value as UiState.Error).message,
+                    Toast.LENGTH_SHORT
+                ).show()
                 viewModel.resetUploadItems()
             }
 

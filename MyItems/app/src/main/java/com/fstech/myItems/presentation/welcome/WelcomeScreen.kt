@@ -70,7 +70,7 @@ fun WelcomeScreen(
         }
         when (uiState) {
             is UiState.Error -> Text(
-                textAlign = TextAlign.Center, text = (uiState as UiState.Error).errorMessage
+                textAlign = TextAlign.Center, text = (uiState as UiState.Error).message
             )
 
             UiState.Initial -> Text(

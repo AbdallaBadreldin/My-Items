@@ -23,5 +23,5 @@ sealed interface UiState {
     /**
      * There was an error generating text
      */
-    data class Error(val errorMessage: String) : UiState
+    data class Error(val message: String) : UiState
 }

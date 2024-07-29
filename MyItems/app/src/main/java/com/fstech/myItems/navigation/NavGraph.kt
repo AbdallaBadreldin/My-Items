@@ -35,7 +35,7 @@ fun NavGraph(
     NavHost(navController = navController, startDestination = NavRoute.FoundItemNavRoute.path) {
         openFoundItemScreen(navController = navController, this, viewModel = viewModel)
         openLocationFoFoundItemScreen(navController = navController, this, viewModel = viewModel)
-        foundItemEnterDataScreen(navController = navController, this, viewModel)
+        openFoundItemEnterDataScreen(navController = navController, this, viewModel)
         openFoundItemUploadSuccessScreen(navController = navController, this)
     }
 }
@@ -66,7 +66,7 @@ fun openLocationFoFoundItemScreen(
     }
 }
 
-fun foundItemEnterDataScreen(
+fun openFoundItemEnterDataScreen(
     navController: NavHostController,
     navGraphBuilder: NavGraphBuilder,
     viewModel: FoundItemViewModel
@@ -77,7 +77,7 @@ fun foundItemEnterDataScreen(
         EnterDataOfFoundItemScreen(
             goToFountItemSuccessScreen = {
                 navController.navigate(NavRoute.FoundItemUploadSuccessNavRoute.path) {
-                    launchSingleTop = true
+//                    launchSingleTop = true
                 }
             },
             viewModel = viewModel
