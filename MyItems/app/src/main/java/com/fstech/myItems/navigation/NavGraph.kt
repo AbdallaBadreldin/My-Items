@@ -12,6 +12,7 @@ import com.fstech.myItems.presentation.found.FoundItemUploadSuccessScreen
 import com.fstech.myItems.presentation.found.FoundItemViewModel
 import com.fstech.myItems.presentation.found.LocationOfLostItem
 import com.fstech.myItems.presentation.lost.LostItemScreen
+import com.fstech.myItems.presentation.lost.LostItemViewModel
 import com.fstech.myItems.presentation.welcome.WelcomeScreen
 
 @Composable
@@ -20,7 +21,6 @@ fun NavGraph(
 ) {
     NavHost(navController = navController, startDestination = NavRoute.WelcomeNavRoute.path) {
         openWelcomeScreen(navController = navController, this)
-        openLostItemScreen(navController = navController, this)
         openMainScreen(navController = navController, this)
         openHomeScreen(navController = navController, this)
         openMapScreen(navController = navController, this)
@@ -37,6 +37,18 @@ fun NavGraph(
         openLocationFoFoundItemScreen(navController = navController, this, viewModel = viewModel)
         openFoundItemEnterDataScreen(navController = navController, this, viewModel)
         openFoundItemUploadSuccessScreen(navController = navController, this,viewModel)
+    }
+}
+@Composable
+fun NavGraph(
+    navController: NavHostController,
+    viewModel: LostItemViewModel
+) {
+    NavHost(navController = navController, startDestination = NavRoute.LostItemNavRoute.path) {
+        openLostItemScreen(navController = navController, this, viewModel = viewModel)
+//        openLostItemLocationScreen(navController = navController, this, viewModel = viewModel)
+//        openLostItemEnterDataScreen(navController = navController, this, viewModel)
+//        openLostItemUploadSuccessScreen(navController = navController, this,viewModel)
     }
 }
 
@@ -58,7 +70,7 @@ fun openLocationFoFoundItemScreen(
     viewModel: FoundItemViewModel
 ) {
     navGraphBuilder.composable(
-        route = NavRoute.LocationOfLostItemNavRoute.path
+        route = NavRoute.LostItemLocationNavRoute.path
     ) {
         LocationOfLostItem(
             navigateToEnterDataOfFoundItemScreen = { navController.navigate(NavRoute.FoundItemEnterDataNavRoute.path) },
@@ -110,10 +122,11 @@ fun openMainScreen(navController: NavHostController, navGraphBuilder: NavGraphBu
     }
 }
 
-fun openLostItemScreen(navController: NavHostController, navGraphBuilder: NavGraphBuilder) {
+fun openLostItemScreen(navController: NavHostController, navGraphBuilder: NavGraphBuilder, viewModel: LostItemViewModel) {
     navGraphBuilder.composable(route = NavRoute.LostItemNavRoute.path) {
         LostItemScreen(
-            navController = navController
+            gotoLocationOfLostItems = { navController.navigate(NavRoute.FoundItemLocationNavRoute.path) },
+            viewModel = viewModel
         )
     }
 }
@@ -126,7 +139,7 @@ fun openFoundItemScreen(
     navGraphBuilder.composable(route = NavRoute.FoundItemNavRoute.path) {
         FoundItemScreen(
             gotoLocationOfLostItems =
-            { navController.navigate(NavRoute.LocationOfLostItemNavRoute.path) },
+            { navController.navigate(NavRoute.LostItemLocationNavRoute.path) },
             viewModel
         )
     }

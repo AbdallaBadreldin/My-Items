@@ -21,6 +21,7 @@ import com.fstech.myItems.R
 import com.fstech.myItems.navigation.NavRoute
 import com.fstech.myItems.presentation.auth.AuthActivity
 import com.fstech.myItems.presentation.found.FoundItemActivity
+import com.fstech.myItems.presentation.lost.LostItemActivity
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -55,7 +56,9 @@ fun HomeScreen(navController: NavHostController) {
         Button(onClick = {
             if (Firebase.auth.currentUser == null)
                 goToAuthentication(context)
-            else   navController.navigate(NavRoute.LostItemNavRoute.path)
+            else
+                goToLostItemActivity(context)
+
         }) {
             Text(text = stringResource(R.string.i_lost_an_item))
         }
@@ -73,6 +76,9 @@ fun HomeScreen(navController: NavHostController) {
 
 fun goToFoundItemActivity(context: Context) {
     context.startActivity(Intent(context, FoundItemActivity::class.java))
+}
+fun goToLostItemActivity(context: Context) {
+    context.startActivity(Intent(context, LostItemActivity::class.java))
 }
 
 fun goToAuthentication(context: Context) {

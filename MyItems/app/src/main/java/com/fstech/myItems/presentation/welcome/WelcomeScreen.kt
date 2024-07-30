@@ -2,12 +2,10 @@ package com.fstech.myItems.presentation.welcome
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowColumn
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -41,7 +39,7 @@ fun WelcomeScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     FlowColumn(
-        verticalArrangement = Arrangement.spacedBy(64.dp),
+        verticalArrangement = Arrangement.spacedBy(32.dp),
         modifier = Modifier
             .verticalScroll(rememberScrollState())
             .padding(64.dp, 64.dp, 64.dp, 64.dp)
@@ -96,17 +94,19 @@ fun WelcomeScreen(
             }
         }
 
-
-    }
-    Spacer(modifier = Modifier.height(64.dp))
-
-    Box(modifier = Modifier.fillMaxSize()) {
         // add your column here (with align modifier)
-        Column(modifier = Modifier.align(Alignment.BottomCenter)) {
-            Button(onClick = { navController.navigate(NavRoute.HomeNavRoute.path) }) {
+        Column(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .fillMaxWidth()
+        ) {
+            Button(
+                onClick = { navController.navigate(NavRoute.HomeNavRoute.path) },
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
                 Text(text = stringResource(R.string.start_using_the_app))
             }
-            Spacer(modifier = Modifier.height(128.dp))
         }
+        Spacer(modifier = Modifier.height(32.dp))
     }
 }

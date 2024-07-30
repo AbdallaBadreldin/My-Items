@@ -50,10 +50,14 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
         _uploadFoundItem.emit(UiState.Loading)
         CoroutineScope(Dispatchers.IO).launch {
             val listOfDownloadUrls = mutableListOf<String>()
+            val myRef = db.getReference("foundItems/${addresses.countryName}").push()
+            val myProfileRef =
+                db.getReference("profiles/${FirebaseAuth.getInstance().currentUser?.uid}/foundItems")
+                    .push()
             imageUris.forEach { uri ->
                 val fileName = uri.lastPathSegment ?: "image.jpg" // Get file name or use a default
                 val imageRef =
-                    storage.reference.child("FoundItemsImages/$fileName")// Create a reference to the image in Firebase Storage
+                    storage.reference.child("FoundItemsImages/${myRef.key}/$fileName")// Create a reference to the image in Firebase Storage
                 try {
                     imageRef.putFile(uri).await() // Upload the image
                     val downloadUrl = imageRef.downloadUrl.await() // Get the download URL
@@ -66,7 +70,6 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
                 }
             }
             //second we will upload data to firebase database
-            val myRef = db.getReference("foundItems/${addresses.countryName}").push()
             try {
                 myRef.child("location").setValue("${addresses.latitude},${addresses.longitude}").await()
                 myRef.child("images").setValue(listOfDownloadUrls.toList()).await()
@@ -81,9 +84,7 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
             }
 
             //third we will upload reference to uploaded data in user profile
-            val myProfileRef =
-                db.getReference("profiles/${FirebaseAuth.getInstance().currentUser?.uid}/foundItems")
-                    .push()
+
             try {
                 myProfileRef.child("id").setValue(myRef.key).await()
                 myProfileRef.child("countryName").setValue(addresses.countryName).await()
@@ -103,11 +104,60 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
     }
 
     override suspend fun uploadLostItems(
-        imageUris: List<Uri>,
-        addresses: Address,
-        aiResponse: ItemResponse
+    imageUris: List<Uri>,
+    addresses: Address,
+    aiResponse: ItemResponse,
+    userDescription: String
     ): Flow<UiState> {
-        TODO("Not yet implemented")
+        //first we will upload photos to firebase storage
+        _uploadLostItem.emit(UiState.Loading)
+        CoroutineScope(Dispatchers.IO).launch {
+            val listOfDownloadUrls = mutableListOf<String>()
+            val myRef = db.getReference("lostItems/${addresses.countryName}").push()
+            val myProfileRef =
+                db.getReference("profiles/${FirebaseAuth.getInstance().currentUser?.uid}/lostItems")
+                    .push()
+            imageUris.forEach { uri ->
+                val fileName = uri.lastPathSegment ?: "image.jpg" // Get file name or use a default
+                val imageRef =
+                    storage.reference.child("LostItemsImages/${myRef.key}/$fileName")// Create a reference to the image in Firebase Storage
+                try {
+                    imageRef.putFile(uri).await() // Upload the image
+                    val downloadUrl = imageRef.downloadUrl.await() // Get the download URL
+                    listOfDownloadUrls.add(downloadUrl.toString())
+                    // Store the download URL in your database or use it as needed
+                } catch (e: Exception) {
+                    // Handle upload errors
+                    _uploadLostItem.emit(UiState.Error(e.message.toString()))
+                    return@launch
+                }
+            }
+            //second we will upload data to firebase database
+            try {
+                myRef.child("location").setValue("${addresses.latitude},${addresses.longitude}").await()
+                myRef.child("images").setValue(listOfDownloadUrls.toList()).await()
+                myRef.child("addressUrl").setValue(addresses.url).await()
+                myRef.child("aiResponse").setValue(aiResponse).await()
+                myRef.child("userDescription").setValue(userDescription).await()
+                myRef.child("user").setValue(FirebaseAuth.getInstance().currentUser?.uid).await()
+                myRef.child("timestamp").setValue(System.currentTimeMillis()).await()
+            } catch (e: Exception) {
+                _uploadLostItem.emit(UiState.Error(e.message.toString()))
+                return@launch
+            }
+
+            //third we will upload reference to uploaded data in user profile
+
+            try {
+                myProfileRef.child("id").setValue(myRef.key).await()
+                myProfileRef.child("countryName").setValue(addresses.countryName).await()
+                _uploadLostItem.emit(UiState.Success(myProfileRef.toString()))
+            } catch (e: Exception) {
+                _uploadLostItem.emit(UiState.Error(e.message.toString()))
+                return@launch
+            }
+        }
+        return uploadLostItem
     }
 
     override suspend fun getLostItemData(): Flow<UiState> {
