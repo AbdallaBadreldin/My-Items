@@ -1,13 +1,12 @@
 package com.fstech.myItems.presentation.found
 
 import android.app.Activity
-import android.location.Geocoder
-import android.os.Build
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,12 +18,16 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -45,17 +48,21 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
-import java.util.Locale
+import kotlinx.coroutines.delay
 
 @Composable
 fun LocationOfLostItem(
     navigateToEnterDataOfFoundItemScreen: () -> Unit,
     viewModel: FoundItemViewModel
 ) {
+    var isMapLoading by remember { mutableStateOf(true) }
     val locationName = remember { mutableStateOf("") }
     val locationTitle = remember { mutableStateOf("") }
     val context = LocalContext.current
-
+    LaunchedEffect(Unit) {
+        delay(1000) // Simulate 1-second delay
+        isMapLoading = false
+    }
 //    val mapView = rememberMapViewWithLifecycle()
     val intentLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
@@ -101,7 +108,8 @@ fun LocationOfLostItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(all = 3.dp).clickable {
+                .padding(all = 3.dp)
+                .clickable {
                     launchMapInputOverlay.invoke()
                 },
             horizontalArrangement = Arrangement.Center
@@ -168,25 +176,32 @@ fun LocationOfLostItem(
                 )
             }
         }
-
-        GoogleMap(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1F, false),
-            onMapClick = {
-                viewModel.latLng.value = LatLng(it.latitude, it.longitude)
-                locationName.value = ""
-                locationTitle.value = "Custom Location"
-            }, onMapLoaded = { viewModel.latLng.value = null }
-        ) {
-            if (viewModel.latLng.value != null) {
-                Marker(
-                    state = MarkerState(position = viewModel.latLng.value!!),
-                    title = locationTitle.value.toString(),
-                    snippet = locationName.value.toString(),
-                )
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .weight(1F, false)) {
+            if (isMapLoading) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            } else {
+                GoogleMap(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    onMapClick = {
+                        viewModel.latLng.value = LatLng(it.latitude, it.longitude)
+                        locationName.value = ""
+                        locationTitle.value = "Custom Location"
+                    }, onMapLoaded = { viewModel.latLng.value = null }
+                ) {
+                    if (viewModel.latLng.value != null) {
+                        Marker(
+                            state = MarkerState(position = viewModel.latLng.value!!),
+                            title = locationTitle.value.toString(),
+                            snippet = locationName.value.toString(),
+                        )
+                    }
+                }
             }
         }
+
         if (viewModel.latLng.value != null) {
 
             Button(

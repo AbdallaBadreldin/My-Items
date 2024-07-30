@@ -215,11 +215,7 @@ fun FoundItemScreen(
             }
 
             UiState.Loading -> {
-                CircularProgressIndicator(
-                    modifier = Modifier.width(64.dp),
-                    color = MaterialTheme.colorScheme.secondary,
-                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
-                )
+                circularProgressIndicator()
             }
 
             is UiState.Success<*> -> {
@@ -314,4 +310,13 @@ fun ImageOfUri(uri: Uri, uriId: Int, viewModel: FoundItemViewModel, context: Con
             ) // Replace with your desired icon
         }
     }
+}
+
+@Composable
+fun circularProgressIndicator() {
+    CircularProgressIndicator(
+        modifier = Modifier.width(64.dp),
+        color = MaterialTheme.colorScheme.secondary,
+        trackColor = MaterialTheme.colorScheme.surfaceVariant,
+    )
 }
