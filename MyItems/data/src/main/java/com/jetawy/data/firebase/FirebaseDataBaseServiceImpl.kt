@@ -89,7 +89,8 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
                 db.getReference("profiles/${FirebaseAuth.getInstance().currentUser?.uid}/foundItems")
                     .push()
             try {
-                myProfileRef.setValue(myRef.key).await()
+                myProfileRef.child("id").setValue(myRef.key).await()
+                myProfileRef.child("countryName").setValue(addresses.countryName).await()
                 _uploadFoundItem.emit(UiState.Success(myProfileRef.toString()))
             } catch (e: Exception) {
                 _uploadFoundItem.emit(UiState.Error(e.message.toString()))
