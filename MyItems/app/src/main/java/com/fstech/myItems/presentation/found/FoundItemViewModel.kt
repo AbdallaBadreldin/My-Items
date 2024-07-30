@@ -53,7 +53,7 @@ class FoundItemViewModel @Inject constructor(private val foundItemsRepositoryImp
 
     private val generativeModel = GenerativeModel(
         modelName = "gemini-1.5-flash",
-        apiKey = "$apiKey"
+        apiKey = apiKey
     )
 
     fun sendPrompt(
@@ -88,7 +88,7 @@ class FoundItemViewModel @Inject constructor(private val foundItemsRepositoryImp
         }
     }
 
-    fun convertJsonToDataClass(jsonString: String): ItemResponse? {
+    private fun convertJsonToDataClass(jsonString: String): ItemResponse? {
         var string = jsonString.trimIndent().trim()
 
         if (string.isEmpty()) {
@@ -103,14 +103,14 @@ class FoundItemViewModel @Inject constructor(private val foundItemsRepositoryImp
     fun uploadItems(
         imageUris: List<Uri>,
         addresses: Address,
-        AiResponse: ItemResponse,
+        aiResponse: ItemResponse,
         userDescription: String
     ) {
         viewModelScope.launch {
             foundItemsRepositoryImpl.uploadFoundItems(
                 imageUris,
                 addresses = addresses,
-                AiResponse,
+                aiResponse,
                 userDescription
             ).collect { req ->
                 _uploadItems.emit(req)

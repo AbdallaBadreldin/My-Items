@@ -1,7 +1,6 @@
 package com.fstech.myItems.presentation.found
 
 import android.app.Activity
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
@@ -66,13 +65,11 @@ fun LocationOfLostItem(
 //    val mapView = rememberMapViewWithLifecycle()
     val intentLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
-    ) {
-        when (it.resultCode) {
+    ) { result ->
+        when (result.resultCode) {
             Activity.RESULT_OK -> {
-                it.data?.let {
+                result.data?.let {
                     val place = Autocomplete.getPlaceFromIntent(it)
-                    val lat = place.latLng?.latitude ?: 0.0
-                    val lng = place.latLng?.longitude ?: 0.0
                     locationTitle.value = place.name?.toString() ?: ""
                     viewModel.latLng.value =
                         LatLng(place.latLng?.latitude ?: 0.0, place.latLng?.longitude ?: 0.0)
@@ -80,9 +77,9 @@ fun LocationOfLostItem(
             }
 
             AutocompleteActivity.RESULT_ERROR -> {
-                it.data?.let {
-                    val status = Autocomplete.getStatusFromIntent(it)
-                    Log.e("MAP_ACTIVITY", status.statusMessage ?: "")
+                result.data?.let {
+//                    val status = Autocomplete.getStatusFromIntent(it)
+//                    should I show this to user ?
                 }
             }
 
@@ -121,12 +118,10 @@ fun LocationOfLostItem(
                 // for our message text field.
                 value =
                 "",
-//                locationName.value,
                 // on below line we are adding on
                 // value change for text field.
                 onValueChange = {
                     launchMapInputOverlay.invoke()
-//                    locationName.value = it
                 },
                 // on below line we are adding place holder
                 // as text as "Enter your email"
@@ -176,9 +171,11 @@ fun LocationOfLostItem(
                 )
             }
         }
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .weight(1F, false)) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1F, false)
+        ) {
             if (isMapLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             } else {
@@ -188,14 +185,14 @@ fun LocationOfLostItem(
                     onMapClick = {
                         viewModel.latLng.value = LatLng(it.latitude, it.longitude)
                         locationName.value = ""
-                        locationTitle.value = "Custom Location"
+                        locationTitle.value = context.getString(R.string.custom_location)
                     }, onMapLoaded = { viewModel.latLng.value = null }
                 ) {
                     if (viewModel.latLng.value != null) {
                         Marker(
                             state = MarkerState(position = viewModel.latLng.value!!),
-                            title = locationTitle.value.toString(),
-                            snippet = locationName.value.toString(),
+                            title = locationTitle.value,
+                            snippet = locationName.value,
                         )
                     }
                 }
