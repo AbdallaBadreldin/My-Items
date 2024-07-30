@@ -12,14 +12,14 @@ interface FirebaseDataBaseService {
     suspend fun uploadLostItems(
         imageUris: List<Uri>,
         addresses: Address,
-        AiResponse: ItemResponse
+        aiResponse: ItemResponse
     ): Flow<UiState>
 
     suspend fun getFoundItemData(): Flow<UiState>
     suspend fun uploadFoundItems(
         imageUris: List<Uri>,
         addresses: Address,
-        AiResponse: ItemResponse,
+        aiResponse: ItemResponse,
         userDescription: String
     ): Flow<UiState>
 }

@@ -2,7 +2,6 @@ package com.jetawy.data.firebase
 
 import android.location.Address
 import android.net.Uri
-import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
@@ -44,7 +43,7 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
     override suspend fun uploadFoundItems(
         imageUris: List<Uri>,
         addresses: Address,
-        AiResponse: ItemResponse,
+        aiResponse: ItemResponse,
         userDescription: String
     ): Flow<UiState> {
         //first we will upload photos to firebase storage
@@ -58,9 +57,6 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
                 try {
                     imageRef.putFile(uri).await() // Upload the image
                     val downloadUrl = imageRef.downloadUrl.await() // Get the download URL
-                    Log.d("FirebaseStorage", "Upload successful. Download URL: $downloadUrl")
-                    Log.d("FirebaseStorage", "Upload successful. Download URL: ${downloadUrl.path}")
-                    Log.d("FirebaseStorage", "Upload successful. Download URL: ${downloadUrl}")
                     listOfDownloadUrls.add(downloadUrl.toString())
                     // Store the download URL in your database or use it as needed
                 } catch (e: Exception) {
@@ -75,7 +71,7 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
                 myRef.child("location").setValue("${addresses.latitude},${addresses.longitude}").await()
                 myRef.child("images").setValue(listOfDownloadUrls.toList()).await()
                 myRef.child("addressUrl").setValue(addresses.url).await()
-                myRef.child("aiResponse").setValue(AiResponse).await()
+                myRef.child("aiResponse").setValue(aiResponse).await()
                 myRef.child("userDescription").setValue(userDescription).await()
                 myRef.child("user").setValue(FirebaseAuth.getInstance().currentUser?.uid).await()
                 myRef.child("timestamp").setValue(System.currentTimeMillis()).await()
@@ -94,7 +90,6 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
                 _uploadFoundItem.emit(UiState.Success(myProfileRef.toString()))
             } catch (e: Exception) {
                 _uploadFoundItem.emit(UiState.Error(e.message.toString()))
-                Log.e("uploadFoundItem", e.message.toString())
                 return@launch
             }
         }
@@ -110,7 +105,7 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
     override suspend fun uploadLostItems(
         imageUris: List<Uri>,
         addresses: Address,
-        AiResponse: ItemResponse
+        aiResponse: ItemResponse
     ): Flow<UiState> {
         TODO("Not yet implemented")
     }
