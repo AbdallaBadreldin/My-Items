@@ -54,7 +54,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 const val maxImagesToScan = 5
-const val minimumImagesToDetect = 1
+const val minimumImagesToDetect = 3
 
 @Composable
 fun FoundItemScreen(
@@ -84,10 +84,11 @@ fun FoundItemScreen(
         ActivityResultContracts.RequestPermission()
     ) {
         if (it) {
-            Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
-            if (viewModel.list.size < maxImagesToScan)
+            Toast.makeText(context,
+                context.getString(R.string.permission_granted), Toast.LENGTH_SHORT).show()
+            if (viewModel.list.size < maxImagesToScan) {
                 cameraLauncher.launch(uri)
-            else {
+            } else {
                 Toast.makeText(
                     context,
                     "You can only take $maxImagesToScan images",
@@ -95,7 +96,7 @@ fun FoundItemScreen(
                 ).show()
             }
         } else {
-            Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.need_permission), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -154,7 +155,7 @@ fun FoundItemScreen(
         if (viewModel.list.isEmpty()) {
             Image(
                 painterResource(id = R.drawable.round_add_circle_outline_24),
-                contentDescription = "add Image",
+                contentDescription = stringResource(R.string.add_image),
                 modifier = Modifier
                     .padding(16.dp)
                     .width(128.dp)
