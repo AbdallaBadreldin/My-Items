@@ -30,8 +30,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.fstech.myItems.R
 import com.fstech.myItems.navigation.NavRoute
+import com.fstech.myItems.presentation.getAppLanguage
 import com.jetawy.domain.utils.UiState
-import java.util.Locale
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -64,7 +64,8 @@ fun WelcomeScreen(
                     stringResource(
                         R.string.generate_only_one_random_quote_to_help_people_to_take_care_of_their_items_or_money_that_can_lose_it_or_being_stole_for_my_items_finder_android_app_in_language,
                         getAppLanguage()
-                    ))
+                    )
+                )
             }
         }
         when (uiState) {
@@ -106,11 +107,6 @@ fun WelcomeScreen(
                 Text(text = stringResource(R.string.start_using_the_app))
             }
             Spacer(modifier = Modifier.height(128.dp))
-
         }
     }
-}
-
-fun getAppLanguage(): String {
-    return Locale.getDefault().language
 }

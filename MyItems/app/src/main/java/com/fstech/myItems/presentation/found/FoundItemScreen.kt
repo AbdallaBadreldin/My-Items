@@ -47,6 +47,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.fstech.myItems.BuildConfig
 import com.fstech.myItems.R
+import com.fstech.myItems.presentation.getAppLanguage
 import com.jetawy.domain.models.ItemResponse
 import com.jetawy.domain.utils.UiState
 import java.io.File
@@ -84,8 +85,10 @@ fun FoundItemScreen(
         ActivityResultContracts.RequestPermission()
     ) {
         if (it) {
-            Toast.makeText(context,
-                context.getString(R.string.permission_granted), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                context.getString(R.string.permission_granted), Toast.LENGTH_SHORT
+            ).show()
             if (viewModel.list.size < maxImagesToScan) {
                 cameraLauncher.launch(uri)
             } else {
@@ -96,7 +99,8 @@ fun FoundItemScreen(
                 ).show()
             }
         } else {
-            Toast.makeText(context, context.getString(R.string.need_permission), Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.need_permission), Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -208,7 +212,10 @@ fun FoundItemScreen(
                         }
                         viewModel.sendPrompt(
                             bitmapList,
-                            "can you return the name of the object in images as String in parameter called name and description as String of the main object in images in parameter called description and color as list of the main object in images in parameter called color and brand as String and category as String of the object in the images in parameter called images in Json object Format"
+                            context.getString(
+                                R.string.can_you_return_the_name_of_the_object_in_images_as_string_in_parameter_called_name_and_name_of_the_object_in_images_as_string_in_language_in_parameter_called_namelocallanguage_and_description_as_string_of_the_main_object_in_images_in_parameter_called_description_and_color_as_list_of_the_main_object_in_images_in_parameter_called_color_and_brand_as_string_and_category_as_string_of_the_object_in_the_images_in_parameter_called_images_in_json_object_format,
+                                getAppLanguage()
+                            )
                         )
                     }) {
                     Text(text = stringResource(R.string.detect_object))
@@ -222,7 +229,12 @@ fun FoundItemScreen(
             is UiState.Success<*> -> {
                 val response = (uiState as UiState.Success<*>).outputData as ItemResponse
                 Column {
-                    Text(text = stringResource(R.string.the_item_is, response.name))
+                    Text(
+                        text = stringResource(R.string.the_item_is, response.nameLocalLanguage),
+                        Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.CenterHorizontally)
+                    )
                     Row(
                         horizontalArrangement = Arrangement.SpaceAround,
                         modifier = Modifier
