@@ -11,13 +11,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.fstech.myItems.navigation.NavGraph
 import com.fstech.myItems.presentation.theme.MyItemsTheme
 import com.google.firebase.FirebaseApp
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class FoundItemActivity : ComponentActivity() {
@@ -32,7 +35,9 @@ class FoundItemActivity : ComponentActivity() {
                 Scaffold { innerPadding ->
                     // A surface container using the 'background' color from the theme
                     Surface(
-                        modifier = Modifier.fillMaxSize().padding(innerPadding),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
                         color = MaterialTheme.colorScheme.background,
                     ) {
                         navController = rememberNavController()
@@ -41,9 +46,11 @@ class FoundItemActivity : ComponentActivity() {
                 }
             }
         }
-        lifecycleScope.launchWhenStarted {
-            viewModel.closeActivity.collect {
-                finish()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.closeActivity.collect {
+                    finish()
+                }
             }
         }
     }
