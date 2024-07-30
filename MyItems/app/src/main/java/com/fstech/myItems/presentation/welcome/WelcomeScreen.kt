@@ -22,7 +22,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -32,6 +31,7 @@ import androidx.navigation.NavHostController
 import com.fstech.myItems.R
 import com.fstech.myItems.navigation.NavRoute
 import com.jetawy.domain.utils.UiState
+import java.util.Locale
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -60,7 +60,11 @@ fun WelcomeScreen(
         )
         if (uiState is UiState.Initial) {
             viewModel.run {
-                sendPrompt("generate only one random quote to help people to take care of their items or money that can lose it or being stole for my Items finder android app")
+                sendPrompt(
+                    stringResource(
+                        R.string.generate_only_one_random_quote_to_help_people_to_take_care_of_their_items_or_money_that_can_lose_it_or_being_stole_for_my_items_finder_android_app_in_language,
+                        getAppLanguage()
+                    ))
             }
         }
         when (uiState) {
@@ -78,7 +82,8 @@ fun WelcomeScreen(
 
             UiState.Loading -> {
                 Text(
-                    textAlign = TextAlign.Center, text = stringResource(R.string.generating_today_s_quote)
+                    textAlign = TextAlign.Center,
+                    text = stringResource(R.string.generating_today_s_quote)
                 )
             }
 
@@ -104,4 +109,8 @@ fun WelcomeScreen(
 
         }
     }
+}
+
+fun getAppLanguage(): String {
+    return Locale.getDefault().language
 }

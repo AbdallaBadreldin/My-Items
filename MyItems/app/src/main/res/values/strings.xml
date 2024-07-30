@@ -52,4 +52,5 @@
     <string name="need_permission">Need Permission</string>
     <string name="permission_granted">Permission Granted</string>
     <string name="generating_today_s_quote">generating today\'s quote.... :)</string>
+    <string name="generate_only_one_random_quote_to_help_people_to_take_care_of_their_items_or_money_that_can_lose_it_or_being_stole_for_my_items_finder_android_app_in_language">generate only one random quote to help people to take care of their items or money that can lose it or being stole for my Items finder android app in %1$s language</string>
 </resources>
