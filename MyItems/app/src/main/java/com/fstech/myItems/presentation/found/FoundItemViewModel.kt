@@ -18,8 +18,10 @@ import com.jetawy.domain.models.ItemResponse
 import com.jetawy.domain.utils.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -71,9 +73,7 @@ class FoundItemViewModel @Inject constructor(private val foundItemsRepositoryImp
                 response.text?.let { outputContent ->
                     Log.e("outputContent", outputContent)
                     val data = convertJsonToDataClass(outputContent)
-                    if (data == null)
-                        _uiState.value = UiState.Error("null")
-                    if (data?.name == null)
+                    if (data == null || data.name == "null")
                         _uiState.value = UiState.Error("null")
                     if (data?.name == "null")
                         _uiState.value = UiState.Error("null")
@@ -107,7 +107,12 @@ class FoundItemViewModel @Inject constructor(private val foundItemsRepositoryImp
         userDescription: String
     ) {
         viewModelScope.launch {
-            foundItemsRepositoryImpl.uploadFoundItems(imageUris, addresses = addresses,AiResponse,userDescription).collect { req ->
+            foundItemsRepositoryImpl.uploadFoundItems(
+                imageUris,
+                addresses = addresses,
+                AiResponse,
+                userDescription
+            ).collect { req ->
                 _uploadItems.emit(req)
             }
         }
@@ -120,6 +125,15 @@ class FoundItemViewModel @Inject constructor(private val foundItemsRepositoryImp
     fun resetUploadItems() {
         viewModelScope.launch {
             _uploadItems.emit(UiState.Initial)
+        }
+    }
+
+    private val _closeActivity = MutableSharedFlow<Unit>()
+    val closeActivity= _closeActivity.asSharedFlow()
+
+    fun triggerCloseActivity() {
+        viewModelScope.launch {
+            _closeActivity.emit(Unit)
         }
     }
 }

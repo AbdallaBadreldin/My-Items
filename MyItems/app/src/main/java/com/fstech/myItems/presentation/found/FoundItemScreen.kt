@@ -58,7 +58,7 @@ const val minimumImagesToDetect = 1
 
 @Composable
 fun FoundItemScreen(
-    gotoLocationOfLostItems: (viewModel: FoundItemViewModel) -> Unit, viewModel: FoundItemViewModel
+    gotoLocationOfLostItems: () -> Unit, viewModel: FoundItemViewModel
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -182,10 +182,8 @@ fun FoundItemScreen(
         if (viewModel.list.size >= minimumImagesToDetect) when (uiState) {
             is UiState.Error -> {
                 val errorString = (uiState as UiState.Error).message
-                if (errorString == "null" || errorString.isEmpty())
-                    Text(text = stringResource(R.string.please_try_again))
-                else
-                    Text(text = (uiState as UiState.Error).message)
+                Toast.makeText(context, errorString, Toast.LENGTH_SHORT).show()
+                Text(text = stringResource(R.string.please_try_again))
             }
 
             UiState.Initial -> {
@@ -253,9 +251,7 @@ fun FoundItemScreen(
                                 .weight(1f) // Occupy the other half of the width
                                 .fillMaxWidth()
                                 .clickable {
-                                    gotoLocationOfLostItems(
-                                        viewModel
-                                    )
+                                    gotoLocationOfLostItems()
                                 },
                             painter = painterResource(id = R.drawable.icon_true),
                             contentDescription = stringResource(R.string.the_item_is_correct)

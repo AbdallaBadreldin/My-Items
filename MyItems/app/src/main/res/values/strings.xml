@@ -45,4 +45,6 @@
     <string name="welcome_to_my_items_finder">Welcome To My Items Finder</string>
     <string name="pickup_a_service">Pickup a Service</string>
     <string name="error_loading_image">Error loading image</string>
+    <string name="complete_process">Complete Process</string>
+    <string name="process_successful_we_will_notify_you_if_there_is_any_matchmaking_request">Process Successful!\nWe will notify you if there is any matchmaking request</string>
 </resources>

@@ -36,18 +36,19 @@ fun NavGraph(
         openFoundItemScreen(navController = navController, this, viewModel = viewModel)
         openLocationFoFoundItemScreen(navController = navController, this, viewModel = viewModel)
         openFoundItemEnterDataScreen(navController = navController, this, viewModel)
-        openFoundItemUploadSuccessScreen(navController = navController, this)
+        openFoundItemUploadSuccessScreen(navController = navController, this,viewModel)
     }
 }
 
 fun openFoundItemUploadSuccessScreen(
     navController: NavHostController,
-    navGraphBuilder: NavGraphBuilder
+    navGraphBuilder: NavGraphBuilder,
+    viewModel: FoundItemViewModel
 ) {
     navGraphBuilder.composable(
         route = NavRoute.FoundItemUploadSuccessNavRoute.path
     ) {
-        FoundItemUploadSuccessScreen()
+        FoundItemUploadSuccessScreen(viewModel)
     }
 }
 

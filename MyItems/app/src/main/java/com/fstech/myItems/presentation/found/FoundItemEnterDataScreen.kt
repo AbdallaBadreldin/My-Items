@@ -81,10 +81,7 @@ fun EnterDataOfFoundItemScreen(
             }
 
             is UiState.Success<*> -> {
-                //we need to navigate away from this screen and show toast
-//                Toast.makeText(context, "Upload Successful", Toast.LENGTH_SHORT).show()
-                goToFountItemSuccessScreen.invoke()
-                goToFountItemSuccessScreen
+                goToFountItemSuccessScreen()
             }
         }
     }
@@ -101,7 +98,6 @@ fun uploadDataRoutine(
     val geocoder = Geocoder(context, Locale.getDefault())
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         geocoder.getFromLocation(lat, lng, 1) { addresses ->
-            Log.e("addresses", addresses.toString())
             viewModel.addresses = addresses
             viewModel.uploadItems(
                 imageUris = viewModel.list,
@@ -113,7 +109,6 @@ fun uploadDataRoutine(
     } else {
         val addresses = geocoder.getFromLocation(lat, lng, 1)
         viewModel.addresses = addresses
-        Log.e("addresses", addresses.toString())
         viewModel.uploadItems(
             imageUris = viewModel.list,
             addresses = addresses?.get(0)!!,
