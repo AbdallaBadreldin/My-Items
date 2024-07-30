@@ -51,4 +51,5 @@
     <string name="add_image">add Image</string>
     <string name="need_permission">Need Permission</string>
     <string name="permission_granted">Permission Granted</string>
+    <string name="generating_today_s_quote">generating today\'s quote.... :)</string>
 </resources>

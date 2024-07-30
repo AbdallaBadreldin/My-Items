@@ -38,16 +38,11 @@ import com.jetawy.domain.utils.UiState
 fun WelcomeScreen(
     viewModel: WelcomeViewModel = viewModel(), navController: NavHostController
 ) {
-//    var prompt by rememberSaveable { mutableStateOf(placeholderPrompt) }
-//    var result by rememberSaveable { mutableStateOf(placeholderResult) }
     val uiState by viewModel.uiState.collectAsState()
-    val context = LocalContext.current
 
     FlowColumn(
         verticalArrangement = Arrangement.spacedBy(64.dp),
-//        horizontalArrangement = Alignment.CenterVertically,
         modifier = Modifier
-//            .fillMaxWidth()
             .verticalScroll(rememberScrollState())
             .padding(64.dp, 64.dp, 64.dp, 64.dp)
     ) {
@@ -69,22 +64,30 @@ fun WelcomeScreen(
             }
         }
         when (uiState) {
-            is UiState.Error -> Text(
-                textAlign = TextAlign.Center, text = (uiState as UiState.Error).message
-            )
+            is UiState.Error -> {
+                Text(
+                    textAlign = TextAlign.Center, text = (uiState as UiState.Error).message
+                )
+            }
 
-            UiState.Initial -> Text(
-                textAlign = TextAlign.Center, text = ""
-            )
+            UiState.Initial -> {
+                Text(
+                    textAlign = TextAlign.Center, text = ""
+                )
+            }
 
-            UiState.Loading -> Text(
-                textAlign = TextAlign.Center, text = "generating today's quote :)"
-            )
+            UiState.Loading -> {
+                Text(
+                    textAlign = TextAlign.Center, text = stringResource(R.string.generating_today_s_quote)
+                )
+            }
 
-            is UiState.Success<*> -> Text(
-                textAlign = TextAlign.Center,
-                text = (uiState as UiState.Success<*>).outputData as String
-            )
+            is UiState.Success<*> -> {
+                Text(
+                    textAlign = TextAlign.Center,
+                    text = (uiState as UiState.Success<*>).outputData as String
+                )
+            }
         }
 
 
