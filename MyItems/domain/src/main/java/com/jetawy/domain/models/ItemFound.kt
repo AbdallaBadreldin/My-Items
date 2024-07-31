@@ -5,7 +5,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class ItemFound(
-    val name: String?,
+    val type: String?,
     val nameLocalLanguage: String? ="",
     val description: String?="",
     val userDescription: String?="",

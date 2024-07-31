@@ -280,16 +280,16 @@ fun LostItemScreen(gotoLocationOfLostItems: () -> Unit, viewModel: LostItemViewM
                                 viewModel.color3.value
                             )
                             val itemFound = ItemFound(
-                                name = viewModel.name.value,
+                                type = viewModel.name.value,
                                 model = viewModel.model.value,
                                 brand = viewModel.brand.value,
                                 colors = colors,
                                 userDescription = viewModel.userDescription.value
                             )
                             viewModel.sendPrompt(
-                                inputs = "${itemFound.name} is this name of item ?" +
-                                        "${itemFound.brand} is this real brand or unknown word ?" +
-                                        "${itemFound.model} is this real model or unknown word ?" +
+                                inputs = "${itemFound.type} is this valid type of an item ?" +
+                                        "${itemFound.brand} is this real brand or random word ?" +
+                                        "${itemFound.model} is this real model or rando, word ?" +
                                         "${itemFound.colors} is colors in this list is colors or unknown words ignore empty string ?" +
                                         "${itemFound.userDescription} is userDescription is true for correct or false for unknown words ?",
                                 prompt = "if all the inputs are correct reply only with true also check if only one of them is wrong return only one word false"

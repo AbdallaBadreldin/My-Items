@@ -14,7 +14,6 @@ import com.google.ai.client.generativeai.type.content
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import com.jetawy.data.repositories.FoundItemsRepositoryImpl
-import com.jetawy.domain.models.ItemLost
 import com.jetawy.domain.models.ItemFound
 import com.jetawy.domain.utils.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -74,9 +73,9 @@ class FoundItemViewModel @Inject constructor(private val foundItemsRepositoryImp
                 response.text?.let { outputContent ->
                     Log.e("outputContent", outputContent)
                     val data = convertJsonToDataClass(outputContent)
-                    if (data == null || data.name == "null")
+                    if (data == null || data.type == "null")
                         _uiState.value = UiState.Error("null")
-                    if (data?.name == "null")
+                    if (data?.type == "null")
                         _uiState.value = UiState.Error("null")
                     else
                         _uiState.value = UiState.Success(
