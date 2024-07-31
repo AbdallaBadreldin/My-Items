@@ -1,12 +1,12 @@
 package com.jetawy.domain.models
 
 data class ItemLost(
-    val name: String,
-    val model: String,
-    val brand: String,
-    val category: List<String>,
-    val itemState: String,
-    val colors: List<String>,
-    val description: String
+    val type: String?=null,
+    val model: String?=null,
+    val brand: String?=null,
+    val category: List<String>?=null,
+    val itemState: String?=null,
+    val colors: List<String>?=null,
+    val description: String?=null
 )
 

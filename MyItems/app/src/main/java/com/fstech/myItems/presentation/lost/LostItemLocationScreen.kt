@@ -48,10 +48,11 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import kotlinx.coroutines.delay
+
 @Composable
 fun LostItemLocationScreen(
-navigateToEnterDataOfLostItemScreen: () -> Unit,
-viewModel: LostItemViewModel
+    navigateToEnterDataOfLostItemScreen: () -> Unit,
+    viewModel: LostItemViewModel
 ) {
     var isMapLoading by remember { mutableStateOf(true) }
     val locationName = remember { mutableStateOf("") }
@@ -189,7 +190,7 @@ viewModel: LostItemViewModel
                 ) {
                     if (viewModel.latLng.value != null) {
                         Marker(
-                            state = MarkerState(position = viewModel.latLng.value!!),
+                            state = remember { MarkerState(position = viewModel.latLng.value!!) },
                             title = locationTitle.value,
                             snippet = locationName.value,
                         )

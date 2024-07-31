@@ -32,16 +32,16 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
     val list = mutableStateListOf<Uri>()
     val latLng = mutableStateOf<LatLng?>(null)
 
-    var userDescription = mutableStateOf("")
-    var name = mutableStateOf("")
-    var model = mutableStateOf("")
-    var brand = mutableStateOf("")
+    var userDescription = mutableStateOf<String?>("")
+    var type = mutableStateOf<String?>("")
+    var model = mutableStateOf<String?>("")
+    var brand = mutableStateOf<String?>("")
     var category = mutableStateOf(listOf(""))  //generate it
-    var itemState = mutableStateOf("")
+    var itemState = mutableStateOf<String?>("")
     var colors = mutableStateOf(listOf(""))  //add three colors together
-    var color1 = mutableStateOf("")
-    var color2 = mutableStateOf("")
-    var color3 = mutableStateOf("")
+    var color1 = mutableStateOf<String?>("")
+    var color2 = mutableStateOf<String?>("")
+    var color3 = mutableStateOf<String?>("")
 
     fun addList(list: List<Uri>) {
         this.list.clear()

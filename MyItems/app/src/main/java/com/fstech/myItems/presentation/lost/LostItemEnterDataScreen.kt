@@ -20,7 +20,7 @@ fun LostItemEnterDataScreen(function: () -> Unit, viewModel: LostItemViewModel) 
     val context = LocalContext.current
     viewModel.resetStates()
     val itemLost = ItemLost(
-        name = viewModel.name.value,
+        type = viewModel.type.value,
         model = viewModel.model.value,
         brand = viewModel.brand.value,
         category = viewModel.category.value,
@@ -60,7 +60,7 @@ fun LostItemEnterDataScreen(function: () -> Unit, viewModel: LostItemViewModel) 
                         imageUris = viewModel.list,
                         addresses = viewModel.addresses!![0],
                         aiResponse = itemLost,
-                        userDescription = viewModel.userDescription.value
+                        userDescription = viewModel.userDescription.value?:""
                     )
                 }
             } else {
@@ -70,7 +70,7 @@ fun LostItemEnterDataScreen(function: () -> Unit, viewModel: LostItemViewModel) 
                     imageUris = viewModel.list,
                     addresses = viewModel.addresses!![0],
                     aiResponse = itemLost,
-                    userDescription = viewModel.userDescription.value
+                    userDescription = viewModel.userDescription.value?:""
                 )
             }
 

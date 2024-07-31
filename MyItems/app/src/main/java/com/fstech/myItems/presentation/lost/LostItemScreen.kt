@@ -92,12 +92,12 @@ fun LostItemScreen(gotoLocationOfLostItems: () -> Unit, viewModel: LostItemViewM
             }
         }
         SingleLineInputTextField(
-            value = viewModel.name.value,
+            value = viewModel.type.value?:"",
             onValueChange = {
-                viewModel.name.value = it
+                viewModel.type.value = it
                 showErrorName.value = ""
             },
-            label = stringResource(R.string.name_e_g_watch_card),
+            label = stringResource(R.string.type_e_g_watch_card),
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.CenterHorizontally)
@@ -105,7 +105,7 @@ fun LostItemScreen(gotoLocationOfLostItems: () -> Unit, viewModel: LostItemViewM
             showError = showErrorName.value
         )
         SingleLineInputTextField(
-            value = viewModel.model.value,
+            value = viewModel.model.value?:"",
             onValueChange = {
                 viewModel.model.value = it
                 showErrorModel.value = ""
@@ -118,7 +118,7 @@ fun LostItemScreen(gotoLocationOfLostItems: () -> Unit, viewModel: LostItemViewM
             showError = showErrorModel.value
         )
         SingleLineInputTextField(
-            value = viewModel.brand.value,
+            value = viewModel.brand.value?:"",
             onValueChange = {
                 viewModel.brand.value = it
                 showErrorBrand.value = ""
@@ -132,7 +132,7 @@ fun LostItemScreen(gotoLocationOfLostItems: () -> Unit, viewModel: LostItemViewM
         )
         Row {
             SingleLineInputTextField(
-                value = viewModel.color1.value,
+                value = viewModel.color1.value?:"",
                 onValueChange = {
                     viewModel.color1.value = it
                     showErrorColor1.value = ""
@@ -144,7 +144,7 @@ fun LostItemScreen(gotoLocationOfLostItems: () -> Unit, viewModel: LostItemViewM
                 showError = showErrorColor1.value
             )
             SingleLineInputTextField(
-                value = viewModel.color2.value,
+                value = viewModel.color2.value?:"",
                 onValueChange = {
                     viewModel.color2.value = it
                     showErrorColor2.value = ""
@@ -156,7 +156,7 @@ fun LostItemScreen(gotoLocationOfLostItems: () -> Unit, viewModel: LostItemViewM
                 showError = showErrorColor2.value
             )
             SingleLineInputTextField(
-                value = viewModel.color3.value,
+                value = viewModel.color3.value?:"",
                 onValueChange = {
                     viewModel.color3.value = it
                     showErrorColor3.value = ""
@@ -170,7 +170,7 @@ fun LostItemScreen(gotoLocationOfLostItems: () -> Unit, viewModel: LostItemViewM
         }
 
         StringInputTextField(
-            value = viewModel.userDescription.value,
+            value = viewModel.userDescription.value?:"",
             onValueChange = {
                 viewModel.userDescription.value = it
                 showErrorDescription.value = ""
@@ -195,7 +195,7 @@ fun LostItemScreen(gotoLocationOfLostItems: () -> Unit, viewModel: LostItemViewM
 
         if (viewModel.itemState.value == options[options.size - 1]) {
             SingleLineInputTextField(
-                value = viewModel.itemState.value,
+                value = viewModel.itemState.value?:"",
                 onValueChange = { viewModel.itemState.value = it },
                 label = stringResource(R.string.state),
                 modifier = Modifier
@@ -223,38 +223,38 @@ fun LostItemScreen(gotoLocationOfLostItems: () -> Unit, viewModel: LostItemViewM
             UiState.Initial -> {
                 Button(
                     onClick = {
-                        if (viewModel.color1.value.trimIndent().trim()
-                                .isEmpty() && viewModel.color2.value.trimIndent().trim()
+                        if (viewModel.color1.value.toString().trimIndent().trim()
+                                .isEmpty() && viewModel.color2.value.toString().trimIndent().trim()
                                 .isNotEmpty()
                         ) {
                             showErrorColor2.value =
                                 context.getString(R.string.first_color_is_required)
                         } else showErrorColor2.value = ""
 
-                        if (viewModel.color1.value.trimIndent().trim()
-                                .isEmpty() && viewModel.color3.value.trimIndent().trim()
+                        if (viewModel.color1.value.toString().trimIndent().trim()
+                                .isEmpty() && viewModel.color3.value.toString().trimIndent().trim()
                                 .isNotEmpty()
                         ) {
                             showErrorColor3.value =
                                 context.getString(R.string.first_color_is_required)
                         } else showErrorColor3.value = ""
 
-                        if (viewModel.name.value.trimIndent().trim().isEmpty())
+                        if (viewModel.type.value.toString().trimIndent().trim().isEmpty())
                             showErrorName.value =
                                 context.getString(R.string.this_field_cannot_be_empty)
                         else
                             showErrorName.value = ""
-                        if (viewModel.model.value.trimIndent().trim().isEmpty())
+                        if (viewModel.model.value.toString().trimIndent().trim().isEmpty())
                             showErrorModel.value =
                                 context.getString(R.string.this_field_cannot_be_empty)
                         else
                             showErrorModel.value = ""
-                        if (viewModel.brand.value.trimIndent().trim().isEmpty())
+                        if (viewModel.brand.value.toString().trimIndent().trim().isEmpty())
                             showErrorBrand.value =
                                 context.getString(R.string.this_field_cannot_be_empty)
                         else
                             showErrorBrand.value = ""
-                        if (viewModel.color1.value.trimIndent().trim().isEmpty())
+                        if (viewModel.color1.value.toString().trimIndent().trim().isEmpty())
                             showErrorColor1.value =
                                 context.getString(R.string.this_field_cannot_be_empty)
                         else {
@@ -262,7 +262,7 @@ fun LostItemScreen(gotoLocationOfLostItems: () -> Unit, viewModel: LostItemViewM
                             showErrorColor2.value = ""
                             showErrorColor3.value = ""
                         }
-                        if (viewModel.userDescription.value.trimIndent().trim().isEmpty())
+                        if (viewModel.userDescription.value.toString().trimIndent().trim().isEmpty())
                             showErrorDescription.value =
                                 context.getString(R.string.this_field_cannot_be_empty)
                         else
@@ -280,18 +280,20 @@ fun LostItemScreen(gotoLocationOfLostItems: () -> Unit, viewModel: LostItemViewM
                                 viewModel.color3.value
                             )
                             val itemFound = ItemFound(
-                                type = viewModel.name.value,
+                                type = viewModel.type.value,
                                 model = viewModel.model.value,
                                 brand = viewModel.brand.value,
                                 colors = colors,
                                 userDescription = viewModel.userDescription.value
                             )
                             viewModel.sendPrompt(
-                                inputs = "${itemFound.type} is this valid type of an item ?" +
-                                        "${itemFound.brand} is this real brand or random word ?" +
-                                        "${itemFound.model} is this real model or rando, word ?" +
-                                        "${itemFound.colors} is colors in this list is colors or unknown words ignore empty string ?" +
-                                        "${itemFound.userDescription} is userDescription is true for correct or false for unknown words ?",
+                                inputs = "${itemFound.type} is this valid type of an physical item that human can lose it ?" +
+//                                        "${itemFound.brand} is this real brand or random word with no meaning ?" +
+//                                        "${itemFound.model} is this real model or random word ?" +
+                                        "${viewModel.color1} is colors in this list is valid or the word is wrong or unknown words ignore empty string ?" +
+                                        "${viewModel.color2} is colors in this list is valid or the word is wrong or unknown words ignore empty string ?" +
+                                        "${viewModel.color3} is colors in this list is valid or the word is wrong or unknown words ignore empty string ?" +
+                                        "${itemFound.userDescription} is userDescription is false when contain unknown words if all words is good retrun true ?",
                                 prompt = "if all the inputs are correct reply only with true also check if only one of them is wrong return only one word false"
                             )
 

@@ -65,7 +65,7 @@
     <string name="first_color">First Color</string>
     <string name="brand">Brand</string>
     <string name="third_color">Third Color</string>
-    <string name="name_e_g_watch_card">"Name(e.g. Watch, Card) "</string>
+    <string name="type_e_g_watch_card">"Type(e.g. Watch, Card) "</string>
     <string name="left_it">Left it</string>
     <string name="stolen">Stolen</string>
     <string name="hijacked">Hijacked</string>
