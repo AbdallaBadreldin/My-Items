@@ -73,4 +73,5 @@
     <string name="unknown">Unknown</string>
     <string name="other">Other</string>
     <string name="uploading_your_item">Uploading Your Item</string>
+    <string name="checking_entries">Checking Entries</string>
 </resources>

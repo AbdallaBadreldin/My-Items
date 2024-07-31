@@ -13,7 +13,6 @@ import com.google.ai.client.generativeai.type.content
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import com.jetawy.data.repositories.LostItemsRepositoryImpl
-import com.jetawy.domain.models.ItemFound
 import com.jetawy.domain.models.ItemLost
 import com.jetawy.domain.utils.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -99,9 +98,11 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
                         "true" -> {
                             _uiState.emit(UiState.Success(outputContent))
                         }
+
                         "false" -> {
                             _uiState.emit(UiState.Error("Check your inputs"))
                         }
+
                         else -> _uiState.emit(UiState.Error(outputContent))
                     }
                 }
@@ -111,7 +112,39 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
         }
     }
 
-    private fun convertJsonToDataClass(jsonString: String): ItemFound? {
+    fun translatePrompt(
+        inputs: String,
+        prompt: String
+    ) {
+        _uiState.value = UiState.Loading
+        Log.e("translatePrompt inputs", inputs)
+        Log.e("translatePrompt prompt", prompt)
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = generativeModel.generateContent(
+                    content {
+                        text(inputs)
+                        text(prompt)
+                    }
+                )
+                response.text?.let { outputContent ->
+                    Log.e("outputContent", outputContent)
+
+                    try {
+                        val data = convertJsonToDataClass(outputContent)
+                        _uiState.emit(UiState.Success(data))
+                    } catch (e: Exception) {
+                        _uiState.emit(UiState.Error(e.localizedMessage ?: ""))
+
+                    }
+                }
+            } catch (e: Exception) {
+                _uiState.value = UiState.Error(e.localizedMessage ?: "")
+            }
+        }
+    }
+
+    private fun convertJsonToDataClass(jsonString: String): ItemLost? {
         var string = jsonString.trimIndent().trim()
 
         if (string.isEmpty()) {
@@ -119,7 +152,7 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
         }
         string = string.removePrefix("```json").removeSuffix("```")
         val gson = Gson()
-        val jsonObject = gson.fromJson(string, ItemFound::class.java)
+        val jsonObject = gson.fromJson(string, ItemLost::class.java)
         return jsonObject
     }
 
