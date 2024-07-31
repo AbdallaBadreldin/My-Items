@@ -52,7 +52,7 @@ fun LostItemEnterDataScreen(function: () -> Unit, viewModel: LostItemViewModel) 
         is UiState.Success<*> -> {
             val lat = viewModel.latLng.value?.latitude ?: 0.0
             val lng = viewModel.latLng.value?.longitude ?: 0.0
-            val geocoder = Geocoder(context, Locale.getDefault())
+            val geocoder = Geocoder(context, Locale.ENGLISH)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 geocoder.getFromLocation(lat, lng, 1) { addresses ->
                     viewModel.addresses = addresses
