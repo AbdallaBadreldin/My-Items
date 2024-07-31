@@ -1,6 +1,5 @@
 package com.fstech.myItems.presentation.lost
 
-import android.graphics.Bitmap
 import android.location.Address
 import android.net.Uri
 import android.util.Log
@@ -13,9 +12,9 @@ import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
-import com.jetawy.data.repositories.FoundItemsRepositoryImpl
 import com.jetawy.data.repositories.LostItemsRepositoryImpl
-import com.jetawy.domain.models.ItemResponse
+import com.jetawy.domain.models.ItemFound
+import com.jetawy.domain.models.ItemLost
 import com.jetawy.domain.utils.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +25,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 @HiltViewModel
 class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl: LostItemsRepositoryImpl) :
     ViewModel() {
@@ -33,14 +33,31 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
     val list = mutableStateListOf<Uri>()
     val latLng = mutableStateOf<LatLng?>(null)
 
-    fun updateItem(itemIndex: Int, item: Uri) {
+    var userDescription = mutableStateOf("")
+    var name = mutableStateOf("")
+    var model = mutableStateOf("")
+    var brand = mutableStateOf("")
+    var category = mutableStateOf(listOf(""))  //generate it
+    var itemState = mutableStateOf("")
+    var colors = mutableStateOf(listOf(""))  //add three colors together
+    var color1 = mutableStateOf("")
+    var color2 = mutableStateOf("")
+    var color3 = mutableStateOf("")
+
+    fun addList(list: List<Uri>) {
+        this.list.clear()
+        this.list.addAll(list)
+    }
+
+    fun updateList(itemIndex: Int, item: Uri) {
         list.set(itemIndex, item) // sets the element at 'itemIndex' to 'item'
     } // You can fill the list with initial values if you like, for testing
 
-    fun addItem(uri: Uri?) {
+    fun addList(uri: Uri?) {
         list.add(uri!!)
     }
-    fun removeItem(itemIndex: Int) {
+
+    fun removeList(itemIndex: Int) {
         list.removeAt(itemIndex)
     }
 
@@ -60,7 +77,7 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
     )
 
     fun sendPrompt(
-        bitmap: MutableList<Bitmap>,
+        inputs: String,
         prompt: String
     ) {
         _uiState.value = UiState.Loading
@@ -69,21 +86,24 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
             try {
                 val response = generativeModel.generateContent(
                     content {
-                        bitmap.forEach { image(it) }
+                        text(inputs)
                         text(prompt)
                     }
                 )
                 response.text?.let { outputContent ->
-                    Log.e("outputContent", outputContent)
-                    val data = convertJsonToDataClass(outputContent)
-                    if (data == null || data.name == "null")
-                        _uiState.value = UiState.Error("null")
-                    if (data?.name == "null")
-                        _uiState.value = UiState.Error("null")
-                    else
-                        _uiState.value = UiState.Success(
-                            data
-                        )
+                    Log.e(
+                        "LostItemScreenViewModel",
+                        outputContent
+                    )
+                    when (outputContent.trim().toString().trimIndent()) {
+                        "true" -> {
+                            _uiState.emit(UiState.Success(outputContent))
+                        }
+                        "false" -> {
+                            _uiState.emit(UiState.Error("Check your inputs"))
+                        }
+                        else -> _uiState.emit(UiState.Error(outputContent))
+                    }
                 }
             } catch (e: Exception) {
                 _uiState.value = UiState.Error(e.localizedMessage ?: "")
@@ -91,7 +111,7 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
         }
     }
 
-    private fun convertJsonToDataClass(jsonString: String): ItemResponse? {
+    private fun convertJsonToDataClass(jsonString: String): ItemFound? {
         var string = jsonString.trimIndent().trim()
 
         if (string.isEmpty()) {
@@ -99,14 +119,14 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
         }
         string = string.removePrefix("```json").removeSuffix("```")
         val gson = Gson()
-        val jsonObject = gson.fromJson(string, ItemResponse::class.java)
+        val jsonObject = gson.fromJson(string, ItemFound::class.java)
         return jsonObject
     }
 
     fun uploadItems(
         imageUris: List<Uri>,
         addresses: Address,
-        aiResponse: ItemResponse,
+        aiResponse: ItemLost,
         userDescription: String
     ) {
         viewModelScope.launch {
@@ -132,7 +152,7 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
     }
 
     private val _closeActivity = MutableSharedFlow<Unit>()
-    val closeActivity= _closeActivity.asSharedFlow()
+    val closeActivity = _closeActivity.asSharedFlow()
 
     fun triggerCloseActivity() {
         viewModelScope.launch {

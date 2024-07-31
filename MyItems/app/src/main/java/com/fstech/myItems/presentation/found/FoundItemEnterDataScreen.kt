@@ -3,7 +3,6 @@ package com.fstech.myItems.presentation.found
 import android.content.Context
 import android.location.Geocoder
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,25 +23,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstech.myItems.R
-import com.jetawy.domain.models.ItemResponse
+import com.jetawy.domain.models.ItemFound
 import com.jetawy.domain.utils.UiState
 import java.util.Locale
 
 
 @Composable
-fun EnterDataOfFoundItemScreen(
+fun FoundItemEnterDataScreen(
     goToFountItemSuccessScreen: () -> Unit,
     viewModel: FoundItemViewModel
 ) {
     val context = LocalContext.current
     var userDescription by remember { mutableStateOf("") }
-    var uploadingItems = viewModel.uploadItems.collectAsState()
-    val AiResponse =
-        (viewModel.uiState.collectAsState().value as UiState.Success<*>).outputData as ItemResponse
+    val uploadingItems = viewModel.uploadItems.collectAsState()
+    val aiResponse =
+        (viewModel.uiState.collectAsState().value as UiState.Success<*>).outputData as ItemFound
     Column {
         StringInputTextField(
             value = userDescription,
@@ -65,7 +65,7 @@ fun EnterDataOfFoundItemScreen(
                         .fillMaxWidth()
                         .padding(32.dp),
                     onClick = {
-                        uploadDataRoutine(context, viewModel, AiResponse, userDescription)
+                        uploadDataRoutine(context, viewModel, aiResponse, userDescription)
                     }) { Text(text = stringResource(R.string.upload_data)) }
             }
 
@@ -90,7 +90,7 @@ fun EnterDataOfFoundItemScreen(
 fun uploadDataRoutine(
     context: Context,
     viewModel: FoundItemViewModel,
-    AiResponse: ItemResponse,
+    aiResponse: ItemFound,
     userDescription: String
 ) {
     val lat = viewModel.latLng.value?.latitude ?: 0.0
@@ -102,7 +102,7 @@ fun uploadDataRoutine(
             viewModel.uploadItems(
                 imageUris = viewModel.list,
                 addresses = addresses[0],
-                AiResponse,
+                aiResponse,
                 userDescription
             )
         }
@@ -112,7 +112,7 @@ fun uploadDataRoutine(
         viewModel.uploadItems(
             imageUris = viewModel.list,
             addresses = addresses?.get(0)!!,
-            AiResponse,
+            aiResponse,
             userDescription
         )
     }
@@ -123,7 +123,8 @@ fun StringInputTextField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showError: String = ""
 ) {
     OutlinedTextField(
         value = value,
@@ -132,14 +133,21 @@ fun StringInputTextField(
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
-        singleLine = true, // For single-line input
+        singleLine = false,
         shape = RoundedCornerShape(16.dp), // Rounded corners for a softer look
-        maxLines = Int.MAX_VALUE,
+        maxLines = 6,
         minLines = 1,
         textStyle = MaterialTheme.typography.bodyMedium,
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = MaterialTheme.colorScheme.primary,
             unfocusedBorderColor = MaterialTheme.colorScheme.outline
-        ),
+        ),  supportingText = {
+            if (showError.isNotEmpty()) {
+                Text(
+                    text = showError,
+                    color = Color.Red
+                )
+            }
+        },
     )
 }

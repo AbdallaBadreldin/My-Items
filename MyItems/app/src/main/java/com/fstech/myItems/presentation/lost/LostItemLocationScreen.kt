@@ -1,4 +1,4 @@
-package com.fstech.myItems.presentation.found
+package com.fstech.myItems.presentation.lost
 
 import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -48,11 +48,10 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import kotlinx.coroutines.delay
-
 @Composable
-fun LocationOfLostItem(
-    navigateToEnterDataOfFoundItemScreen: () -> Unit,
-    viewModel: FoundItemViewModel
+fun LostItemLocationScreen(
+navigateToEnterDataOfLostItemScreen: () -> Unit,
+viewModel: LostItemViewModel
 ) {
     var isMapLoading by remember { mutableStateOf(true) }
     val locationName = remember { mutableStateOf("") }
@@ -202,7 +201,7 @@ fun LocationOfLostItem(
         if (viewModel.latLng.value != null) {
 
             Button(
-                onClick = navigateToEnterDataOfFoundItemScreen,
+                onClick = { navigateToEnterDataOfLostItemScreen() },
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(64.dp, 8.dp)

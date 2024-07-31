@@ -5,7 +5,8 @@ import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
-import com.jetawy.domain.models.ItemResponse
+import com.jetawy.domain.models.ItemLost
+import com.jetawy.domain.models.ItemFound
 import com.jetawy.domain.utils.UiState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -43,7 +44,7 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
     override suspend fun uploadFoundItems(
         imageUris: List<Uri>,
         addresses: Address,
-        aiResponse: ItemResponse,
+        aiResponse: ItemFound,
         userDescription: String
     ): Flow<UiState> {
         //first we will upload photos to firebase storage
@@ -104,10 +105,10 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
     }
 
     override suspend fun uploadLostItems(
-    imageUris: List<Uri>,
-    addresses: Address,
-    aiResponse: ItemResponse,
-    userDescription: String
+        imageUris: List<Uri>,
+        addresses: Address,
+        aiResponse: ItemLost,
+        userDescription: String
     ): Flow<UiState> {
         //first we will upload photos to firebase storage
         _uploadLostItem.emit(UiState.Loading)

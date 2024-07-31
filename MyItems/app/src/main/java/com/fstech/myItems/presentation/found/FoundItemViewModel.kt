@@ -14,7 +14,8 @@ import com.google.ai.client.generativeai.type.content
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import com.jetawy.data.repositories.FoundItemsRepositoryImpl
-import com.jetawy.domain.models.ItemResponse
+import com.jetawy.domain.models.ItemLost
+import com.jetawy.domain.models.ItemFound
 import com.jetawy.domain.utils.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -88,7 +89,7 @@ class FoundItemViewModel @Inject constructor(private val foundItemsRepositoryImp
         }
     }
 
-    private fun convertJsonToDataClass(jsonString: String): ItemResponse? {
+    private fun convertJsonToDataClass(jsonString: String): ItemFound? {
         var string = jsonString.trimIndent().trim()
 
         if (string.isEmpty()) {
@@ -96,14 +97,14 @@ class FoundItemViewModel @Inject constructor(private val foundItemsRepositoryImp
         }
         string = string.removePrefix("```json").removeSuffix("```")
         val gson = Gson()
-        val jsonObject = gson.fromJson(string, ItemResponse::class.java)
+        val jsonObject = gson.fromJson(string, ItemFound::class.java)
         return jsonObject
     }
 
     fun uploadItems(
         imageUris: List<Uri>,
         addresses: Address,
-        aiResponse: ItemResponse,
+        aiResponse: ItemFound,
         userDescription: String
     ) {
         viewModelScope.launch {

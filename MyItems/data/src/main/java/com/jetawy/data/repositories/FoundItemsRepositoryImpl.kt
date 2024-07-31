@@ -3,7 +3,8 @@ package com.jetawy.data.repositories
 import android.location.Address
 import android.net.Uri
 import com.jetawy.data.firebase.FirebaseDataBaseService
-import com.jetawy.domain.models.ItemResponse
+import com.jetawy.domain.models.ItemFound
+import com.jetawy.domain.models.ItemLost
 import com.jetawy.domain.repository.FoundItemsRepository
 import com.jetawy.domain.utils.UiState
 import kotlinx.coroutines.flow.Flow
@@ -19,7 +20,7 @@ class FoundItemsRepositoryImpl @Inject constructor(private val fbs: FirebaseData
     override suspend fun uploadFoundItems(
         imageUris: List<Uri>,
         addresses: Address,
-        AiResponse: ItemResponse,
+        AiResponse: ItemFound,
         userDescription: String
     ): Flow<UiState> {
         return fbs.uploadFoundItems(

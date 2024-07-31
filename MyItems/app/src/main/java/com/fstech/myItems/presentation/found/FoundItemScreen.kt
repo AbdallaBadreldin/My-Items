@@ -48,7 +48,7 @@ import coil.request.ImageRequest
 import com.fstech.myItems.BuildConfig
 import com.fstech.myItems.R
 import com.fstech.myItems.presentation.getAppLanguage
-import com.jetawy.domain.models.ItemResponse
+import com.jetawy.domain.models.ItemFound
 import com.jetawy.domain.utils.UiState
 import java.io.File
 import java.text.SimpleDateFormat
@@ -227,10 +227,10 @@ fun FoundItemScreen(
             }
 
             is UiState.Success<*> -> {
-                val response = (uiState as UiState.Success<*>).outputData as ItemResponse
+                val response = (uiState as UiState.Success<*>).outputData as ItemFound
                 Column {
                     Text(
-                        text = stringResource(R.string.the_item_is, response.nameLocalLanguage),
+                        text = stringResource(R.string.the_item_is, response.nameLocalLanguage?:""),
                         Modifier
                             .fillMaxWidth()
                             .align(Alignment.CenterHorizontally)
