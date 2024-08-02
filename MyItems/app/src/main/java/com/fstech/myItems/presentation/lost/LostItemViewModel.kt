@@ -36,7 +36,7 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
     var type = mutableStateOf<String?>("")
     var model = mutableStateOf<String?>("")
     var brand = mutableStateOf<String?>("")
-    var category = mutableStateOf(listOf(""))  //generate it
+    var category = mutableStateOf("")  //generate it
     var itemState = mutableStateOf<String?>("")
     var colors = mutableStateOf(listOf(""))  //add three colors together
     var color1 = mutableStateOf<String?>("")

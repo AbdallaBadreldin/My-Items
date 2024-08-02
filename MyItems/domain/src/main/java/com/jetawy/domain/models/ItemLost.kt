@@ -4,9 +4,10 @@ data class ItemLost(
     val type: String?=null,
     val model: String?=null,
     val brand: String?=null,
-    val category: List<String>?=null,
+    val category: String?="",
     val itemState: String?=null,
     val colors: List<String>?=null,
-    val description: String?=null
+    val description: String?=null,
+    val userDescription: String?=null
 )
 
