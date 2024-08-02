@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstech.myItems.BuildConfig.apiKey
+import com.fstech.myItems.presentation.getAppLanguage
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
 import com.google.android.gms.maps.model.LatLng
@@ -42,6 +43,8 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
     var color1 = mutableStateOf<String?>("")
     var color2 = mutableStateOf<String?>("")
     var color3 = mutableStateOf<String?>("")
+    var descriptionError = mutableStateOf<String?>("")
+    var strictDescription = mutableStateOf<Boolean?>(true)
 
     fun addList(list: List<Uri>) {
         this.list.clear()
@@ -75,40 +78,142 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
         apiKey = apiKey
     )
 
-    fun sendPrompt(
-        inputs: String,
-        prompt: String
-    ) {
+    fun sendPrompt() {
         _uiState.value = UiState.Loading
+        descriptionError.value = ""
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = generativeModel.generateContent(
+                val checkType =
+                    "is \"${type.value.toString()}\" valid type of an physical item that can be lost ? return only true or if false return the reason in ${getAppLanguage()}"
+                val checkTypeResponse = generativeModel.generateContent(
                     content {
-                        text(inputs)
-                        text(prompt)
+                        text(checkType)
                     }
                 )
-                response.text?.let { outputContent ->
+                checkTypeResponse.text?.let { outputContent ->
                     Log.e(
                         "LostItemScreenViewModel",
                         outputContent
                     )
-                    when (outputContent.trim().toString().trimIndent()) {
-                        "true" -> {
+                    when (outputContent.trim().trimIndent().lowercase().contains("true")) {
+                        true -> {}
+                        false -> {
+                            descriptionError.value = (outputContent)
+                            _uiState.emit(UiState.Error("Check your inputs"))
+                            return@launch
+                        }
+                    }
+                }
+                if (color1.value.toString().isNotEmpty()) {
+
+                    val checkColor1 =
+                        "is \"${color1.value.toString()}\" color ? return with true or if false return the reason in ${getAppLanguage()}"
+
+                    val checkColor1Response = generativeModel.generateContent(
+                        content {
+                            text(checkColor1)
+                        }
+                    )
+                    checkColor1Response.text?.let { outputContent ->
+                        Log.e(
+                            "LostItemScreenViewModel2",
+                            outputContent
+                        )
+                        when (outputContent.trim().trimIndent().lowercase().contains("true")) {
+                            true -> {}
+                            false -> {
+                                descriptionError.value = (outputContent)
+                                _uiState.emit(UiState.Error("Check your inputs"))
+                                return@launch
+                            }
+                        }
+                    }
+                }
+                if (color2.value.toString().isNotEmpty()) {
+
+                    val checkColor2 =
+                        "is \"${color2.value.toString()}\" color ? return with true or if false return the reason in ${getAppLanguage()}"
+
+                    val checkColor2Response = generativeModel.generateContent(
+                        content {
+                            text(checkColor2)
+                        }
+                    )
+                    checkColor2Response.text?.let { outputContent ->
+                        Log.e(
+                            "LostItemScreenViewModel2",
+                            outputContent
+                        )
+                        when (outputContent.trim().trimIndent().lowercase().contains("true")) {
+                            true -> {}
+                            false -> {
+                                descriptionError.value = (outputContent)
+                                _uiState.emit(UiState.Error("Check your inputs"))
+                                return@launch
+                            }
+                        }
+                    }
+                }
+                if (color3.value.toString().isNotEmpty()) {
+                    val checkColor3 =
+                        "is \"${color3.value.toString()}\" color ? return with true or if false return the reason in ${getAppLanguage()}"
+
+                    val checkColor3Response = generativeModel.generateContent(
+                        content {
+                            text(checkColor3)
+                        }
+                    )
+                    checkColor3Response.text?.let { outputContent ->
+                        Log.e(
+                            "LostItemScreenViewModel2",
+                            outputContent
+                        )
+                        when (outputContent.trim().trimIndent().lowercase().contains("true")) {
+                            true -> {}
+                            false -> {
+                                descriptionError.value = (outputContent)
+                                _uiState.emit(UiState.Error("Check your inputs"))
+                                return@launch
+                            }
+                        }
+                    }
+                }
+
+                val checkUserDescription = if (strictDescription.value == true)
+                    "is \"${userDescription.value.toString()}\" describing \"${type.value.toString()}\" ? then check is \"${userDescription.value.toString()}\" making sense ? return true or if false return the reason in ${getAppLanguage()}"
+                else
+                    "is \"${userDescription.value.toString()}\" making sense ? return true or if false return the reason in ${getAppLanguage()}"
+
+                val checkUserDescriptionResponse = generativeModel.generateContent(
+                    content {
+                        text(checkUserDescription)
+                    }
+                )
+                checkUserDescriptionResponse.text?.let { outputContent ->
+                    Log.e(
+                        "LostItemScreenViewModel4",
+                        outputContent
+                    )
+                    when (outputContent.trim().trimIndent().lowercase().contains("true")) {
+                        true -> {
                             _uiState.emit(UiState.Success(outputContent))
                         }
 
-                        "false" -> {
+                        false -> {
+                            descriptionError.value = (outputContent)
                             _uiState.emit(UiState.Error("Check your inputs"))
+                            return@launch
                         }
-
-                        else -> _uiState.emit(UiState.Error(outputContent))
                     }
                 }
+
+
             } catch (e: Exception) {
                 _uiState.value = UiState.Error(e.localizedMessage ?: "")
+                return@launch
             }
+
         }
     }
 

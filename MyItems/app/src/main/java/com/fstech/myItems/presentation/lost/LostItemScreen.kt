@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,6 +25,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -49,7 +51,6 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.fstech.myItems.R
 import com.fstech.myItems.presentation.found.StringInputTextField
-import com.jetawy.domain.models.ItemFound
 import com.jetawy.domain.utils.UiState
 
 @Composable
@@ -92,7 +93,7 @@ fun LostItemScreen(gotoLocationOfLostItems: () -> Unit, viewModel: LostItemViewM
             }
         }
         SingleLineInputTextField(
-            value = viewModel.type.value?:"",
+            value = viewModel.type.value ?: "",
             onValueChange = {
                 viewModel.type.value = it
                 showErrorName.value = ""
@@ -105,7 +106,7 @@ fun LostItemScreen(gotoLocationOfLostItems: () -> Unit, viewModel: LostItemViewM
             showError = showErrorName.value
         )
         SingleLineInputTextField(
-            value = viewModel.model.value?:"",
+            value = viewModel.model.value ?: "",
             onValueChange = {
                 viewModel.model.value = it
                 showErrorModel.value = ""
@@ -118,7 +119,7 @@ fun LostItemScreen(gotoLocationOfLostItems: () -> Unit, viewModel: LostItemViewM
             showError = showErrorModel.value
         )
         SingleLineInputTextField(
-            value = viewModel.brand.value?:"",
+            value = viewModel.brand.value ?: "",
             onValueChange = {
                 viewModel.brand.value = it
                 showErrorBrand.value = ""
@@ -132,7 +133,7 @@ fun LostItemScreen(gotoLocationOfLostItems: () -> Unit, viewModel: LostItemViewM
         )
         Row {
             SingleLineInputTextField(
-                value = viewModel.color1.value?:"",
+                value = viewModel.color1.value ?: "",
                 onValueChange = {
                     viewModel.color1.value = it
                     showErrorColor1.value = ""
@@ -144,7 +145,7 @@ fun LostItemScreen(gotoLocationOfLostItems: () -> Unit, viewModel: LostItemViewM
                 showError = showErrorColor1.value
             )
             SingleLineInputTextField(
-                value = viewModel.color2.value?:"",
+                value = viewModel.color2.value ?: "",
                 onValueChange = {
                     viewModel.color2.value = it
                     showErrorColor2.value = ""
@@ -156,7 +157,7 @@ fun LostItemScreen(gotoLocationOfLostItems: () -> Unit, viewModel: LostItemViewM
                 showError = showErrorColor2.value
             )
             SingleLineInputTextField(
-                value = viewModel.color3.value?:"",
+                value = viewModel.color3.value ?: "",
                 onValueChange = {
                     viewModel.color3.value = it
                     showErrorColor3.value = ""
@@ -170,7 +171,7 @@ fun LostItemScreen(gotoLocationOfLostItems: () -> Unit, viewModel: LostItemViewM
         }
 
         StringInputTextField(
-            value = viewModel.userDescription.value?:"",
+            value = viewModel.userDescription.value ?: "",
             onValueChange = {
                 viewModel.userDescription.value = it
                 showErrorDescription.value = ""
@@ -195,7 +196,7 @@ fun LostItemScreen(gotoLocationOfLostItems: () -> Unit, viewModel: LostItemViewM
 
         if (viewModel.itemState.value == options[options.size - 1]) {
             SingleLineInputTextField(
-                value = viewModel.itemState.value?:"",
+                value = viewModel.itemState.value ?: "",
                 onValueChange = { viewModel.itemState.value = it },
                 label = stringResource(R.string.state),
                 modifier = Modifier
@@ -206,6 +207,15 @@ fun LostItemScreen(gotoLocationOfLostItems: () -> Unit, viewModel: LostItemViewM
                 scrollState.scrollTo(scrollState.maxValue)
             }
         }
+
+        if (viewModel.descriptionError.value?.isNotEmpty() == true) {
+            Text(
+                text = viewModel.descriptionError.value!!, modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            )
+        }
+        MyCheckbox { viewModel.strictDescription.value = it }
         when (viewModel.uiState.collectAsState().value) {
             is UiState.Error -> {
                 Toast.makeText(
@@ -262,7 +272,9 @@ fun LostItemScreen(gotoLocationOfLostItems: () -> Unit, viewModel: LostItemViewM
                             showErrorColor2.value = ""
                             showErrorColor3.value = ""
                         }
-                        if (viewModel.userDescription.value.toString().trimIndent().trim().isEmpty())
+                        if (viewModel.userDescription.value.toString().trimIndent().trim()
+                                .isEmpty()
+                        )
                             showErrorDescription.value =
                                 context.getString(R.string.this_field_cannot_be_empty)
                         else
@@ -274,28 +286,7 @@ fun LostItemScreen(gotoLocationOfLostItems: () -> Unit, viewModel: LostItemViewM
                             showErrorColor1.value.trimIndent().trim().isEmpty() &&
                             showErrorDescription.value.trimIndent().trim().isEmpty()
                         ) {
-                            val colors = listOf(
-                                viewModel.color1.value,
-                                viewModel.color2.value,
-                                viewModel.color3.value
-                            )
-                            val itemFound = ItemFound(
-                                type = viewModel.type.value,
-                                model = viewModel.model.value,
-                                brand = viewModel.brand.value,
-                                colors = colors,
-                                userDescription = viewModel.userDescription.value
-                            )
-                            viewModel.sendPrompt(
-                                inputs = "${itemFound.type} is this valid type of an physical item that human can lose it ?" +
-//                                        "${itemFound.brand} is this real brand or random word with no meaning ?" +
-//                                        "${itemFound.model} is this real model or random word ?" +
-                                        "${viewModel.color1} is colors in this list is valid or the word is wrong or unknown words ignore empty string ?" +
-                                        "${viewModel.color2} is colors in this list is valid or the word is wrong or unknown words ignore empty string ?" +
-                                        "${viewModel.color3} is colors in this list is valid or the word is wrong or unknown words ignore empty string ?" +
-                                        "${itemFound.userDescription} is userDescription is false when contain unknown words if all words is good retrun true ?",
-                                prompt = "if all the inputs are correct reply only with true also check if only one of them is wrong return only one word false"
-                            )
+                            viewModel.sendPrompt()
 
 //need to send prompt to AI to ask for category
 //                    then ask if inputs are right
@@ -499,4 +490,25 @@ fun Spinner(onValueChange: (String) -> Unit, options: List<String>) {
             }
         }
     }
+}
+
+@Composable
+fun MyCheckbox(onValueChange: (Boolean) -> Unit) {
+    var isChecked by remember { mutableStateOf(true) }
+
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Checkbox(
+            checked = isChecked,
+            onCheckedChange = {
+                isChecked = it
+                onValueChange(it)
+            }
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(text = if (isChecked) stringResource(R.string.more_strict) else stringResource(R.string.less_strict))
+    }
+    Text(
+        text = stringResource(R.string.more_strict_for_better_matching),
+        modifier = Modifier.padding(16.dp, 0.dp)
+    )
 }

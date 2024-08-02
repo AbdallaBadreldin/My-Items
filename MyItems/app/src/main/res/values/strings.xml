@@ -74,4 +74,7 @@
     <string name="other">Other</string>
     <string name="uploading_your_item">Uploading Your Item</string>
     <string name="checking_entries">Checking Entries</string>
+    <string name="more_strict_for_better_matching">More Strict for better matching!</string>
+    <string name="more_strict">More Strict</string>
+    <string name="less_strict">Less Strict</string>
 </resources>
