@@ -18,10 +18,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.fstech.myItems.R
-import com.fstech.myItems.navigation.NavRoute
 import com.fstech.myItems.presentation.auth.AuthActivity
 import com.fstech.myItems.presentation.found.FoundItemActivity
 import com.fstech.myItems.presentation.lost.LostItemActivity
+import com.fstech.myItems.presentation.matchmaking.MatchMakingActivity
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -66,7 +66,9 @@ fun HomeScreen(navController: NavHostController) {
         Button(onClick = {
             if (Firebase.auth.currentUser == null)
                 goToAuthentication(context)
-            else   navController.navigate(NavRoute.MapNavRoute.path)
+            else
+                goToMatchMakingActivity(context)
+
         }) {
             Text(text = stringResource(R.string.search_items_casually))
         }
@@ -74,9 +76,15 @@ fun HomeScreen(navController: NavHostController) {
     }
 }
 
+fun goToMatchMakingActivity(context: Context) {
+    context.startActivity(Intent(context, MatchMakingActivity::class.java))
+
+}
+
 fun goToFoundItemActivity(context: Context) {
     context.startActivity(Intent(context, FoundItemActivity::class.java))
 }
+
 fun goToLostItemActivity(context: Context) {
     context.startActivity(Intent(context, LostItemActivity::class.java))
 }

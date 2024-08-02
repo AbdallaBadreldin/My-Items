@@ -1,5 +1,8 @@
 package com.jetawy.domain.models
 
+import androidx.annotation.Keep
+
+@Keep
 data class ItemLost(
     val type: String?="",
     val model: String?="",
