@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -18,6 +19,8 @@ import java.util.Locale
 @Composable
 fun LostItemEnterDataScreen(function: () -> Unit, viewModel: LostItemViewModel) {
     val context = LocalContext.current
+
+LaunchedEffect("startTheMainTask") {
     viewModel.resetStates()
     val itemLost = ItemLost(
         type = viewModel.type.value,
@@ -26,13 +29,16 @@ fun LostItemEnterDataScreen(function: () -> Unit, viewModel: LostItemViewModel) 
         category = viewModel.category.value,
         itemState = viewModel.itemState.value,
         colors = viewModel.colors.value,
-        description = viewModel.userDescription.value
+        imageDescription = viewModel.imageDescription.value,
+        userDescription = viewModel.userDescription.value
     )
-
+    //I want to add photos to the itemLost object to make ai describe it better
+    //generate category
     viewModel.translatePrompt(
-        itemLost.toString(),
+        itemLost,
         "\ncan you translate the data in this model to English leave parameters as it is and return it as json format"
     )
+}
     when (viewModel.uiState.collectAsState().value) {
         is UiState.Error -> {
             Toast.makeText(
@@ -50,6 +56,17 @@ fun LostItemEnterDataScreen(function: () -> Unit, viewModel: LostItemViewModel) 
         }
 
         is UiState.Success<*> -> {
+            val itemLost:ItemLost =ItemLost(
+                viewModel.type.value,
+                viewModel.model.value,
+                viewModel.brand.value,
+                viewModel.category.value,
+                viewModel.itemState.value,
+                viewModel.colors.value,
+                viewModel.imageDescription.value,
+                viewModel.userDescription.value,
+                viewModel.translatedDescription.value
+            )
             val lat = viewModel.latLng.value?.latitude ?: 0.0
             val lng = viewModel.latLng.value?.longitude ?: 0.0
             val geocoder = Geocoder(context, Locale.ENGLISH)
@@ -59,8 +76,9 @@ fun LostItemEnterDataScreen(function: () -> Unit, viewModel: LostItemViewModel) 
                     viewModel.uploadItems(
                         imageUris = viewModel.list,
                         addresses = viewModel.addresses!![0],
-                        aiResponse = itemLost,
-                        userDescription = viewModel.userDescription.value?:""
+                        aiResponse =itemLost ,
+                        userDescription = viewModel.userDescription.value?:"",
+//                        description = viewModel.userDescription.value?:""
                     )
                 }
             } else {

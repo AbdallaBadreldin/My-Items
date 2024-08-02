@@ -49,6 +49,7 @@ import com.fstech.myItems.BuildConfig
 import com.fstech.myItems.R
 import com.fstech.myItems.presentation.getAppLanguage
 import com.jetawy.domain.models.ItemFound
+import com.jetawy.domain.utils.Converter
 import com.jetawy.domain.utils.UiState
 import java.io.File
 import java.text.SimpleDateFormat
@@ -104,15 +105,7 @@ fun FoundItemScreen(
         }
     }
 
-    fun uriToBitmap(contentResolver: ContentResolver, imageUri: Uri): Bitmap? {
-        return try {
-            val inputStream = contentResolver.openInputStream(imageUri)
-            BitmapFactory.decodeStream(inputStream)
-        } catch (e: Exception) {
-            // Handle exceptions (e.g., file not found, invalid URI)
-            null
-        }
-    }
+
 
     fun openCameraRoutine() {
         val permissionCheckResult =
@@ -201,7 +194,7 @@ fun FoundItemScreen(
                         val bitmapList = mutableListOf<Bitmap>()
                         viewModel.list.forEach {
                             if (it != null || it != Uri.EMPTY) {
-                                uriToBitmap(contentResolver, it)?.let { it1 ->
+                                Converter().uriToBitmap(contentResolver, it)?.let { it1 ->
                                     bitmapList.add(
                                         it1
                                     )

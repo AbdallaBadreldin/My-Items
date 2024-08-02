@@ -1,13 +1,14 @@
 package com.jetawy.domain.models
 
 data class ItemLost(
-    val type: String?=null,
-    val model: String?=null,
-    val brand: String?=null,
+    val type: String?="",
+    val model: String?="",
+    val brand: String?="",
     val category: String?="",
-    val itemState: String?=null,
-    val colors: List<String>?=null,
-    val description: String?=null,
-    val userDescription: String?=null
+    val itemState: String?="",
+    val colors: List<String>?= listOf(),
+    val imageDescription: String?="",
+    var userDescription: String?="",
+    val translatedDescription: String?=""
 )
 

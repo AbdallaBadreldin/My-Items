@@ -13,6 +13,5 @@ interface FoundItemsRepository {
         imageUris: List<Uri>,
         addresses: Address,
         AiResponse: ItemFound,
-        userDescription: String
     ): Any
 }

@@ -46,7 +46,7 @@ import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberMarkerState
 import kotlinx.coroutines.delay
 
 @Composable
@@ -57,6 +57,8 @@ fun LostItemLocationScreen(
     var isMapLoading by remember { mutableStateOf(true) }
     val locationName = remember { mutableStateOf("") }
     val locationTitle = remember { mutableStateOf("") }
+    val markerState = rememberMarkerState(position = viewModel.latLng.value ?: LatLng(0.0, 0.0))
+
     val context = LocalContext.current
     LaunchedEffect(Unit) {
         delay(1000) // Simulate 1-second delay
@@ -189,10 +191,13 @@ fun LostItemLocationScreen(
                     }, onMapLoaded = { viewModel.latLng.value = null }
                 ) {
                     if (viewModel.latLng.value != null) {
+                        markerState.position = viewModel.latLng.value!!
                         Marker(
-                            state = remember { MarkerState(position = viewModel.latLng.value!!) },
+                            state = markerState,
                             title = locationTitle.value,
                             snippet = locationName.value,
+                            draggable = true,
+                            onClick = { true }
                         )
                     }
                 }

@@ -21,13 +21,11 @@ class FoundItemsRepositoryImpl @Inject constructor(private val fbs: FirebaseData
         imageUris: List<Uri>,
         addresses: Address,
         AiResponse: ItemFound,
-        userDescription: String
     ): Flow<UiState> {
         return fbs.uploadFoundItems(
             imageUris,
             addresses,
             AiResponse,
-            userDescription
         )
     }
 

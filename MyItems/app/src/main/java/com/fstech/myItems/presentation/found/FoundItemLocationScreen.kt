@@ -46,7 +46,7 @@ import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberMarkerState
 import kotlinx.coroutines.delay
 
 @Composable
@@ -57,6 +57,8 @@ fun FoundItemLocationScreen(
     var isMapLoading by remember { mutableStateOf(true) }
     val locationName = remember { mutableStateOf("") }
     val locationTitle = remember { mutableStateOf("") }
+    val markerState = rememberMarkerState(position = viewModel.latLng.value ?: LatLng(0.0, 0.0))
+
     val context = LocalContext.current
     LaunchedEffect(Unit) {
         delay(1000) // Simulate 1-second delay
@@ -121,7 +123,7 @@ fun FoundItemLocationScreen(
                 // on below line we are adding on
                 // value change for text field.
                 onValueChange = {
-                    launchMapInputOverlay.invoke()
+                    launchMapInputOverlay()
                 },
                 // on below line we are adding place holder
                 // as text as "Enter your email"
@@ -129,7 +131,7 @@ fun FoundItemLocationScreen(
                     Text(
                         text = stringResource(R.string.enter_your_location_to_search),
                         modifier = Modifier.clickable {
-                            launchMapInputOverlay.invoke()
+                            launchMapInputOverlay()
                         })
                 },
                 // on below line we are adding modifier to it
@@ -186,13 +188,16 @@ fun FoundItemLocationScreen(
                         viewModel.latLng.value = LatLng(it.latitude, it.longitude)
                         locationName.value = ""
                         locationTitle.value = context.getString(R.string.custom_location)
-                    }, onMapLoaded = { viewModel.latLng.value = null }
+                    },
                 ) {
                     if (viewModel.latLng.value != null) {
+                        markerState.position = viewModel.latLng.value!!
                         Marker(
-                            state = MarkerState(position = viewModel.latLng.value!!),
+                            state = markerState,
                             title = locationTitle.value,
                             snippet = locationName.value,
+                            draggable = true,
+                            onClick = { true }
                         )
                     }
                 }

@@ -4,8 +4,11 @@ import android.graphics.Bitmap
 import android.location.Address
 import android.net.Uri
 import android.util.Log
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstech.myItems.BuildConfig.apiKey
@@ -32,6 +35,7 @@ class FoundItemViewModel @Inject constructor(private val foundItemsRepositoryImp
     var addresses: MutableList<Address>? = null
     val list = mutableStateListOf<Uri>()
     val latLng = mutableStateOf<LatLng?>(null)
+    var userDescription = mutableStateOf<String?>("")
 
     fun updateItem(itemIndex: Int, item: Uri) {
         list.set(itemIndex, item) // sets the element at 'itemIndex' to 'item'
@@ -104,14 +108,27 @@ class FoundItemViewModel @Inject constructor(private val foundItemsRepositoryImp
         imageUris: List<Uri>,
         addresses: Address,
         aiResponse: ItemFound,
-        userDescription: String
     ) {
         viewModelScope.launch {
+            try {
+                val translateRequest ="translate next string \"${userDescription.value}\" to English if it's not translatable return false"  // or the original string
+                val translateResponse = generativeModel.generateContent(
+                    content {
+                        text(translateRequest)
+                    }
+                )
+                translateResponse.text?.let {
+                    aiResponse.translatedDescription= it
+                    aiResponse.userDescription = userDescription.value
+                }
+
+            }catch (e:Exception){
+                _uploadItems.value = UiState.Error(e.localizedMessage ?: "")
+            }
             foundItemsRepositoryImpl.uploadFoundItems(
                 imageUris,
                 addresses = addresses,
                 aiResponse,
-                userDescription
             ).collect { req ->
                 _uploadItems.emit(req)
             }

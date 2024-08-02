@@ -39,14 +39,13 @@ fun FoundItemEnterDataScreen(
     viewModel: FoundItemViewModel
 ) {
     val context = LocalContext.current
-    var userDescription by remember { mutableStateOf("") }
     val uploadingItems = viewModel.uploadItems.collectAsState()
     val aiResponse =
         (viewModel.uiState.collectAsState().value as UiState.Success<*>).outputData as ItemFound
     Column {
         StringInputTextField(
-            value = userDescription,
-            onValueChange = { userDescription = it },
+            value = viewModel.userDescription.value?:"",
+            onValueChange = { viewModel.userDescription.value = it },
             label = stringResource(R.string.can_you_tell_us_more_details_or_description_of_the_item_to_help_us_matching_it_to_it_s_owner_faster)
         )
         when (uploadingItems.value) {
@@ -65,7 +64,7 @@ fun FoundItemEnterDataScreen(
                         .fillMaxWidth()
                         .padding(32.dp),
                     onClick = {
-                        uploadDataRoutine(context, viewModel, aiResponse, userDescription)
+                        uploadDataRoutine(context, viewModel, aiResponse, viewModel.userDescription.value?:"")
                     }) { Text(text = stringResource(R.string.upload_data)) }
             }
 
@@ -93,6 +92,7 @@ fun uploadDataRoutine(
     aiResponse: ItemFound,
     userDescription: String
 ) {
+    aiResponse.userDescription = userDescription
     val lat = viewModel.latLng.value?.latitude ?: 0.0
     val lng = viewModel.latLng.value?.longitude ?: 0.0
     val geocoder = Geocoder(context, Locale.ENGLISH)
@@ -103,7 +103,6 @@ fun uploadDataRoutine(
                 imageUris = viewModel.list,
                 addresses = addresses[0],
                 aiResponse,
-                userDescription
             )
         }
     } else {
@@ -113,7 +112,6 @@ fun uploadDataRoutine(
             imageUris = viewModel.list,
             addresses = addresses?.get(0)!!,
             aiResponse,
-            userDescription
         )
     }
 }

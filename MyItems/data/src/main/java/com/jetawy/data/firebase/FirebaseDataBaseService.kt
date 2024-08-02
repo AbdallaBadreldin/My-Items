@@ -22,6 +22,5 @@ interface FirebaseDataBaseService {
         imageUris: List<Uri>,
         addresses: Address,
         aiResponse: ItemFound,
-        userDescription: String
     ): Flow<UiState>
 }

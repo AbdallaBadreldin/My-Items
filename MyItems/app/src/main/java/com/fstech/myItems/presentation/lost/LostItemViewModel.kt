@@ -1,8 +1,8 @@
 package com.fstech.myItems.presentation.lost
 
+import android.graphics.Bitmap
 import android.location.Address
 import android.net.Uri
-import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -33,7 +33,9 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
     val list = mutableStateListOf<Uri>()
     val latLng = mutableStateOf<LatLng?>(null)
 
+    var translatedDescription = mutableStateOf<String?>("")
     var userDescription = mutableStateOf<String?>("")
+    var imageDescription = mutableStateOf<String?>("")
     var type = mutableStateOf<String?>("")
     var model = mutableStateOf<String?>("")
     var brand = mutableStateOf<String?>("")
@@ -43,7 +45,7 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
     var color1 = mutableStateOf<String?>("")
     var color2 = mutableStateOf<String?>("")
     var color3 = mutableStateOf<String?>("")
-    var descriptionError = mutableStateOf<String?>("")
+    var userDescriptionError = mutableStateOf<String?>("")
     var strictDescription = mutableStateOf<Boolean?>(true)
 
     fun addList(list: List<Uri>) {
@@ -78,12 +80,59 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
         apiKey = apiKey
     )
 
-    fun sendPrompt() {
+    fun sendPrompt(
+        bitmap: MutableList<Bitmap>,
+    ) {
         _uiState.value = UiState.Loading
-        descriptionError.value = ""
+        userDescriptionError.value = ""
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                if (bitmap.isNotEmpty()) {
+                    val checkImages = "can you check if the main object in images is \"${
+                        type.value.toString().trim().trimIndent()
+                    }\"? if the question answer is true return only true word else return the reason"
+                    val checkImagesResponse = generativeModel.generateContent(
+                        content {
+                            bitmap.forEach { image(it) }
+                            text(checkImages)
+                        }
+                    )
+                    checkImagesResponse.text?.let { outputContent ->
+
+                        when (outputContent.trim().trimIndent().lowercase().contains("true")) {
+                            true -> {}
+                            false -> {
+                                userDescriptionError.value = (outputContent)
+                                _uiState.emit(UiState.Error("Check Images"))
+                                return@launch
+                            }
+                        }
+                    }
+
+
+                    val generateDescriptionRequest =
+                        "can you describe object in the image and return the description in string ?"
+                    val generateDescriptionResponse = generativeModel.generateContent(
+                        content {
+                            bitmap.forEach { image(it) }
+                            text(generateDescriptionRequest)
+                        }
+                    )
+                    generateDescriptionResponse.text?.let { outputContent ->
+
+                        when (outputContent.trim().trimIndent().lowercase().contains("true")) {
+                            true -> {
+                                imageDescription.value = outputContent
+                            }
+                            false -> {
+                                userDescriptionError.value = (outputContent)
+                                _uiState.emit(UiState.Error("Check Images"))
+                                return@launch
+                            }
+                        }
+                    }
+                }
                 val checkType =
                     "is \"${type.value.toString()}\" valid type of an physical item that can be lost ? return only true or if false return the reason in ${getAppLanguage()}"
                 val checkTypeResponse = generativeModel.generateContent(
@@ -92,14 +141,11 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
                     }
                 )
                 checkTypeResponse.text?.let { outputContent ->
-                    Log.e(
-                        "LostItemScreenViewModel",
-                        outputContent
-                    )
+
                     when (outputContent.trim().trimIndent().lowercase().contains("true")) {
                         true -> {}
                         false -> {
-                            descriptionError.value = (outputContent)
+                            userDescriptionError.value = (outputContent)
                             _uiState.emit(UiState.Error("Check your inputs"))
                             return@launch
                         }
@@ -116,14 +162,11 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
                         }
                     )
                     checkColor1Response.text?.let { outputContent ->
-                        Log.e(
-                            "LostItemScreenViewModel2",
-                            outputContent
-                        )
+
                         when (outputContent.trim().trimIndent().lowercase().contains("true")) {
                             true -> {}
                             false -> {
-                                descriptionError.value = (outputContent)
+                                userDescriptionError.value = (outputContent)
                                 _uiState.emit(UiState.Error("Check your inputs"))
                                 return@launch
                             }
@@ -141,14 +184,10 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
                         }
                     )
                     checkColor2Response.text?.let { outputContent ->
-                        Log.e(
-                            "LostItemScreenViewModel2",
-                            outputContent
-                        )
                         when (outputContent.trim().trimIndent().lowercase().contains("true")) {
                             true -> {}
                             false -> {
-                                descriptionError.value = (outputContent)
+                                userDescriptionError.value = (outputContent)
                                 _uiState.emit(UiState.Error("Check your inputs"))
                                 return@launch
                             }
@@ -165,14 +204,11 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
                         }
                     )
                     checkColor3Response.text?.let { outputContent ->
-                        Log.e(
-                            "LostItemScreenViewModel2",
-                            outputContent
-                        )
+
                         when (outputContent.trim().trimIndent().lowercase().contains("true")) {
                             true -> {}
                             false -> {
-                                descriptionError.value = (outputContent)
+                                userDescriptionError.value = (outputContent)
                                 _uiState.emit(UiState.Error("Check your inputs"))
                                 return@launch
                             }
@@ -191,17 +227,14 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
                     }
                 )
                 checkUserDescriptionResponse.text?.let { outputContent ->
-                    Log.e(
-                        "LostItemScreenViewModel4",
-                        outputContent
-                    )
+
                     when (outputContent.trim().trimIndent().lowercase().contains("true")) {
                         true -> {
                             _uiState.emit(UiState.Success(outputContent))
                         }
 
                         false -> {
-                            descriptionError.value = (outputContent)
+                            userDescriptionError.value = (outputContent)
                             _uiState.emit(UiState.Error("Check your inputs"))
                             return@launch
                         }
@@ -218,22 +251,31 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
     }
 
     fun translatePrompt(
-        inputs: String,
-        prompt: String
+        inputs: ItemLost,
+        prompt: String,
     ) {
         _uiState.value = UiState.Loading
-        Log.e("translatePrompt inputs", inputs)
-        Log.e("translatePrompt prompt", prompt)
+
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                val translateDescription = "can you translate the following \"${userDescription.value.toString().trimIndent().trim()}\" to English and return it as string?"
+                val translateDescriptionResponse = generativeModel.generateContent(
+                    content {
+                        text(translateDescription)
+                    }
+                )
+                translateDescriptionResponse.text?.let { outputContent ->
+                    translatedDescription.value = outputContent
+                    inputs.userDescription = userDescription.value
+                }
+
                 val response = generativeModel.generateContent(
                     content {
-                        text(inputs)
+                        text(inputs.toString())
                         text(prompt)
                     }
                 )
                 response.text?.let { outputContent ->
-                    Log.e("outputContent", outputContent)
 
                     try {
                         val data = convertJsonToDataClass(outputContent)

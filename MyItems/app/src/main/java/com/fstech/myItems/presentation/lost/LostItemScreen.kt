@@ -1,5 +1,6 @@
 package com.fstech.myItems.presentation.lost
 
+import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
@@ -51,6 +52,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.fstech.myItems.R
 import com.fstech.myItems.presentation.found.StringInputTextField
+import com.jetawy.domain.utils.Converter
 import com.jetawy.domain.utils.UiState
 
 @Composable
@@ -70,7 +72,7 @@ fun LostItemScreen(gotoLocationOfLostItems: () -> Unit, viewModel: LostItemViewM
     val showErrorColor1 = remember { mutableStateOf("") }
     val showErrorColor2 = remember { mutableStateOf("") }
     val showErrorColor3 = remember { mutableStateOf("") }
-    val showErrorDescription = remember { mutableStateOf("") }
+    val showErrorUserDescription = remember { mutableStateOf("") }
 
     Column(
         Modifier
@@ -174,14 +176,14 @@ fun LostItemScreen(gotoLocationOfLostItems: () -> Unit, viewModel: LostItemViewM
             value = viewModel.userDescription.value ?: "",
             onValueChange = {
                 viewModel.userDescription.value = it
-                showErrorDescription.value = ""
+                showErrorUserDescription.value = ""
             },
             label = stringResource(R.string.can_you_tell_us_more_details_or_description_of_the_item_to_find_it_faster),
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.CenterHorizontally)
                 .padding(16.dp),
-            showError = showErrorDescription.value
+            showError = showErrorUserDescription.value
         )
 
 
@@ -208,9 +210,9 @@ fun LostItemScreen(gotoLocationOfLostItems: () -> Unit, viewModel: LostItemViewM
             }
         }
 
-        if (viewModel.descriptionError.value?.isNotEmpty() == true) {
+        if (viewModel.userDescriptionError.value?.isNotEmpty() == true) {
             Text(
-                text = viewModel.descriptionError.value!!, modifier = Modifier
+                text = viewModel.userDescriptionError.value!!, modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
             )
@@ -275,18 +277,31 @@ fun LostItemScreen(gotoLocationOfLostItems: () -> Unit, viewModel: LostItemViewM
                         if (viewModel.userDescription.value.toString().trimIndent().trim()
                                 .isEmpty()
                         )
-                            showErrorDescription.value =
+                            showErrorUserDescription.value =
                                 context.getString(R.string.this_field_cannot_be_empty)
                         else
-                            showErrorDescription.value = ""
+                            showErrorUserDescription.value = ""
 
                         if (showErrorName.value.trimIndent().trim().isEmpty() &&
                             showErrorModel.value.trimIndent().trim().isEmpty() &&
                             showErrorBrand.value.trimIndent().trim().isEmpty() &&
                             showErrorColor1.value.trimIndent().trim().isEmpty() &&
-                            showErrorDescription.value.trimIndent().trim().isEmpty()
+                            showErrorUserDescription.value.trimIndent().trim().isEmpty()
                         ) {
-                            viewModel.sendPrompt()
+                            val contentResolver = context.contentResolver
+                            val bitmapList = mutableListOf<Bitmap>()
+                            viewModel.list.forEach {
+                                if (it != null || it != Uri.EMPTY) {
+                                    Converter().uriToBitmap(contentResolver, it)?.let { it1 ->
+                                        bitmapList.add(
+                                            it1
+                                        )
+                                    }
+                                } else {
+                                    // Handle the error (e.g., display an error message)
+                                }
+                            }
+                            viewModel.sendPrompt(bitmapList)
 
 //need to send prompt to AI to ask for category
 //                    then ask if inputs are right
@@ -446,6 +461,7 @@ fun SingleLineInputTextField(
 fun Spinner(onValueChange: (String) -> Unit, options: List<String>) {
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionText by remember { mutableStateOf(options[0]) }
+    LaunchedEffect(key1 = "selectedOptionText") { onValueChange(selectedOptionText)}
     Column(
         modifier = Modifier
             .fillMaxWidth()
