@@ -29,6 +29,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl: LostItemsRepositoryImpl) :
     ViewModel() {
+    lateinit var aiResponse: ItemLost
     var addresses: MutableList<Address>? = null
     val list = mutableStateListOf<Uri>()
     val latLng = mutableStateOf<LatLng?>(null)
@@ -41,7 +42,7 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
     var brand = mutableStateOf<String?>("")
     var category = mutableStateOf("")  //generate it
     var itemState = mutableStateOf<String?>("")
-    var colors = mutableStateOf(listOf(""))  //add three colors together
+    var colors = mutableStateListOf<String>()  //add three colors together
     var color1 = mutableStateOf<String?>("")
     var color2 = mutableStateOf<String?>("")
     var color3 = mutableStateOf<String?>("")
@@ -89,9 +90,9 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 if (bitmap.isNotEmpty()) {
-                    val checkImages = "can you check if the main object in images is \"${
+                    val checkImages = "is the main object in images is type of \"${
                         type.value.toString().trim().trimIndent()
-                    }\"? if the question answer is true return only true word else return the reason"
+                    }\"? if the question answer is yes then reply with only true word else reply false and translate the reason to ${getAppLanguage()} and reply with this reason"
                     val checkImagesResponse = generativeModel.generateContent(
                         content {
                             bitmap.forEach { image(it) }
@@ -112,7 +113,7 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
 
 
                     val generateDescriptionRequest =
-                        "can you describe object in the image and return the description in string ?"
+                        "can you describe object in the image and return the description in string? translate it to ${getAppLanguage()}"
                     val generateDescriptionResponse = generativeModel.generateContent(
                         content {
                             bitmap.forEach { image(it) }
@@ -120,21 +121,11 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
                         }
                     )
                     generateDescriptionResponse.text?.let { outputContent ->
-
-                        when (outputContent.trim().trimIndent().lowercase().contains("true")) {
-                            true -> {
-                                imageDescription.value = outputContent
-                            }
-                            false -> {
-                                userDescriptionError.value = (outputContent)
-                                _uiState.emit(UiState.Error("Check Images"))
-                                return@launch
-                            }
-                        }
+                        imageDescription.value = outputContent
                     }
                 }
                 val checkType =
-                    "is \"${type.value.toString()}\" valid type of an physical item that can be lost ? return only true or if false return the reason in ${getAppLanguage()}"
+                    "is \"${type.value.toString()}\" valid type of an physical item that can be lost ? return only true or if false return the reason and translate it to ${getAppLanguage()}"
                 val checkTypeResponse = generativeModel.generateContent(
                     content {
                         text(checkType)
@@ -154,7 +145,7 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
                 if (color1.value.toString().isNotEmpty()) {
 
                     val checkColor1 =
-                        "is \"${color1.value.toString()}\" color ? return with true or if false return the reason in ${getAppLanguage()}"
+                        "is word \"${color1.value.toString()}\" a color ? return with true or if false return the reason and translate it to ${getAppLanguage()}"
 
                     val checkColor1Response = generativeModel.generateContent(
                         content {
@@ -176,7 +167,7 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
                 if (color2.value.toString().isNotEmpty()) {
 
                     val checkColor2 =
-                        "is \"${color2.value.toString()}\" color ? return with true or if false return the reason in ${getAppLanguage()}"
+                        "is word \"${color2.value.toString()}\" a color ? return with true or if false return the reason in ${getAppLanguage()}"
 
                     val checkColor2Response = generativeModel.generateContent(
                         content {
@@ -196,7 +187,7 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
                 }
                 if (color3.value.toString().isNotEmpty()) {
                     val checkColor3 =
-                        "is \"${color3.value.toString()}\" color ? return with true or if false return the reason in ${getAppLanguage()}"
+                        "is word \"${color3.value.toString()}\" a color ? return with true or if false return the reason and translate it to ${getAppLanguage()}"
 
                     val checkColor3Response = generativeModel.generateContent(
                         content {
@@ -217,9 +208,9 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
                 }
 
                 val checkUserDescription = if (strictDescription.value == true)
-                    "is \"${userDescription.value.toString()}\" describing \"${type.value.toString()}\" ? then check is \"${userDescription.value.toString()}\" making sense ? return true or if false return the reason in ${getAppLanguage()}"
+                    "is \"${userDescription.value.toString()}\" describing \"${type.value.toString()}\" ? then check is \"${userDescription.value.toString()}\" making sense ? return true or if false return the reason and translate it to ${getAppLanguage()}"
                 else
-                    "is \"${userDescription.value.toString()}\" making sense ? return true or if false return the reason in ${getAppLanguage()}"
+                    "is \"${userDescription.value.toString()}\" making sense ? return true or if false return the reason and translate it to ${getAppLanguage()}"
 
                 val checkUserDescriptionResponse = generativeModel.generateContent(
                     content {
@@ -258,20 +249,31 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val translateDescription = "can you translate the following \"${userDescription.value.toString().trimIndent().trim()}\" to English and return it as string?"
+                val translateDescription = "can you translate the following \"${
+                    userDescription.value.toString().trimIndent().trim()
+                }\" to English and return it as string? if you are not able to translate return only false word"
                 val translateDescriptionResponse = generativeModel.generateContent(
                     content {
                         text(translateDescription)
                     }
                 )
                 translateDescriptionResponse.text?.let { outputContent ->
-                    translatedDescription.value = outputContent
-                    inputs.userDescription = userDescription.value
-                }
+                    when (outputContent.trim().trimIndent().lowercase().contains("false")) {
+                        true -> {
+                            _uiState.emit(UiState.Error("Check your inputs"))
+                        }
 
+                        false -> {
+                            translatedDescription.value = outputContent
+                            inputs.userDescription = userDescription.value
+                        }
+                    }
+
+                }
+                val inputsJson = Gson().toJson(inputs)
                 val response = generativeModel.generateContent(
                     content {
-                        text(inputs.toString())
+                        text(inputsJson)
                         text(prompt)
                     }
                 )
@@ -280,6 +282,7 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
                     try {
                         val data = convertJsonToDataClass(outputContent)
                         _uiState.emit(UiState.Success(data))
+                        aiResponse = data!!
                     } catch (e: Exception) {
                         _uiState.emit(UiState.Error(e.localizedMessage ?: ""))
 
@@ -307,14 +310,23 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
         imageUris: List<Uri>,
         addresses: Address,
         aiResponse: ItemLost,
-        userDescription: String
+        userDescription: String,
+        userResponse: ItemLost
     ) {
+        colors.clear()
+        colors.add(color1.value.toString())
+        if (color2.value.toString().isNotEmpty())
+            colors.add(color2.value.toString())
+        if (color3.value.toString().isNotEmpty())
+            colors.add(color3.value.toString())
+        aiResponse.colors = colors
+        aiResponse.userDescription = userDescription
         viewModelScope.launch {
             lostItemsRepositoryImpl.uploadLostItems(
                 imageUris,
                 addresses = addresses,
                 aiResponse,
-                userDescription
+                userResponse = userResponse
             ).collect { req ->
                 _uploadItems.emit(req)
             }

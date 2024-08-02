@@ -107,7 +107,7 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
         imageUris: List<Uri>,
         addresses: Address,
         aiResponse: ItemLost,
-        userDescription: String
+        userResponse: ItemLost,
     ): Flow<UiState> {
         //first we will upload photos to firebase storage
         _uploadLostItem.emit(UiState.Loading)
@@ -138,7 +138,8 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
                 myRef.child("images").setValue(listOfDownloadUrls.toList()).await()
                 myRef.child("addressUrl").setValue(addresses.url).await()
                 myRef.child("aiResponse").setValue(aiResponse).await()
-                myRef.child("userDescription").setValue(userDescription).await()
+                myRef.child("userResponse").setValue(userResponse).await()
+//                myRef.child("userDescription").setValue(userDescription).await()
                 myRef.child("user").setValue(FirebaseAuth.getInstance().currentUser?.uid).await()
                 myRef.child("timestamp").setValue(System.currentTimeMillis()).await()
             } catch (e: Exception) {

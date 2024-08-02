@@ -79,7 +79,7 @@ fun openLostItemUploadSuccessScreen(
     navGraphBuilder.composable(
         route = NavRoute.LostItemUploadSuccessNavRoute.path
     ) {
-        LostItemUploadSuccessScreen()
+        LostItemUploadSuccessScreen(viewModel)
     }
 }
 

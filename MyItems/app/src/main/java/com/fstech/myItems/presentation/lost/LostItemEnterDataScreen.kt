@@ -28,7 +28,7 @@ LaunchedEffect("startTheMainTask") {
         brand = viewModel.brand.value,
         category = viewModel.category.value,
         itemState = viewModel.itemState.value,
-        colors = viewModel.colors.value,
+        colors = viewModel.colors,
         imageDescription = viewModel.imageDescription.value,
         userDescription = viewModel.userDescription.value
     )
@@ -62,7 +62,7 @@ LaunchedEffect("startTheMainTask") {
                 viewModel.brand.value,
                 viewModel.category.value,
                 viewModel.itemState.value,
-                viewModel.colors.value,
+                viewModel.colors,
                 viewModel.imageDescription.value,
                 viewModel.userDescription.value,
                 viewModel.translatedDescription.value
@@ -76,7 +76,8 @@ LaunchedEffect("startTheMainTask") {
                     viewModel.uploadItems(
                         imageUris = viewModel.list,
                         addresses = viewModel.addresses!![0],
-                        aiResponse =itemLost ,
+                        aiResponse =viewModel.aiResponse ,
+                        userResponse=itemLost,
                         userDescription = viewModel.userDescription.value?:"",
 //                        description = viewModel.userDescription.value?:""
                     )
@@ -88,7 +89,8 @@ LaunchedEffect("startTheMainTask") {
                     imageUris = viewModel.list,
                     addresses = viewModel.addresses!![0],
                     aiResponse = itemLost,
-                    userDescription = viewModel.userDescription.value?:""
+                    userDescription = viewModel.userDescription.value?:"",
+                    userResponse = itemLost
                 )
             }
 

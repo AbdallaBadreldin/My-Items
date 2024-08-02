@@ -14,7 +14,7 @@ interface FirebaseDataBaseService {
         imageUris: List<Uri>,
         addresses: Address,
         aiResponse: ItemLost,
-        userDescription: String
+        userResponse: ItemLost,
     ): Flow<UiState>
 
     suspend fun getFoundItemData(): Flow<UiState>

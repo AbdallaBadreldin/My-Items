@@ -3,7 +3,6 @@ package com.jetawy.data.repositories
 import android.location.Address
 import android.net.Uri
 import com.jetawy.data.firebase.FirebaseDataBaseService
-import com.jetawy.domain.models.ItemFound
 import com.jetawy.domain.models.ItemLost
 import com.jetawy.domain.repository.LostItemsRepository
 import com.jetawy.domain.utils.UiState
@@ -21,13 +20,13 @@ class LostItemsRepositoryImpl @Inject constructor(private val fbs: FirebaseDataB
         imageUris: List<Uri>,
         addresses: Address,
         AiResponse: ItemLost,
-        userDescription: String
+        userResponse: ItemLost,
     ): Flow<UiState> {
         return fbs.uploadLostItems(
             imageUris,
             addresses,
             AiResponse,
-            userDescription
+            userResponse
         )
     }
 

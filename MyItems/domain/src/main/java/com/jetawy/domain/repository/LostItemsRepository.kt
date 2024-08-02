@@ -13,6 +13,6 @@ interface LostItemsRepository  {
         imageUris: List<Uri>,
         addresses: Address,
         AiResponse: ItemLost,
-        userDescription: String
+        userResponse: ItemLost,
     ): Any
 }
