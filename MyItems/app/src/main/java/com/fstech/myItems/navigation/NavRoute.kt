@@ -16,6 +16,9 @@ sealed class NavRoute(val path: String) {
     object LostItemEnterDataNavRoute : NavRoute("lost_item_enter_data_screen")
     object LostItemUploadSuccessNavRoute : NavRoute("lost_item_upload_success_screen")
 
+   //matchmaking
+    object ShowItemsNavRoute : NavRoute("show_items_screen")
+
     // build navigation path (for screen navigation)
     fun withArgs(vararg args: String): String {
         return buildString {

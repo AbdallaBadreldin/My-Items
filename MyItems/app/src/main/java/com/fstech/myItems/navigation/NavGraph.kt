@@ -16,6 +16,8 @@ import com.fstech.myItems.presentation.lost.LostItemLocationScreen
 import com.fstech.myItems.presentation.lost.LostItemScreen
 import com.fstech.myItems.presentation.lost.LostItemUploadSuccessScreen
 import com.fstech.myItems.presentation.lost.LostItemViewModel
+import com.fstech.myItems.presentation.matchmaking.MatchMakingViewModel
+import com.fstech.myItems.presentation.matchmaking.ShowItemsScreen
 import com.fstech.myItems.presentation.welcome.WelcomeScreen
 
 @Composable
@@ -55,7 +57,27 @@ fun NavGraph(
         openLostItemUploadSuccessScreen(navController = navController, this, viewModel)
     }
 }
+@Composable
+fun NavGraph(
+    navController: NavHostController,
+    viewModel: MatchMakingViewModel
+) {
+    NavHost(navController = navController, startDestination = NavRoute.ShowItemsNavRoute.path) {
+openShowItemsScreen(navController = navController, this, viewModel)
+    }
+}
 
+fun openShowItemsScreen(
+    navController: NavHostController,
+    navGraphBuilder: NavGraphBuilder,
+    viewModel: MatchMakingViewModel
+){
+    navGraphBuilder.composable(
+        route = NavRoute.ShowItemsNavRoute.path
+    ) {
+        ShowItemsScreen(viewModel)
+    }
+}
 fun openLostItemEnterDataScreen(
     navController: NavHostController,
     navGraphBuilder: NavGraphBuilder,
