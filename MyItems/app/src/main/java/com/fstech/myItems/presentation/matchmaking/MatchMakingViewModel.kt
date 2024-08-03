@@ -19,6 +19,8 @@ class MatchMakingViewModel @Inject constructor(
     private val foundItemsRepo: FoundItemsRepositoryImpl,
     private val lostItemsRepo: LostItemsRepositoryImpl
 ) : ViewModel() {
+    var itemIndex = 0
+
     private val _foundUiState: MutableStateFlow<UiState> =
         MutableStateFlow(UiState.Initial)
     val foundUiState: StateFlow<UiState> =

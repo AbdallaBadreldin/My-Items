@@ -6,6 +6,7 @@ import androidx.annotation.Keep
 data class ItemLostResponse(
     var aiResponse: AiResponse? = AiResponse(),
     var location: String? = "",
+    var images: List<String?>? = listOf(),
     var objectID: String? = "",
     var timestamp: Long? = 0L,
     var user: String? = "",

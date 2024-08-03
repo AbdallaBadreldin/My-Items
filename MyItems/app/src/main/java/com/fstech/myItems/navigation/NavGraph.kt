@@ -57,13 +57,14 @@ fun NavGraph(
         openLostItemUploadSuccessScreen(navController = navController, this, viewModel)
     }
 }
+
 @Composable
 fun NavGraph(
     navController: NavHostController,
     viewModel: MatchMakingViewModel
 ) {
     NavHost(navController = navController, startDestination = NavRoute.ShowItemsNavRoute.path) {
-openShowItemsScreen(navController = navController, this, viewModel)
+        openShowItemsScreen(navController = navController, this, viewModel)
     }
 }
 
@@ -71,13 +72,14 @@ fun openShowItemsScreen(
     navController: NavHostController,
     navGraphBuilder: NavGraphBuilder,
     viewModel: MatchMakingViewModel
-){
+) {
     navGraphBuilder.composable(
         route = NavRoute.ShowItemsNavRoute.path
     ) {
-        ShowItemsScreen(viewModel)
+        ShowItemsScreen({ navController.navigate(NavRoute.MatchMakingNavRoute.path) }, viewModel)
     }
 }
+
 fun openLostItemEnterDataScreen(
     navController: NavHostController,
     navGraphBuilder: NavGraphBuilder,
