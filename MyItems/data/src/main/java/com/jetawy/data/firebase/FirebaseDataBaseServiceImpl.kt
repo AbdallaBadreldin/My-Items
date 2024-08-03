@@ -116,11 +116,11 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
                     //start getting data for each item by using Ids that we got in profile
                     val profileItem = profileItemSnapShot.getValue(ProfileItem::class.java)
                     val itemRef =
-                        db.getReference("/lostItems/${profileItem?.countryName}/${profileItem?.objectID}")
-                    val lostItemsSnapShot = itemRef.get().await()
+                        db.getReference("/foundItems/${profileItem?.countryName}/${profileItem?.objectID}")
+                    val foundItemsSnapShot = itemRef.get().await()
 //                    lostItemsSnapShot?.children?.forEach { it ->
-                    Log.d("TAG", "getFoundItemData: ${lostItemsSnapShot}")
-                    lostItemsSnapShot.getValue(ItemFoundResponse::class.java)?.let {
+                    Log.d("TAG", "getFoundItemData: ${foundItemsSnapShot}")
+                    foundItemsSnapShot.getValue(ItemFoundResponse::class.java)?.let {
                         profileItemDetails.add(it)
 //                        }
                     }
@@ -198,11 +198,11 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
         _getLostItemData.emit(UiState.Loading)
         try {
             CoroutineScope(Dispatchers.IO).launch {
-                val foundRef =
+                val lostRef =
                     db.getReference("/profiles/${FirebaseAuth.getInstance().currentUser?.uid}/lostItems")
                 val profileItemDetails = mutableListOf<ItemLostResponse>()
                 //get list of items Ids from Profile
-                val item = foundRef.get().await()
+                val item = lostRef.get().await()
                 item?.children?.forEach { profileItemSnapShot ->
                     //start getting data for each item by using Ids that we got in profile
                     val profileItem = profileItemSnapShot.getValue(ProfileItem::class.java)

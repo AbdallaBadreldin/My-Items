@@ -84,4 +84,7 @@
     <string name="lost_items">Lost Items</string>
     <string name="start_matching">Start Matching</string>
     <string name="retry">Retry</string>
+    <string name="no_lost_items">No Lost Items</string>
+    <string name="no_found_items">No Found Items</string>
+    <string name="no_images">No Images</string>
 </resources>

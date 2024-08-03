@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,7 +23,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.fstech.myItems.R
 import com.jetawy.domain.models.get.found.ItemFoundResponse
@@ -37,7 +40,12 @@ fun ShowItemsScreen(goToMatchMakingScreen: () -> Unit, viewModel: MatchMakingVie
         viewModel.getLostItemData()
     }
 
-    Column(Modifier.verticalScroll(rememberScrollState())) {
+    Column(
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         when (viewModel.foundUiState.collectAsState().value) {
             is UiState.Error -> {
                 Button(onClick = { viewModel.getFoundItemData() }) {
@@ -76,13 +84,27 @@ fun ShowItemsScreen(goToMatchMakingScreen: () -> Unit, viewModel: MatchMakingVie
                         .fillMaxWidth()
                         .align(Alignment.CenterHorizontally)
                 )
-                LazyRow(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth()
-                ) {
-                    items(data.size) { index ->
-                        ItemRow(data[index], index)
+                if (data.isEmpty()) {
+                    Text(
+                        text = stringResource(R.string.no_found_items),
+                        modifier = Modifier
+                            .padding(0.dp, 64.dp)
+                            .wrapContentSize()
+                            .align(Alignment.CenterHorizontally),
+                        color = Color.Red,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                } else {
+
+                    LazyRow(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth()
+                    ) {
+                        items(data.size) { index ->
+                            ItemRow(data[index], index+1)
+                        }
                     }
                 }
             }
@@ -125,13 +147,26 @@ fun ShowItemsScreen(goToMatchMakingScreen: () -> Unit, viewModel: MatchMakingVie
                         .fillMaxWidth()
                         .align(Alignment.CenterHorizontally)
                 )
-                LazyRow(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth()
-                ) {
-                    items(data.size) { index ->
-                        ItemRow(data[index], index, goToMatchMakingScreen, viewModel)
+                if (data.isEmpty()) {
+                    Text(
+                        text = stringResource(R.string.no_lost_items),
+                        modifier = Modifier
+                            .padding(0.dp, 64.dp)
+                            .wrapContentSize()
+                            .align(Alignment.CenterHorizontally),
+                        color = Color.Red,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                } else {
+                    LazyRow(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth()
+                    ) {
+                        items(data.size) { index ->
+                            ItemRow(data[index], index+1, goToMatchMakingScreen, viewModel)
+                        }
                     }
                 }
             }
@@ -231,6 +266,6 @@ fun ItemRow(data: ItemFoundResponse, index: Int) {
                     )
             )
         }
-        Text(text = "No Images", modifier = Modifier.padding(16.dp), color = Color.Black)
+        Text(text = stringResource(R.string.no_images), modifier = Modifier.padding(16.dp), color = Color.Black)
     }
 }
