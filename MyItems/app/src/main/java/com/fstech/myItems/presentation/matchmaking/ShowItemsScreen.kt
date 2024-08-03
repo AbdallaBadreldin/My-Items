@@ -103,7 +103,7 @@ fun ShowItemsScreen(goToMatchMakingScreen: () -> Unit, viewModel: MatchMakingVie
                             .fillMaxWidth()
                     ) {
                         items(data.size) { index ->
-                            ItemRow(data[index], index+1)
+                            ItemRow(data[index], index + 1)
                         }
                     }
                 }
@@ -165,7 +165,7 @@ fun ShowItemsScreen(goToMatchMakingScreen: () -> Unit, viewModel: MatchMakingVie
                             .fillMaxWidth()
                     ) {
                         items(data.size) { index ->
-                            ItemRow(data[index], index+1, goToMatchMakingScreen, viewModel)
+                            ItemRow(data[index], index + 1, goToMatchMakingScreen, viewModel)
                         }
                     }
                 }
@@ -216,7 +216,11 @@ fun ItemRow(
                     )
             )
         }
-        Text(text = "No Images", modifier = Modifier.padding(16.dp), color = Color.Black)
+        Text(
+            text = stringResource(id = R.string.no_images),
+            modifier = Modifier.padding(16.dp),
+            color = Color.Black
+        )
         Button(onClick = {
             viewModel.itemIndex = index
             goToMatchMakingScreen()
@@ -266,6 +270,10 @@ fun ItemRow(data: ItemFoundResponse, index: Int) {
                     )
             )
         }
-        Text(text = stringResource(R.string.no_images), modifier = Modifier.padding(16.dp), color = Color.Black)
+        Text(
+            text = stringResource(R.string.no_images),
+            modifier = Modifier.padding(16.dp),
+            color = Color.Black
+        )
     }
 }

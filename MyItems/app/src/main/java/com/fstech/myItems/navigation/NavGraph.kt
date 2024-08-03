@@ -67,7 +67,16 @@ fun NavGraph(
     NavHost(navController = navController, startDestination = NavRoute.ShowItemsNavRoute.path) {
         openShowItemsScreen(navController = navController, this, viewModel)
         openMatchMakingScreen(navController = navController, this, viewModel)
+        openMatchDetailsScreen(navController = navController, this, viewModel)
     }
+}
+
+fun openMatchDetailsScreen(
+    navController: NavHostController,
+    navGraphBuilder: NavGraphBuilder,
+    viewModel: MatchMakingViewModel
+) {
+    TODO("Not yet implemented")
 }
 
 fun openMatchMakingScreen(
@@ -78,7 +87,10 @@ fun openMatchMakingScreen(
     navGraphBuilder.composable(
         route = NavRoute.MatchMakingNavRoute.path
     ) {
-        MatchMakingScreen(viewModel)
+        MatchMakingScreen(
+            goToMatchDetailsScreen = { navController.navigate(NavRoute.MatchDetailsNavRoute.path) },
+            viewModel
+        )
     }
 }
 

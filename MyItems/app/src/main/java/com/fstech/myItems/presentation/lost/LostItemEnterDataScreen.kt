@@ -71,7 +71,8 @@ LaunchedEffect("startTheMainTask") {
             val lng = viewModel.latLng.value?.longitude ?: 0.0
             val geocoder = Geocoder(context, Locale.ENGLISH)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                geocoder.getFromLocation(lat, lng, 1) { addresses ->
+                geocoder.getFromLocation(lat, lng, 1)
+                { addresses ->
                     viewModel.addresses = addresses
                     viewModel.uploadItems(
                         imageUris = viewModel.list,

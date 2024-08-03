@@ -2,10 +2,17 @@ package com.fstech.myItems.presentation.matchmaking
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fstech.myItems.BuildConfig.apiKey
+import com.google.ai.client.generativeai.GenerativeModel
+import com.google.ai.client.generativeai.type.content
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.jetawy.data.repositories.FoundItemsRepositoryImpl
 import com.jetawy.data.repositories.LostItemsRepositoryImpl
+import com.jetawy.domain.models.get.found.ItemFoundResponse
 import com.jetawy.domain.utils.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,6 +27,7 @@ class MatchMakingViewModel @Inject constructor(
     private val lostItemsRepo: LostItemsRepositoryImpl
 ) : ViewModel() {
     var itemIndex = 0
+    var detailIndex = 0
 
     private val _foundUiState: MutableStateFlow<UiState> =
         MutableStateFlow(UiState.Initial)
@@ -60,6 +68,44 @@ class MatchMakingViewModel @Inject constructor(
         }
     }
 
+    private val generativeModel = GenerativeModel(
+        modelName = "gemini-1.5-flash",
+        apiKey = apiKey
+    )
+    private val _promptState: MutableStateFlow<UiState> =
+        MutableStateFlow(UiState.Initial)
+    val promptState: StateFlow<UiState> =
+        _promptState.asStateFlow()
+
+    fun sendPrompt(
+        prompt: String,
+    ) {
+        _promptState.value = UiState.Loading
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = generativeModel.generateContent(
+                    content {
+                        text(prompt)
+                    }
+                )
+                response.text?.let { outputContent ->
+                    // Handle the generated text
+                    val data = parseJsonArray(outputContent)
+                    _promptState.value = UiState.Success<List<ItemFoundResponse>>(data)
+                }
+            } catch (e: Exception) {
+                _promptState.value = UiState.Error(e.localizedMessage ?: "")
+            }
+        }
+    }
+
+    private fun parseJsonArray(jsonString: String): List<ItemFoundResponse> {
+        val gson = Gson()
+        val listType = object : TypeToken<List<ItemFoundResponse>>() {}.type
+        return gson.fromJson(jsonString, listType)
+    }
+
     private val _closeActivity = MutableSharedFlow<Unit>()
     val closeActivity = _closeActivity.asSharedFlow()
 
@@ -67,6 +113,10 @@ class MatchMakingViewModel @Inject constructor(
         viewModelScope.launch {
             _closeActivity.emit(Unit)
         }
+    }
+
+    fun resetPromptState() {
+        _promptState.value = UiState.Initial
     }
 
 }

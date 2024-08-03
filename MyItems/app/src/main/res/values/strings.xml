@@ -87,4 +87,5 @@
     <string name="no_lost_items">No Lost Items</string>
     <string name="no_found_items">No Found Items</string>
     <string name="no_images">No Images</string>
+    <string name="view_item_details">View Item Details</string>
 </resources>
