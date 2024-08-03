@@ -19,13 +19,13 @@ class LostItemsRepositoryImpl @Inject constructor(private val fbs: FirebaseDataB
     override suspend fun uploadLostItems(
         imageUris: List<Uri>,
         addresses: Address,
-        AiResponse: ItemLost,
+        aiResponse: ItemLost,
         userResponse: ItemLost,
     ): Flow<UiState> {
         return fbs.uploadLostItems(
             imageUris,
             addresses,
-            AiResponse,
+            aiResponse,
             userResponse
         )
     }
