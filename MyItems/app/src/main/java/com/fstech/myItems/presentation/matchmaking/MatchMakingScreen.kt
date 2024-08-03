@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -70,7 +71,7 @@ fun MatchMakingScreen(goToMatchDetailsScreen: () -> Unit, viewModel: MatchMaking
             Button(onClick = {
                 viewModel.getFoundItemByCountry(countryName.value)
             }) {
-                Text(text = stringResource(R.string.retry))
+                Text(text = stringResource(R.string.retry), modifier = Modifier.wrapContentSize())
             }
         }
 
@@ -103,7 +104,7 @@ fun MatchMakingScreen(goToMatchDetailsScreen: () -> Unit, viewModel: MatchMaking
                 (uiState.value as UiState.Success<MutableList<ItemLostResponse>>).outputData
             val currentItemJson = Gson().toJson(currentItem)
             val listOfFoundItemsJson = Gson().toJson(listOfFoundItems)
-            LaunchedEffect("startTheMainTask") {
+            LaunchedEffect("startTheMainTasks") {
                 viewModel.sendPrompt(
                     prompt = "can you make the best matching item for next item $currentItemJson with the following list of items $listOfFoundItemsJson return best matching $topItemsCount items as json"
                 )
@@ -116,7 +117,7 @@ fun MatchMakingScreen(goToMatchDetailsScreen: () -> Unit, viewModel: MatchMaking
                 viewModel.resetPromptState()
                 viewModel.getFoundItemByCountry(countryName.value)
             }) {
-                Text(text = stringResource(R.string.retry))
+                Text(text = stringResource(R.string.retry), modifier = Modifier.wrapContentSize())
             }
         }
         UiState.Initial -> {}

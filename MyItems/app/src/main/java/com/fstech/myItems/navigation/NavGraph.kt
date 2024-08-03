@@ -16,6 +16,7 @@ import com.fstech.myItems.presentation.lost.LostItemLocationScreen
 import com.fstech.myItems.presentation.lost.LostItemScreen
 import com.fstech.myItems.presentation.lost.LostItemUploadSuccessScreen
 import com.fstech.myItems.presentation.lost.LostItemViewModel
+import com.fstech.myItems.presentation.matchmaking.MatchDetailsScreen
 import com.fstech.myItems.presentation.matchmaking.MatchMakingScreen
 import com.fstech.myItems.presentation.matchmaking.MatchMakingViewModel
 import com.fstech.myItems.presentation.matchmaking.ShowItemsScreen
@@ -76,7 +77,13 @@ fun openMatchDetailsScreen(
     navGraphBuilder: NavGraphBuilder,
     viewModel: MatchMakingViewModel
 ) {
-    TODO("Not yet implemented")
+    navGraphBuilder.composable(
+        route = NavRoute.MatchDetailsNavRoute.path
+    ) {
+        MatchDetailsScreen(
+            viewModel
+        )
+    }
 }
 
 fun openMatchMakingScreen(

@@ -101,9 +101,15 @@ class MatchMakingViewModel @Inject constructor(
     }
 
     private fun parseJsonArray(jsonString: String): List<ItemFoundResponse> {
+        var string = jsonString.trimIndent().trim()
+
+        if (string.isEmpty()) {
+            return emptyList()
+        }
+        string = jsonString.removePrefix("```json").removeSuffix("```")
         val gson = Gson()
         val listType = object : TypeToken<List<ItemFoundResponse>>() {}.type
-        return gson.fromJson(jsonString, listType)
+        return gson.fromJson(string, listType)
     }
 
     private val _closeActivity = MutableSharedFlow<Unit>()
