@@ -13,4 +13,6 @@ interface FoundItemsRepository {
         addresses: Address,
         aiResponse: ItemFound,
     ): Any
+
+    suspend fun getFoundItemsByCountry(country: String): Flow<UiState>
 }

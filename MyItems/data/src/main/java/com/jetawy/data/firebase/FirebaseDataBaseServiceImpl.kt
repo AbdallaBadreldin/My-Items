@@ -103,6 +103,27 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
         return uploadFoundItem
     }
 
+    private val _getFoundItemsByCountry: MutableStateFlow<UiState> =
+        MutableStateFlow(UiState.Initial)
+    val getFoundItemsByCountry: Flow<UiState> =
+        _getFoundItemsByCountry.asStateFlow()
+
+    override suspend fun getFoundItemsByCountry(country: String): Flow<UiState> {
+        _getFoundItemsByCountry.emit(UiState.Loading)
+        val list = mutableListOf<ItemFoundResponse>()
+        try {
+            val ref = db.getReference("/foundItems/$country").get().await()
+            ref.children.forEach {
+                list.add(it.getValue(ItemFoundResponse::class.java)!!)
+            }
+            _getFoundItemsByCountry.emit(UiState.Success(list))
+        } catch (e: Exception) {
+            _getFoundItemsByCountry.emit(UiState.Error(e.message.toString()))
+
+        }
+        return getFoundItemsByCountry
+    }
+
     override suspend fun getFoundItemsById(): Flow<UiState> {
         _getFoundItemData.emit(UiState.Loading)
         try {

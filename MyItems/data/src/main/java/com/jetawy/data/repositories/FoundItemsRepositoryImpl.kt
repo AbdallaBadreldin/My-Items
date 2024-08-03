@@ -28,5 +28,9 @@ class FoundItemsRepositoryImpl @Inject constructor(private val fbs: FirebaseData
         )
     }
 
+    override suspend fun getFoundItemsByCountry(country: String): Flow<UiState> {
+      return  fbs.getFoundItemsByCountry(country)
+    }
+
 
 }

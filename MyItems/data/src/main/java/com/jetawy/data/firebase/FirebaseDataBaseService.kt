@@ -23,4 +23,6 @@ interface FirebaseDataBaseService {
         addresses: Address,
         aiResponse: ItemFound,
     ): Flow<UiState>
+
+    suspend fun getFoundItemsByCountry(country: String): Flow<UiState>
 }

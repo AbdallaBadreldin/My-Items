@@ -31,6 +31,35 @@ class MatchMakingViewModel @Inject constructor(
     val lostUiState: StateFlow<UiState> =
         _lostUiState.asStateFlow()
 
+    private val _getFoundUiStateByCountry: MutableStateFlow<UiState> =
+        MutableStateFlow(UiState.Initial)
+    val getFoundUiStateByCountry: StateFlow<UiState> =
+        _getFoundUiStateByCountry.asStateFlow()
+
+    fun getFoundItemByCountry(country: String) {
+        viewModelScope.launch {
+            foundItemsRepo.getFoundItemsByCountry(country).collect {
+                _getFoundUiStateByCountry.emit(it)
+            }
+        }
+    }
+
+    fun getFoundItemById() {
+        viewModelScope.launch {
+            foundItemsRepo.getFoundItemsById().collect {
+                _foundUiState.emit(it)
+            }
+        }
+    }
+
+    fun getLostItemById() {
+        viewModelScope.launch {
+            lostItemsRepo.getLostItemById().collect {
+                _lostUiState.emit(it)
+            }
+        }
+    }
+
     private val _closeActivity = MutableSharedFlow<Unit>()
     val closeActivity = _closeActivity.asSharedFlow()
 
@@ -40,19 +69,4 @@ class MatchMakingViewModel @Inject constructor(
         }
     }
 
-    fun getFoundItemData() {
-        viewModelScope.launch {
-            foundItemsRepo.getFoundItemsById().collect {
-                _foundUiState.emit(it)
-            }
-        }
-    }
-
-    fun getLostItemData() {
-        viewModelScope.launch {
-            lostItemsRepo.getLostItemById().collect {
-                _lostUiState.emit(it)
-            }
-        }
-    }
 }

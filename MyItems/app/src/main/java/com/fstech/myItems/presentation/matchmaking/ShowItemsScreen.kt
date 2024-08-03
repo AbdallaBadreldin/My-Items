@@ -36,8 +36,8 @@ import com.jetawy.domain.utils.UiState
 fun ShowItemsScreen(goToMatchMakingScreen: () -> Unit, viewModel: MatchMakingViewModel) {
 
     LaunchedEffect(key1 = "dataFetchKey") {
-        viewModel.getFoundItemData()
-        viewModel.getLostItemData()
+        viewModel.getFoundItemById()
+        viewModel.getLostItemById()
     }
 
     Column(
@@ -48,7 +48,7 @@ fun ShowItemsScreen(goToMatchMakingScreen: () -> Unit, viewModel: MatchMakingVie
     ) {
         when (viewModel.foundUiState.collectAsState().value) {
             is UiState.Error -> {
-                Button(onClick = { viewModel.getFoundItemData() }) {
+                Button(onClick = { viewModel.getFoundItemById() }) {
                     Text(text = stringResource(R.string.retry))
                 }
             }
@@ -111,7 +111,7 @@ fun ShowItemsScreen(goToMatchMakingScreen: () -> Unit, viewModel: MatchMakingVie
         }
         when (viewModel.lostUiState.collectAsState().value) {
             is UiState.Error -> {
-                Button(onClick = { viewModel.getLostItemData() }) {
+                Button(onClick = { viewModel.getLostItemById() }) {
                     Text(text = stringResource(R.string.retry))
                 }
             }
