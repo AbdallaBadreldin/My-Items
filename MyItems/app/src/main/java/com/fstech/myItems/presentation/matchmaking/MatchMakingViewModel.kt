@@ -42,7 +42,7 @@ class MatchMakingViewModel @Inject constructor(
 
     fun getFoundItemData() {
         viewModelScope.launch {
-            foundItemsRepo.getFoundItemData().collect {
+            foundItemsRepo.getFoundItemsById().collect {
                 _foundUiState.emit(it)
             }
         }
@@ -50,7 +50,7 @@ class MatchMakingViewModel @Inject constructor(
 
     fun getLostItemData() {
         viewModelScope.launch {
-            lostItemsRepo.getLostItemData().collect {
+            lostItemsRepo.getLostItemById().collect {
                 _lostUiState.emit(it)
             }
         }

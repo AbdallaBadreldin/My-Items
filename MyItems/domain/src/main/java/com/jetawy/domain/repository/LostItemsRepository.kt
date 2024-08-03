@@ -8,7 +8,7 @@ import com.jetawy.domain.utils.UiState
 import kotlinx.coroutines.flow.Flow
 
 interface LostItemsRepository  {
-    suspend fun getLostItemData(): Flow<UiState>
+    suspend fun getLostItemById(): Flow<UiState>
     suspend fun uploadLostItems(
         imageUris: List<Uri>,
         addresses: Address,

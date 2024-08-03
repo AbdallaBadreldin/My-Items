@@ -103,7 +103,7 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
         return uploadFoundItem
     }
 
-    override suspend fun getFoundItemData(): Flow<UiState> {
+    override suspend fun getFoundItemsById(): Flow<UiState> {
         _getFoundItemData.emit(UiState.Loading)
         try {
             CoroutineScope(Dispatchers.IO).launch {
@@ -194,7 +194,7 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
         return uploadLostItem
     }
 
-    override suspend fun getLostItemData(): Flow<UiState> {
+    override suspend fun getLostItemById(): Flow<UiState> {
         _getLostItemData.emit(UiState.Loading)
         try {
             CoroutineScope(Dispatchers.IO).launch {

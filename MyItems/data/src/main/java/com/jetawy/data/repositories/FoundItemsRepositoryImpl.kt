@@ -12,8 +12,8 @@ import javax.inject.Inject
 class FoundItemsRepositoryImpl @Inject constructor(private val fbs: FirebaseDataBaseService) :
     FoundItemsRepository {
 
-    override suspend fun getFoundItemData(): Flow<UiState> {
-        return fbs.getFoundItemData()
+    override suspend fun getFoundItemsById(): Flow<UiState> {
+        return fbs.getFoundItemsById()
     }
 
     override suspend fun uploadFoundItems(

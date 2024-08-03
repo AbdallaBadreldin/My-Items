@@ -12,8 +12,8 @@ import javax.inject.Inject
 class LostItemsRepositoryImpl @Inject constructor(private val fbs: FirebaseDataBaseService) :
     LostItemsRepository {
 
-    override suspend fun getLostItemData(): Flow<UiState> {
-        return fbs.getLostItemData()
+    override suspend fun getLostItemById(): Flow<UiState> {
+        return fbs.getLostItemById()
     }
 
     override suspend fun uploadLostItems(

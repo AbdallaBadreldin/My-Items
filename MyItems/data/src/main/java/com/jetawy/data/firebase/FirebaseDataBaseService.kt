@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface FirebaseDataBaseService {
 
-    suspend fun getLostItemData(): Flow<UiState>
+    suspend fun getLostItemById(): Flow<UiState>
     suspend fun uploadLostItems(
         imageUris: List<Uri>,
         addresses: Address,
@@ -17,7 +17,7 @@ interface FirebaseDataBaseService {
         userResponse: ItemLost,
     ): Flow<UiState>
 
-    suspend fun getFoundItemData(): Flow<UiState>
+    suspend fun getFoundItemsById(): Flow<UiState>
     suspend fun uploadFoundItems(
         imageUris: List<Uri>,
         addresses: Address,

@@ -7,7 +7,7 @@ import com.jetawy.domain.utils.UiState
 import kotlinx.coroutines.flow.Flow
 
 interface FoundItemsRepository {
-    suspend fun getFoundItemData(): Flow<UiState>
+    suspend fun getFoundItemsById(): Flow<UiState>
     suspend fun uploadFoundItems(
         imageUris: List<Uri>,
         addresses: Address,
