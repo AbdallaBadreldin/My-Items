@@ -18,6 +18,7 @@ import com.fstech.myItems.presentation.lost.LostItemUploadSuccessScreen
 import com.fstech.myItems.presentation.lost.LostItemViewModel
 import com.fstech.myItems.presentation.matchmaking.MatchDetailsScreen
 import com.fstech.myItems.presentation.matchmaking.MatchMakingScreen
+import com.fstech.myItems.presentation.matchmaking.MatchMakingSuccessScreen
 import com.fstech.myItems.presentation.matchmaking.MatchMakingViewModel
 import com.fstech.myItems.presentation.matchmaking.ShowItemsScreen
 import com.fstech.myItems.presentation.welcome.WelcomeScreen
@@ -69,6 +70,19 @@ fun NavGraph(
         openShowItemsScreen(navController = navController, this, viewModel)
         openMatchMakingScreen(navController = navController, this, viewModel)
         openMatchDetailsScreen(navController = navController, this, viewModel)
+        openMatchMakingSuccessScreen(navController = navController, this, viewModel)
+    }
+}
+
+fun openMatchMakingSuccessScreen(
+    navController: NavHostController,
+    navGraphBuilder: NavGraphBuilder,
+    viewModel: MatchMakingViewModel
+) {
+    navGraphBuilder.composable(
+        route = NavRoute.MatchMakingSuccessNavRoute.path
+    ) {
+        MatchMakingSuccessScreen(viewModel)
     }
 }
 
@@ -81,6 +95,7 @@ fun openMatchDetailsScreen(
         route = NavRoute.MatchDetailsNavRoute.path
     ) {
         MatchDetailsScreen(
+            { navController.navigate(NavRoute.MatchMakingSuccessNavRoute.path) },
             viewModel
         )
     }

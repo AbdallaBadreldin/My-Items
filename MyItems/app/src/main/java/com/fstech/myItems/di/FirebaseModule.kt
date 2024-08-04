@@ -9,6 +9,8 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import com.jetawy.data.firebase.FirebaseAuthService
 import com.jetawy.data.firebase.FirebaseAuthServiceImpl
+import com.jetawy.data.firebase.FirebaseChatService
+import com.jetawy.data.firebase.FirebaseChatServiceImpl
 import com.jetawy.data.firebase.FirebaseDataBaseService
 import com.jetawy.data.firebase.FirebaseDataBaseServiceImpl
 import dagger.Module
@@ -31,6 +33,12 @@ object FirebaseModule {
         firebaseDatabase: FirebaseDatabase,
     ): FirebaseDataBaseService =
         FirebaseDataBaseServiceImpl(firebaseStorage, firebaseDatabase)
+
+    @Provides
+    fun providesFirebaseChatService(
+        firebaseDatabase: FirebaseDatabase,
+    ): FirebaseChatService =
+        FirebaseChatServiceImpl( firebaseDatabase)
 
     @Provides
     fun providesFirebaseAuth(): FirebaseAuth = Firebase.auth

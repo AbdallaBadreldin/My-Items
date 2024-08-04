@@ -20,6 +20,12 @@ sealed class NavRoute(val path: String) {
     object ShowItemsNavRoute : NavRoute("show_items_screen")
     object MatchMakingNavRoute : NavRoute("matchmaking_screen")
     object MatchDetailsNavRoute : NavRoute("match_details_screen")
+    object MatchMakingSuccessNavRoute : NavRoute("matchmaking_success_screen")
+
+
+    object ChatNavRoute : NavRoute("chat_screen")
+    object ChatListNavRoute : NavRoute("chat_list_screen")
+
 
     // build navigation path (for screen navigation)
     fun withArgs(vararg args: String): String {

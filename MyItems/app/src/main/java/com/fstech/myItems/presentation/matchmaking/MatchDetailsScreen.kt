@@ -6,10 +6,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import coil.compose.AsyncImage
@@ -20,8 +26,32 @@ import com.jetawy.domain.models.get.found.ItemFoundResponse
 import com.jetawy.domain.utils.UiState
 
 @Composable
-fun MatchDetailsScreen(viewModel: MatchMakingViewModel) {
+fun MatchDetailsScreen(goToMatchMakingSuccessScreen: () -> Unit, viewModel: MatchMakingViewModel) {
     val prompt = viewModel.promptState.collectAsState()
+    var showDialog by remember { mutableStateOf(false) }
+    ConfirmationDialog(
+        message = stringResource(R.string.it_s_mine),
+        showDialog = showDialog,
+        onDismiss = { showDialog = false },
+        onConfirm = {
+            val listOfMatchedItems =
+                (viewModel.promptState.value as UiState.Success<List<ItemFoundResponse>>).outputData
+            val currentItem = listOfMatchedItems[viewModel.detailIndex]
+            viewModel.sendMessage(
+                currentItem.objectID,
+                Firebase.auth.currentUser?.uid.toString(), currentItem.user.toString()
+            )
+            viewModel.createChatRoom(
+                it,
+                Firebase.auth.currentUser?.uid.toString(),
+                currentItem.user.toString(),
+                currentItem.objectID.toString(),
+            )
+            showDialog = false
+        },
+        title = stringResource(R.string.confirm_action),
+        text = stringResource(R.string.are_you_sure_you_want_to_proceed)
+    )
     when (prompt.value) {
 
         is UiState.Error -> {}
@@ -74,21 +104,59 @@ fun MatchDetailsScreen(viewModel: MatchMakingViewModel) {
                 Text("Category: ${currentItem.aiResponse?.category}")
                 Text("Brand: ${currentItem.aiResponse?.brand}")
                 Text("Colors: ${currentItem.aiResponse?.colors?.joinToString(", ")}")
-                Button(onClick = {
-                    viewModel.sendMessage(
-                        currentItem.objectID,
-                        Firebase.auth.currentUser?.uid.toString(), currentItem.user.toString()
-                    )
-                    // 1 send message to user that some one own this
-                    // 2 navigate to chat screen
-                    // 3 delete it from database and profile
-                    // 4 notify another user that it is mine
-                }) {
+                Button(onClick = { showDialog = true }
+                ) {
                     Text(text = stringResource(R.string.it_s_mine))
                 }
+
             }
         }
     }
 
+    /*
+      // 1 send message to user that some one own this
+      // 2 navigate to chat screen
+      // 3 delete it from database and profile
+      // 4 notify another user that it is mine
+  }*/
+    when (viewModel.createChatRoom.collectAsState().value) {
+        is UiState.Error -> {}
+        UiState.Initial -> {
+            CircularProgressIndicator()
+        }
+
+        UiState.Loading -> {}
+        is UiState.Success<*> -> {
+            goToMatchMakingSuccessScreen()
+        }
+    }
+}
+
+@Composable
+fun ConfirmationDialog(
+    message: String,
+    showDialog: Boolean,
+    onDismiss: () -> Unit,
+    onConfirm: (string: String) -> Unit,
+    title: String,
+    text: String
+) {
+    if (showDialog) {
+        AlertDialog(onDismissRequest = onDismiss,
+            title = { Text(title) },
+            text = { Text(text) },
+            confirmButton = {
+                Button(onClick = { onConfirm(message) }) {
+                    Text(stringResource(R.string.confirm))
+                }
+            },
+            dismissButton = {
+                Button(onClick = onDismiss) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        )
+    }
 
 }
+

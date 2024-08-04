@@ -91,4 +91,9 @@
     <string name="it_s_mine">It\'s Mine!!!!?</string>
     <string name="faild_to_find_items">Failed to find items</string>
     <string name="failed_to_find_matched_items">Failed to find matched Items</string>
+    <string name="confirm_action">Confirm Action</string>
+    <string name="are_you_sure_you_want_to_proceed">Are you sure you want to proceed?</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="congratulations_we_notified_user_successfully_you_can_contact_him_now">Congratulations!!\nWe Notified User Successfully\nyou can contact him now</string>
 </resources>

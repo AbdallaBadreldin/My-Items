@@ -1,9 +1,9 @@
-package com.jetawy.domain.repository
+package com.jetawy.data.firebase
 
 import com.jetawy.domain.utils.UiState
 import kotlinx.coroutines.flow.Flow
 
-interface ChatRepository {
+interface FirebaseChatService {
     suspend fun sendMessage(
         message: String,
         sender: String,

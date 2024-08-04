@@ -7,8 +7,6 @@ import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.jetawy.data.repositories.FoundItemsRepositoryImpl
-import com.jetawy.data.repositories.LostItemsRepositoryImpl
 import com.jetawy.domain.models.get.found.ItemFoundResponse
 import com.jetawy.domain.repository.ChatRepository
 import com.jetawy.domain.repository.FoundItemsRepository
@@ -132,8 +130,30 @@ class MatchMakingViewModel @Inject constructor(
     fun resetFoundItems() {
     }
 
-    fun sendMessage(objectID: String?,sender:String,receiver:String)  {
+    fun sendMessage(objectID: String?, sender: String, receiver: String) {
 
     }
 
+    private val _createChatRoom: MutableStateFlow<UiState> =
+        MutableStateFlow(UiState.Initial)
+    val createChatRoom: StateFlow<UiState> =
+        _createChatRoom.asStateFlow()
+
+    fun createChatRoom(
+        message: String,
+        sender: String,
+        receiver: String,
+        foundItemID: String
+    ) {
+        viewModelScope.launch {
+            chatRepo.createChatRoom(
+                message,
+                sender,
+                receiver,
+                foundItemID
+            ).collect {
+                _createChatRoom.emit(it)
+            }
+        }
+    }
 }

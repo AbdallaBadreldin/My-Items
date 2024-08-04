@@ -1,53 +1,27 @@
 package com.fstech.myItems.di
 
+import com.jetawy.data.firebase.FirebaseChatService
+import com.jetawy.data.firebase.FirebaseDataBaseService
+import com.jetawy.data.repositories.ChatRepositoryImpl
+import com.jetawy.data.repositories.FoundItemsRepositoryImpl
+import com.jetawy.data.repositories.LostItemsRepositoryImpl
+import com.jetawy.domain.repository.ChatRepository
+import com.jetawy.domain.repository.FoundItemsRepository
+import com.jetawy.domain.repository.LostItemsRepository
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 
 @Module
 @InstallIn(ViewModelComponent::class)
 object RepositoryModule {
-    /*    @Provides
-        fun providesAuthRepository(
-            authRemoteDataSource: ApiService,
-            authLocalDataSource: AuthSharedPreference
-        ): AuthRepository =
-            AuthRepositoryImpl(authRemoteDataSource, authLocalDataSource)
+    @Provides
+    fun providesFoundItemsRepo(fbs: FirebaseDataBaseService) : FoundItemsRepository = FoundItemsRepositoryImpl(fbs)
 
-        @Provides
-        fun providesHomeRepository(
-            authRemoteDataSource: ApiService,
-            authLocalDataSource: AuthSharedPreference,
-            profileSharedPreference: ProfileSharedPreference,
-        ): HomeRepository =
-            HomeRepositoryImpl(authRemoteDataSource, authLocalDataSource, profileSharedPreference)
+    @Provides
+    fun providesLostItemsRepo(fbs: FirebaseDataBaseService): LostItemsRepository = LostItemsRepositoryImpl(fbs)
 
-        @Provides
-        fun providesProductRepository(
-            authRemoteDataSource: ApiService
-        ): ProductRepository =
-            ProductRepositoryImpl(authRemoteDataSource)
-
-        @Provides
-        fun providesCartRepository(
-            authRemoteDataSource: ApiService,
-            authLocalDataSource: AuthSharedPreference,
-            profileSharedPreference: ProfileSharedPreference,
-        ): CartRepository =
-            CartRepositoryImpl(
-                authRemoteDataSource,
-                authLocalDataSource,
-                profileSharedPreference
-            )
-        @Provides
-        fun providesProfileRepository(
-            authRemoteDataSource: ApiService
-        ): ProfileRepository =
-            ProfileRepositoryImpl(authRemoteDataSource)
-
-        @Provides
-        fun providesOfferRepository(
-            authRemoteDataSource: ApiService
-        ): OfferRepository =
-            OfferRepositoryImpl(authRemoteDataSource)*/
+    @Provides
+    fun providesChatRepo(focis: FirebaseChatService): ChatRepository = ChatRepositoryImpl(focis)
 }
