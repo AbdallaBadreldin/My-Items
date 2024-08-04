@@ -10,6 +10,9 @@ import com.google.gson.reflect.TypeToken
 import com.jetawy.data.repositories.FoundItemsRepositoryImpl
 import com.jetawy.data.repositories.LostItemsRepositoryImpl
 import com.jetawy.domain.models.get.found.ItemFoundResponse
+import com.jetawy.domain.repository.ChatRepository
+import com.jetawy.domain.repository.FoundItemsRepository
+import com.jetawy.domain.repository.LostItemsRepository
 import com.jetawy.domain.utils.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -23,8 +26,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MatchMakingViewModel @Inject constructor(
-    private val foundItemsRepo: FoundItemsRepositoryImpl,
-    private val lostItemsRepo: LostItemsRepositoryImpl
+    private val foundItemsRepo: FoundItemsRepository,
+    private val lostItemsRepo: LostItemsRepository,
+    private val chatRepo: ChatRepository,
 ) : ViewModel() {
     var itemIndex = 0
     var detailIndex = 0
@@ -123,6 +127,13 @@ class MatchMakingViewModel @Inject constructor(
 
     fun resetPromptState() {
         _promptState.value = UiState.Initial
+    }
+
+    fun resetFoundItems() {
+    }
+
+    fun sendMessage(objectID: String?,sender:String,receiver:String)  {
+
     }
 
 }

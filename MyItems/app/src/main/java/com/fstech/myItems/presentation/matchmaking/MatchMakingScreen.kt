@@ -40,42 +40,46 @@ const val topItemsCount = 10
 @Composable
 fun MatchMakingScreen(goToMatchDetailsScreen: () -> Unit, viewModel: MatchMakingViewModel) {
     val context = LocalContext.current
-    val uiState = viewModel.getFoundUiStateByCountry.collectAsState()
+    val getFoundUiStateByCountry = viewModel.getFoundUiStateByCountry.collectAsState()
     val prompt = viewModel.promptState.collectAsState()
     val countryName = remember {
         mutableStateOf("")
     }
-    LaunchedEffect(key1 = "dataFetchKey") {
-        val currentItem =
-            (viewModel.lostUiState.value as UiState.Success<MutableList<ItemLostResponse>>).outputData[viewModel.itemIndex]
-        val location = currentItem.location
-        val locations = location?.split(",")
-        val lat = locations?.get(0)?.toDouble() ?: 0.0
-        val lng = locations?.get(1)?.toDouble() ?: 0.0
-        val geocoder = Geocoder(context, Locale.ENGLISH)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            geocoder.getFromLocation(lat, lng, 1)
-            { addresses ->
-                countryName.value = addresses[0].countryName
-                viewModel.getFoundItemByCountry(countryName.value)
-            }
-        } else {
-            val addresses = geocoder.getFromLocation(lat, lng, 1)
-            countryName.value = addresses?.get(0)?.countryName.toString()
-            viewModel.getFoundItemByCountry(countryName.value)
-        }
-    }
+    val currentItem =
+        (viewModel.lostUiState.value as UiState.Success<MutableList<ItemLostResponse>>).outputData[viewModel.itemIndex]
 
-    when (uiState.value) {
+    when (getFoundUiStateByCountry.value) {
         is UiState.Error -> {
-            Button(onClick = {
-                viewModel.getFoundItemByCountry(countryName.value)
-            }) {
+            Button(
+                onClick = {
+                    viewModel.getFoundItemByCountry(countryName.value)
+                }, modifier = Modifier
+                    .wrapContentSize()
+            ) {
                 Text(text = stringResource(R.string.retry), modifier = Modifier.wrapContentSize())
             }
         }
 
-        UiState.Initial -> {}
+        UiState.Initial -> {
+            LaunchedEffect(key1 = "dataFetchKey") {
+                val location = currentItem.location
+                val locations = location?.split(",")
+                val lat = locations?.get(0)?.toDouble() ?: 0.0
+                val lng = locations?.get(1)?.toDouble() ?: 0.0
+                val geocoder = Geocoder(context, Locale.ENGLISH)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    geocoder.getFromLocation(lat, lng, 1)
+                    { addresses ->
+                        countryName.value = addresses[0].countryName
+                        viewModel.getFoundItemByCountry(countryName.value)
+                    }
+                } else {
+                    val addresses = geocoder.getFromLocation(lat, lng, 1)
+                    countryName.value = addresses?.get(0)?.countryName.toString()
+                    viewModel.getFoundItemByCountry(countryName.value)
+                }
+            }
+        }
 
         UiState.Loading -> {
             Column(
@@ -98,15 +102,33 @@ fun MatchMakingScreen(goToMatchDetailsScreen: () -> Unit, viewModel: MatchMaking
         }
 
         is UiState.Success<*> -> {
-            val currentItem =
-                (viewModel.lostUiState.collectAsState().value as UiState.Success<MutableList<ItemLostResponse>>).outputData[viewModel.itemIndex]
-            val listOfFoundItems =
-                (uiState.value as UiState.Success<MutableList<ItemLostResponse>>).outputData
+            val listOfFoundItems =viewModel.getFoundUiStateByCountry.value as UiState.Success<MutableList<ItemFoundResponse>>
+            val listOfFoundItems2 = listOfFoundItems.outputData
+            if (listOfFoundItems2.isEmpty()) {
+                Text(
+                    text = stringResource(R.string.failed_to_find_matched_items),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(64.dp),
+                )
+                Button(
+                    onClick = {
+                        viewModel.getFoundItemByCountry(countryName.value)
+                    }, modifier = Modifier
+                        .wrapContentSize()
+                ) {
+                    Text(
+                        text = stringResource(R.string.retry),
+                        modifier = Modifier.wrapContentSize()
+                    )
+                }
+                return
+            }
             val currentItemJson = Gson().toJson(currentItem)
             val listOfFoundItemsJson = Gson().toJson(listOfFoundItems)
             LaunchedEffect("startTheMainTasks") {
                 viewModel.sendPrompt(
-                    prompt = "can you make the best matching item for next item $currentItemJson with the following list of items $listOfFoundItemsJson return best matching $topItemsCount items as json"
+                    prompt = "can you make the best matching item for next item $currentItemJson with the following list of items $listOfFoundItemsJson return best matching $topItemsCount items as json array and don't return the item with the returned list"
                 )
             }
         }
@@ -120,6 +142,7 @@ fun MatchMakingScreen(goToMatchDetailsScreen: () -> Unit, viewModel: MatchMaking
                 Text(text = stringResource(R.string.retry), modifier = Modifier.wrapContentSize())
             }
         }
+
         UiState.Initial -> {}
         UiState.Loading -> {
             Column(
@@ -140,6 +163,7 @@ fun MatchMakingScreen(goToMatchDetailsScreen: () -> Unit, viewModel: MatchMaking
                 )
             }
         }
+
         is UiState.Success<*> -> {
             val listOfMatchedItems =
                 (prompt.value as UiState.Success<List<ItemFoundResponse>>).outputData
@@ -198,7 +222,7 @@ fun ItemColumn(
                 contentDescription = data.aiResponse?.userDescription ?: "",
                 modifier = Modifier
                     .padding(16.dp)
-                    .size(64.dp)
+                    .size(128.dp)
                     .clip(
                         RoundedCornerShape(16.dp)
                     )

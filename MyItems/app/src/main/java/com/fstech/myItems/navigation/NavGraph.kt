@@ -95,7 +95,11 @@ fun openMatchMakingScreen(
         route = NavRoute.MatchMakingNavRoute.path
     ) {
         MatchMakingScreen(
-            goToMatchDetailsScreen = { navController.navigate(NavRoute.MatchDetailsNavRoute.path) },
+            goToMatchDetailsScreen = {
+                navController.navigate(NavRoute.MatchDetailsNavRoute.path) {
+                    popUpTo(NavRoute.MatchMakingNavRoute.path)
+                }
+            },
             viewModel
         )
     }

@@ -111,7 +111,7 @@ class FoundItemViewModel @Inject constructor(private val foundItemsRepositoryImp
     ) {
         viewModelScope.launch {
             try {
-                val translateRequest ="translate next string \"${userDescription.value}\" to English if it's not translatable return false"  // or the original string
+                val translateRequest ="translate next string \"${userDescription.value}\" to English if it's not translatable return false and return the original string if the string is empty ignore it and return the original string"  // or the original string
                 val translateResponse = generativeModel.generateContent(
                     content {
                         text(translateRequest)

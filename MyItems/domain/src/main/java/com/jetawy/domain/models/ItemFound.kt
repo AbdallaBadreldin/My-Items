@@ -10,10 +10,10 @@ data class ItemFound(
     val type: String?,
     val nameLocalLanguage: String? = "",
     val imageDescription: String? = "",
-    var userDescription: String? = "",
-    var translatedDescription: String? = "",
     val colors: List<String?>?,
     val brand: String?,
-    val model: String?,
-    val category: String? = ""
+    val category: String? = "",
+    var userDescription: String? = "",
+    var translatedDescription: String? = "",
+    val model: String?="",
 ) : Parcelable

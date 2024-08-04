@@ -92,7 +92,7 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
             //third we will upload reference to uploaded data in user profile
 
             try {
-                myProfileRef.child("id").setValue(myRef.key).await()
+                myProfileRef.child("objectID").setValue(myRef.key).await()
                 myProfileRef.child("countryName").setValue(addresses.countryName).await()
                 _uploadFoundItem.emit(UiState.Success(myProfileRef.toString()))
             } catch (e: Exception) {
@@ -129,7 +129,7 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 val foundRef =
-                    db.getReference("/profiles/${FirebaseAuth.getInstance().currentUser?.uid}/lostItems")
+                    db.getReference("/profiles/${FirebaseAuth.getInstance().currentUser?.uid}/foundItems")
                 val profileItemDetails = mutableListOf<ItemFoundResponse>()
                 //get list of items Ids from Profile
                 val item = foundRef.get().await()
@@ -140,13 +140,11 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
                         db.getReference("/foundItems/${profileItem?.countryName}/${profileItem?.objectID}")
                     val foundItemsSnapShot = itemRef.get().await()
 //                    lostItemsSnapShot?.children?.forEach { it ->
-                    Log.d("TAG", "getFoundItemData: ${foundItemsSnapShot}")
                     foundItemsSnapShot.getValue(ItemFoundResponse::class.java)?.let {
                         profileItemDetails.add(it)
 //                        }
                     }
                 }
-                Log.d("TAG", "getFoundItemData: $profileItemDetails")
                 _getFoundItemData.emit(UiState.Success(profileItemDetails))
             }
         } catch (e: Exception) {
