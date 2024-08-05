@@ -2,6 +2,7 @@ package com.fstech.myItems.presentation.matchmaking
 
 import android.location.Geocoder
 import android.os.Build
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -127,6 +128,8 @@ fun MatchMakingScreen(goToMatchDetailsScreen: () -> Unit, viewModel: MatchMaking
             } else
                 LaunchedEffect("startTheMainTasks") {
                     viewModel.lostItemId = currentItem.objectID.toString()
+                    Log.e("TAG لا", "MatchMakingScreen: ${currentItem}")
+                    Log.e("TAG لا", "MatchMakingScreen: ${listOfFoundItems}")
                     val currentItemJson = Gson().toJson(currentItem)
                     val listOfFoundItemsJson = Gson().toJson(listOfFoundItems)
                     viewModel.sendPrompt(

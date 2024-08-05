@@ -94,13 +94,13 @@ class MatchMakingViewModel @Inject constructor(
                         text(prompt)
                     }
                 )
-                Log.e("TAG", "sendPrompt: $prompt")
+                Log.e("TAG1", "sendPrompt1: $prompt")
                 response.text?.let { outputContent ->
-                    Log.e("TAG", "sendPrompt: $outputContent")
+                    Log.e("TAG2", "sendPrompt2: $outputContent")
 
                     // Handle the generated text
                     val data = parseJsonArray(outputContent)
-                    Log.e("TAG", "sendPrompt:\n $data")
+                    Log.e("TAG3", "sendPrompt3:\n $data")
 
                     _promptState.value = UiState.Success<List<ItemFoundResponse>>(data)
                 }
