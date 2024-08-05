@@ -249,9 +249,9 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val translateDescription = "can you translate the following \"${
+                val translateDescription = "translate the following string \"${
                     userDescription.value.toString().trimIndent().trim()
-                }\" to English and return it as string? if you are not able to translate return false word only or empty string"
+                }\" to English ? if you are not able to translate return \"false\""
                 val translateDescriptionResponse = generativeModel.generateContent(
                     content {
                         text(translateDescription)

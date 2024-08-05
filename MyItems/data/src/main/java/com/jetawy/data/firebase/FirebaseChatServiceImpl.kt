@@ -47,7 +47,9 @@ class FirebaseChatServiceImpl(private val db: FirebaseDatabase) : FirebaseChatSe
         sender: String,
         receiver: String,
         foundItemID: String,
+        foundItemCountry: String,
         lostItemID: String,
+        lostItemCountry: String,
     ): Flow<UiState> {
         _createChatRoom.emit(UiState.Loading)
         try {
@@ -76,18 +78,18 @@ class FirebaseChatServiceImpl(private val db: FirebaseDatabase) : FirebaseChatSe
             receiverProfileRef.child("isSeen").setValue(false)
             // notified users that chat room is created successfully
 
-            val itemRef = db.getReference("lostItems/$lostItemID")
+            val itemRef = db.getReference("/lostItems/$lostItemCountry/$lostItemID")
             val itemData = itemRef.get().await()
-            val destinationItemRef = db.getReference("doneLostItems/$lostItemID")
+            val destinationItemRef = db.getReference("/doneLostItems/$lostItemCountry/$lostItemID")
             destinationItemRef.setValue(itemData.value)
             itemRef.removeValue()
             //deleted the object from lost items from database successfully
 
             val profileRef =
-                db.getReference("profiles/$sender/lostItems/$lostItemID")
+                db.getReference("/profiles/$sender/lostItems/$lostItemID")
             val profileData = profileRef.get().await()
             val destinationProfileRef =
-                db.getReference("profiles/$sender/doneLostItems/$lostItemID")
+                db.getReference("/profiles/$sender/doneLostItems/$lostItemID")
             destinationProfileRef.setValue(profileData.value)
             profileRef.removeValue()
             //deleted the object from lost items from profile and database successfully

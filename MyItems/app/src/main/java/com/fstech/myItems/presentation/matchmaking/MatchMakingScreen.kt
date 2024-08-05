@@ -47,7 +47,7 @@ fun MatchMakingScreen(goToMatchDetailsScreen: () -> Unit, viewModel: MatchMaking
         mutableStateOf("")
     }
     val currentItem =
-        (viewModel.lostUiState.collectAsState().value as UiState.Success<MutableList<ItemLostResponse>>).outputData[viewModel.itemIndex]
+        (viewModel.lostUiState.collectAsState().value as UiState.Success<MutableList<ItemLostResponse>>).outputData[viewModel.itemIndex] //details and index of current found lost item
 
     when (getFoundUiStateByCountry.value) {
         is UiState.Error -> {
@@ -72,11 +72,13 @@ fun MatchMakingScreen(goToMatchDetailsScreen: () -> Unit, viewModel: MatchMaking
                     geocoder.getFromLocation(lat, lng, 1)
                     { addresses ->
                         countryName.value = addresses[0].countryName
+                        viewModel.lostItemCountryName = addresses[0].countryName
                         viewModel.getFoundItemByCountry(countryName.value)
                     }
                 } else {
                     val addresses = geocoder.getFromLocation(lat, lng, 1)
                     countryName.value = addresses?.get(0)?.countryName.toString()
+                    viewModel.lostItemCountryName = addresses?.get(0)?.countryName.toString()
                     viewModel.getFoundItemByCountry(countryName.value)
                 }
             }
@@ -127,13 +129,13 @@ fun MatchMakingScreen(goToMatchDetailsScreen: () -> Unit, viewModel: MatchMaking
                 return
             } else
                 LaunchedEffect("startTheMainTasks") {
-                    viewModel.lostItemId = currentItem.objectID.toString()
+                    viewModel.lostItemId = currentItem.objectID.toString() //should be current item lost id
                     Log.e("TAG لا", "MatchMakingScreen: ${currentItem}")
                     Log.e("TAG لا", "MatchMakingScreen: ${listOfFoundItems}")
                     val currentItemJson = Gson().toJson(currentItem)
                     val listOfFoundItemsJson = Gson().toJson(listOfFoundItems)
                     viewModel.sendPrompt(
-                        prompt = "can you make the best matching item for next item $currentItemJson with the following list of items $listOfFoundItemsJson return best matching $topItemsCount items as json array and don't return the item with the returned list"
+                        prompt = "can you make the best matching item for next object **$currentItemJson** with the following array of objects **$listOfFoundItemsJson** return best $topItemsCount objects matching as json array and don't return first object with the returned array"
                     )
                 }
         }
@@ -239,7 +241,7 @@ fun ItemColumn(
             color = Color.Black
         )
         Button(onClick = {
-            viewModel.itemIndex = index
+            viewModel.detailIndex = index
             goToMatchDetailsScreen()
         }, modifier = Modifier) {
             Text(

@@ -64,7 +64,7 @@ fun FoundItemEnterDataScreen(
                         .fillMaxWidth()
                         .padding(32.dp),
                     onClick = {
-                        uploadDataRoutine(context, viewModel, aiResponse, viewModel.userDescription.value?:"")
+                        uploadDataRoutine(context, viewModel, aiResponse, viewModel.userDescription.value?:"false")
                     }) { Text(text = stringResource(R.string.upload_data)) }
             }
 

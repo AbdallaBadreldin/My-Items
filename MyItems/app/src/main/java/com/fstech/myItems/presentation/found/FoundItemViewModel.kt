@@ -4,11 +4,8 @@ import android.graphics.Bitmap
 import android.location.Address
 import android.net.Uri
 import android.util.Log
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstech.myItems.BuildConfig.apiKey
@@ -111,26 +108,40 @@ class FoundItemViewModel @Inject constructor(private val foundItemsRepositoryImp
     ) {
         viewModelScope.launch {
             try {
-                val translateRequest ="translate next string \"${userDescription.value}\" to English if it's not translatable return false and return the original string if the string is empty ignore it and return the original string"  // or the original string
-                val translateResponse = generativeModel.generateContent(
-                    content {
-                        text(translateRequest)
+                if (!userDescription.value.isNullOrEmpty()) {
+                    val translateRequest =
+                        "translate next string \"${userDescription.value}\" to English, if the string is not translatable return false"  // or the original string
+                    val translateResponse = generativeModel.generateContent(
+                        content {
+                            text(translateRequest)
+                        }
+                    )
+                    translateResponse.text?.let {
+                        if (it.contains("**false**")) {
+                            aiResponse.translatedDescription = ""
+                            aiResponse.userDescription = ""
+                            return@let
+                        } else {
+                            val startIndex = it.indexOf("\"") + 1
+                            val endIndex = it.lastIndexOf("\"")
+                            val word = it.substring(startIndex, endIndex)
+                            aiResponse.translatedDescription = word
+                            aiResponse.userDescription = userDescription.value
+                        }
                     }
-                )
-                translateResponse.text?.let {
-                    aiResponse.translatedDescription= it
+                } else {
+                    aiResponse.translatedDescription = ""
                     aiResponse.userDescription = userDescription.value
                 }
-
-            }catch (e:Exception){
+                foundItemsRepositoryImpl.uploadFoundItems(
+                    imageUris,
+                    addresses = addresses,
+                    aiResponse,
+                ).collect { req ->
+                    _uploadItems.emit(req)
+                }
+            } catch (e: Exception) {
                 _uploadItems.value = UiState.Error(e.localizedMessage ?: "")
-            }
-            foundItemsRepositoryImpl.uploadFoundItems(
-                imageUris,
-                addresses = addresses,
-                aiResponse,
-            ).collect { req ->
-                _uploadItems.emit(req)
             }
         }
     }
@@ -146,7 +157,7 @@ class FoundItemViewModel @Inject constructor(private val foundItemsRepositoryImp
     }
 
     private val _closeActivity = MutableSharedFlow<Unit>()
-    val closeActivity= _closeActivity.asSharedFlow()
+    val closeActivity = _closeActivity.asSharedFlow()
 
     fun triggerCloseActivity() {
         viewModelScope.launch {

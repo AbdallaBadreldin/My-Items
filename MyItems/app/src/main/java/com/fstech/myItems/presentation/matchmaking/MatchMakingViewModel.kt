@@ -9,7 +9,6 @@ import com.google.ai.client.generativeai.type.content
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.jetawy.domain.models.get.found.ItemFoundResponse
-import com.jetawy.domain.models.get.lost.ItemLostResponse
 import com.jetawy.domain.repository.ChatRepository
 import com.jetawy.domain.repository.FoundItemsRepository
 import com.jetawy.domain.repository.LostItemsRepository
@@ -33,6 +32,7 @@ class MatchMakingViewModel @Inject constructor(
     lateinit var lostItemId: String
     var itemIndex = 0
     var detailIndex = 0
+    var lostItemCountryName = ""
 
     private val _foundUiState: MutableStateFlow<UiState> =
         MutableStateFlow(UiState.Initial)
@@ -97,9 +97,13 @@ class MatchMakingViewModel @Inject constructor(
                 Log.e("TAG1", "sendPrompt1: $prompt")
                 response.text?.let { outputContent ->
                     Log.e("TAG2", "sendPrompt2: $outputContent")
+                    val startIndex = outputContent.indexOf("```json")
+                    val endIndex = outputContent.lastIndexOf("```")+3
+                    val word = outputContent.substring(startIndex, endIndex)
+                    Log.e("TAG2", "sendPrompt word: $word")
 
                     // Handle the generated text
-                    val data = parseJsonArray(outputContent)
+                    val data = parseJsonArray(word)
                     Log.e("TAG3", "sendPrompt3:\n $data")
 
                     _promptState.value = UiState.Success<List<ItemFoundResponse>>(data)
@@ -145,7 +149,9 @@ class MatchMakingViewModel @Inject constructor(
         sender: String,
         receiver: String,
         foundItemID: String,
-        lostItemID: String
+        foundItemCountry: String,
+        lostItemID: String,
+        lostItemCountry: String,
     ) {
         viewModelScope.launch {
             chatRepo.createChatRoom(
@@ -153,7 +159,9 @@ class MatchMakingViewModel @Inject constructor(
                 sender,
                 receiver,
                 foundItemID,
-                foundItemID
+                foundItemCountry,
+                lostItemID,
+                lostItemCountry
             ).collect {
                 _createChatRoom.emit(it)
             }

@@ -42,7 +42,9 @@ fun MatchDetailsScreen(goToMatchMakingSuccessScreen: () -> Unit, viewModel: Matc
                 Firebase.auth.currentUser?.uid.toString(),
                 currentItem.user.toString(),
                 currentItem.objectID.toString(),//foundItem
-                viewModel.lostItemId
+                viewModel.lostItemCountryName,
+                viewModel.lostItemId,
+                viewModel.lostItemCountryName
             )
             showDialog = false
         },
