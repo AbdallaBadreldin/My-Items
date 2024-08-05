@@ -44,7 +44,8 @@ fun MatchDetailsScreen(goToMatchMakingSuccessScreen: () -> Unit, viewModel: Matc
                 currentItem.objectID.toString(),//foundItem
                 viewModel.lostItemCountryName,
                 viewModel.lostItemId,
-                viewModel.lostItemCountryName
+                viewModel.lostItemCountryName,
+                currentItem.aiResponse?.type.toString()
             )
             showDialog = false
         },

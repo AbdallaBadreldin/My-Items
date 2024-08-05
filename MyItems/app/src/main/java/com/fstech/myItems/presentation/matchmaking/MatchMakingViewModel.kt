@@ -98,7 +98,7 @@ class MatchMakingViewModel @Inject constructor(
                 response.text?.let { outputContent ->
                     Log.e("TAG2", "sendPrompt2: $outputContent")
                     val startIndex = outputContent.indexOf("```json")
-                    val endIndex = outputContent.lastIndexOf("```")+3
+                    val endIndex = outputContent.lastIndexOf("```") + 3
                     val word = outputContent.substring(startIndex, endIndex)
                     Log.e("TAG2", "sendPrompt word: $word")
 
@@ -152,6 +152,7 @@ class MatchMakingViewModel @Inject constructor(
         foundItemCountry: String,
         lostItemID: String,
         lostItemCountry: String,
+        itemType: String,
     ) {
         viewModelScope.launch {
             chatRepo.createChatRoom(
@@ -161,7 +162,8 @@ class MatchMakingViewModel @Inject constructor(
                 foundItemID,
                 foundItemCountry,
                 lostItemID,
-                lostItemCountry
+                lostItemCountry,
+                itemType
             ).collect {
                 _createChatRoom.emit(it)
             }

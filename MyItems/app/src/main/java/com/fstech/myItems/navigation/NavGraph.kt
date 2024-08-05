@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.fstech.myItems.presentation.HomeScreen
 import com.fstech.myItems.presentation.chat.ChatListScreen
+import com.fstech.myItems.presentation.chat.ChatUiScreen
 import com.fstech.myItems.presentation.chat.ChatViewModel
 import com.fstech.myItems.presentation.found.FoundItemEnterDataScreen
 import com.fstech.myItems.presentation.found.FoundItemLocationScreen
@@ -82,7 +83,20 @@ fun NavGraph(
     viewModel: ChatViewModel
 ) {
     NavHost(navController = navController, startDestination = NavRoute.ChatListNavRoute.path) {
-openChatListScreen(navController = navController, this, viewModel)
+        openChatListScreen(navController = navController, this, viewModel)
+        openChatUiScreen(navController = navController, this, viewModel)
+    }
+}
+
+fun openChatUiScreen(
+    navController: NavHostController,
+    navGraphBuilder: NavGraphBuilder,
+    viewModel: ChatViewModel
+) {
+    navGraphBuilder.composable(
+        route = NavRoute.ChatUiNavRoute.path
+    ) {
+        ChatUiScreen(viewModel)
     }
 }
 
@@ -94,7 +108,7 @@ fun openChatListScreen(
     navGraphBuilder.composable(
         route = NavRoute.ChatListNavRoute.path
     ) {
-        ChatListScreen(viewModel)
+        ChatListScreen({ navController.navigate(NavRoute.ChatUiNavRoute.path) },viewModel)
     }
 }
 

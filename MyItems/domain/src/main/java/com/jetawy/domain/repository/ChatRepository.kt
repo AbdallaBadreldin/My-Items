@@ -10,6 +10,7 @@ interface ChatRepository {
         receiver: String,
         roomID: String
     ): Flow<UiState>
+
     suspend fun createChatRoom(
         message: String,
         sender: String,
@@ -18,6 +19,7 @@ interface ChatRepository {
         foundItemCountry: String,
         lostItemID: String,
         lostItemCountry: String,
+        itemType: String,
     ): Flow<UiState>
 
     suspend fun getChatRooms(): Flow<UiState>

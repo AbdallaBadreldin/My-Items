@@ -1,5 +1,8 @@
 package com.jetawy.domain.models.messages
 
+import androidx.annotation.Keep
+
+@Keep
 data class MessageModel (
     var message: String? = null,
     var sender: String? = null,

@@ -25,6 +25,7 @@ sealed class NavRoute(val path: String) {
 
     object ChatNavRoute : NavRoute("chat_screen")
     object ChatListNavRoute : NavRoute("chat_list_screen")
+    object ChatUiNavRoute : NavRoute("chat_ui_screen")
 
 
     // build navigation path (for screen navigation)

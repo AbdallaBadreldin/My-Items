@@ -106,6 +106,7 @@ class FoundItemViewModel @Inject constructor(private val foundItemsRepositoryImp
         addresses: Address,
         aiResponse: ItemFound,
     ) {
+        _uploadItems.value = UiState.Loading
         viewModelScope.launch {
             try {
                 if (!userDescription.value.isNullOrEmpty()) {

@@ -97,4 +97,11 @@
     <string name="cancel">Cancel</string>
     <string name="congratulations_we_notified_user_successfully_you_can_contact_him_now">Congratulations!!\nWe Notified User Successfully\nyou can contact him now</string>
     <string name="chat_icon">Chat Icon</string>
+    <string name="you">You</string>
+    <string name="found_it_in">found it in</string>
+    <string name="message_sent">message sent</string>
+    <string name="got_message">Got Message</string>
+    <string name="your_lost_item">your lost item</string>
+    <string name="message_received">Message Recieved</string>
+    <string name="someone_lost_item">Someone lost item</string>
 </resources>
