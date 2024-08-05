@@ -127,13 +127,6 @@ class MatchMakingViewModel @Inject constructor(
         _promptState.value = UiState.Initial
     }
 
-    fun resetFoundItems() {
-    }
-
-    fun sendMessage(objectID: String?, sender: String, receiver: String) {
-
-    }
-
     private val _createChatRoom: MutableStateFlow<UiState> =
         MutableStateFlow(UiState.Initial)
     val createChatRoom: StateFlow<UiState> =

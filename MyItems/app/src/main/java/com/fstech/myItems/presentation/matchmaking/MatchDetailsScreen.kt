@@ -37,10 +37,6 @@ fun MatchDetailsScreen(goToMatchMakingSuccessScreen: () -> Unit, viewModel: Matc
             val listOfMatchedItems =
                 (viewModel.promptState.value as UiState.Success<List<ItemFoundResponse>>).outputData
             val currentItem = listOfMatchedItems[viewModel.detailIndex]
-            viewModel.sendMessage(
-                currentItem.objectID,
-                Firebase.auth.currentUser?.uid.toString(), currentItem.user.toString()
-            )
             viewModel.createChatRoom(
                 it,
                 Firebase.auth.currentUser?.uid.toString(),

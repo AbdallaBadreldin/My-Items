@@ -18,7 +18,7 @@ fun MatchMakingSuccessScreen(viewModel: MatchMakingViewModel) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Button(onClick = { viewModel.closeActivity }) {
+        Button(onClick = { viewModel.triggerCloseActivity() }) {
             Text(
                 text = stringResource(R.string.congratulations_we_notified_user_successfully_you_can_contact_him_now),
             )

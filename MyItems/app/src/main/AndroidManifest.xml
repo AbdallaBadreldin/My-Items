@@ -27,6 +27,7 @@
         <activity android:name=".presentation.found.FoundItemActivity" />
         <activity android:name=".presentation.lost.LostItemActivity" />
         <activity android:name=".presentation.matchmaking.MatchMakingActivity" />
+        <activity android:name=".presentation.chat.ChatActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
