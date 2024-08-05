@@ -41,7 +41,8 @@ fun MatchDetailsScreen(goToMatchMakingSuccessScreen: () -> Unit, viewModel: Matc
                 it,
                 Firebase.auth.currentUser?.uid.toString(),
                 currentItem.user.toString(),
-                currentItem.objectID.toString(),
+                currentItem.objectID.toString(),//foundItem
+                viewModel.lostItemId
             )
             showDialog = false
         },
@@ -116,12 +117,15 @@ fun MatchDetailsScreen(goToMatchMakingSuccessScreen: () -> Unit, viewModel: Matc
       // 4 notify another user that it is mine
   }*/
     when (viewModel.createChatRoom.collectAsState().value) {
-        is UiState.Error -> {}
+        is UiState.Error -> {
+            Text(text = stringResource(id = R.string.retry))
+        }
         UiState.Initial -> {
-            CircularProgressIndicator()
         }
 
-        UiState.Loading -> {}
+        UiState.Loading -> {
+            CircularProgressIndicator()
+        }
         is UiState.Success<*> -> {
             goToMatchMakingSuccessScreen()
         }

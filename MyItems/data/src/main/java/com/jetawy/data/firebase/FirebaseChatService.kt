@@ -14,7 +14,8 @@ interface FirebaseChatService {
         message: String,
         sender: String,
         receiver: String,
-        foundItemID: String
+        foundItemID: String,
+        lostItemID: String,
     ): Flow<UiState>
 
     suspend fun getChatRooms(): Flow<UiState>

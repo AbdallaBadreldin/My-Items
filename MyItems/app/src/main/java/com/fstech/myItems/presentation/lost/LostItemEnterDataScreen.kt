@@ -19,87 +19,92 @@ import java.util.Locale
 @Composable
 fun LostItemEnterDataScreen(function: () -> Unit, viewModel: LostItemViewModel) {
     val context = LocalContext.current
+    LaunchedEffect("startTheMainTaskUploadLost") {
+        viewModel.resetStates()
+        val itemLost = ItemLost(
+            type = viewModel.type.value,
+            model = viewModel.model.value,
+            brand = viewModel.brand.value,
+            category = viewModel.category.value,
+            itemState = viewModel.itemState.value,
+            colors = viewModel.colors,
+            imageDescription = viewModel.imageDescription.value,
+            userDescription = viewModel.userDescription.value
+        )
+        //I want to add photos to the itemLost object to make ai describe it better
+        //generate category
+        viewModel.translatePrompt(
+            itemLost,
+            "\ncan you translate the data in this model to English leave parameters as it is and return it as json format"
+        )
+    }
 
-LaunchedEffect("startTheMainTask") {
-    viewModel.resetStates()
-    val itemLost = ItemLost(
-        type = viewModel.type.value,
-        model = viewModel.model.value,
-        brand = viewModel.brand.value,
-        category = viewModel.category.value,
-        itemState = viewModel.itemState.value,
-        colors = viewModel.colors,
-        imageDescription = viewModel.imageDescription.value,
-        userDescription = viewModel.userDescription.value
-    )
-    //I want to add photos to the itemLost object to make ai describe it better
-    //generate category
-    viewModel.translatePrompt(
-        itemLost,
-        "\ncan you translate the data in this model to English leave parameters as it is and return it as json format"
-    )
-}
     when (viewModel.uiState.collectAsState().value) {
         is UiState.Error -> {
             Toast.makeText(
                 context,
-                (viewModel.uiState.collectAsState().value as UiState.Error).message,
+                (viewModel.uiState.value as UiState.Error).message,
                 Toast.LENGTH_LONG
             ).show()
             viewModel.resetStates()
         }
 
-        UiState.Initial -> {}
+        UiState.Initial -> {
+
+        }
+
         UiState.Loading -> {
             Text(text = stringResource(R.string.checking_entries))
             CircularProgressIndicator()
         }
 
         is UiState.Success<*> -> {
-            val itemLost:ItemLost =ItemLost(
-                viewModel.type.value,
-                viewModel.model.value,
-                viewModel.brand.value,
-                viewModel.category.value,
-                viewModel.itemState.value,
-                viewModel.colors,
-                viewModel.imageDescription.value,
-                viewModel.userDescription.value,
-                viewModel.translatedDescription.value
-            )
-            val lat = viewModel.latLng.value?.latitude ?: 0.0
-            val lng = viewModel.latLng.value?.longitude ?: 0.0
-            val geocoder = Geocoder(context, Locale.ENGLISH)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                geocoder.getFromLocation(lat, lng, 1)
-                { addresses ->
+            LaunchedEffect("upload") {
+                val itemLost: ItemLost = ItemLost(
+                    viewModel.type.value,
+                    viewModel.model.value,
+                    viewModel.brand.value,
+                    viewModel.category.value,
+                    viewModel.itemState.value,
+                    viewModel.colors,
+                    viewModel.imageDescription.value,
+                    viewModel.userDescription.value,
+                    viewModel.translatedDescription.value
+                )
+                val lat = viewModel.latLng.value?.latitude ?: 0.0
+                val lng = viewModel.latLng.value?.longitude ?: 0.0
+                val geocoder = Geocoder(context, Locale.ENGLISH)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    geocoder.getFromLocation(lat, lng, 1)
+                    { addresses ->
+                        viewModel.addresses = addresses
+                        viewModel.uploadItems(
+                            imageUris = viewModel.list,
+                            addresses = viewModel.addresses!![0],
+                            aiResponse = viewModel.aiResponse,
+                            userResponse = itemLost,
+                            userDescription = viewModel.userDescription.value ?: "",
+//                        description = viewModel.userDescription.value?:""
+                        )
+                    }
+                } else {
+                    val addresses = geocoder.getFromLocation(lat, lng, 1)
                     viewModel.addresses = addresses
                     viewModel.uploadItems(
                         imageUris = viewModel.list,
                         addresses = viewModel.addresses!![0],
-                        aiResponse =viewModel.aiResponse ,
-                        userResponse=itemLost,
-                        userDescription = viewModel.userDescription.value?:"",
-//                        description = viewModel.userDescription.value?:""
+                        aiResponse = itemLost,
+                        userDescription = viewModel.userDescription.value ?: "",
+                        userResponse = itemLost
                     )
                 }
-            } else {
-                val addresses = geocoder.getFromLocation(lat, lng, 1)
-                viewModel.addresses = addresses
-                viewModel.uploadItems(
-                    imageUris = viewModel.list,
-                    addresses = viewModel.addresses!![0],
-                    aiResponse = itemLost,
-                    userDescription = viewModel.userDescription.value?:"",
-                    userResponse = itemLost
-                )
             }
 
             when (viewModel.uploadItems.collectAsState().value) {
                 is UiState.Error -> {
                     Toast.makeText(
                         context,
-                        (viewModel.uploadItems.collectAsState().value as UiState.Error).message,
+                        (viewModel.uploadItems.value as UiState.Error).message,
                         Toast.LENGTH_LONG
                     ).show()
                     viewModel.resetUploadItems()

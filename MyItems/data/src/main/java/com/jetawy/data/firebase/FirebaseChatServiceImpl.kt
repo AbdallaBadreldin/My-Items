@@ -46,7 +46,8 @@ class FirebaseChatServiceImpl(private val db: FirebaseDatabase) : FirebaseChatSe
         message: String,
         sender: String,
         receiver: String,
-        foundItemID: String
+        foundItemID: String,
+        lostItemID: String,
     ): Flow<UiState> {
         _createChatRoom.emit(UiState.Loading)
         try {
@@ -57,6 +58,7 @@ class FirebaseChatServiceImpl(private val db: FirebaseDatabase) : FirebaseChatSe
             ref.child("sender").setValue(sender)
             ref.child("receiver").setValue(receiver)
             ref.child("foundItemID").setValue(foundItemID)
+            ref.child("lostItemId").setValue(lostItemID)
             ref.child("messages").push().setValue(messageModel)
             ref.child("timestamp").setValue(System.currentTimeMillis())
             ref.child("isSeen").setValue(false)
@@ -74,18 +76,18 @@ class FirebaseChatServiceImpl(private val db: FirebaseDatabase) : FirebaseChatSe
             receiverProfileRef.child("isSeen").setValue(false)
             // notified users that chat room is created successfully
 
-            val itemRef = db.getReference("lostItems/$foundItemID")
+            val itemRef = db.getReference("lostItems/$lostItemID")
             val itemData = itemRef.get().await()
-            val destinationItemRef = db.getReference("doneLostItems/$foundItemID")
+            val destinationItemRef = db.getReference("doneLostItems/$lostItemID")
             destinationItemRef.setValue(itemData.value)
             itemRef.removeValue()
             //deleted the object from lost items from database successfully
 
             val profileRef =
-                db.getReference("profiles/$sender/lostItems/$foundItemID")
+                db.getReference("profiles/$sender/lostItems/$lostItemID")
             val profileData = profileRef.get().await()
             val destinationProfileRef =
-                db.getReference("profiles/$sender/doneLostItems/$foundItemID")
+                db.getReference("profiles/$sender/doneLostItems/$lostItemID")
             destinationProfileRef.setValue(profileData.value)
             profileRef.removeValue()
             //deleted the object from lost items from profile and database successfully

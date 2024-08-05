@@ -56,8 +56,7 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
             val listOfDownloadUrls = mutableListOf<String>()
             val myRef = db.getReference("foundItems/${addresses.countryName}").push()
             val myProfileRef =
-                db.getReference("profiles/${FirebaseAuth.getInstance().currentUser?.uid}/foundItems")
-                    .push()
+                db.getReference("profiles/${FirebaseAuth.getInstance().currentUser?.uid}/foundItems/${myRef.key}")
             imageUris.forEach { uri ->
                 val fileName = uri.lastPathSegment ?: "image.jpg" // Get file name or use a default
                 val imageRef =
@@ -165,8 +164,8 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
             val listOfDownloadUrls = mutableListOf<String>()
             val myRef = db.getReference("lostItems/${addresses.countryName}").push()
             val myProfileRef =
-                db.getReference("profiles/${FirebaseAuth.getInstance().currentUser?.uid}/lostItems")
-                    .push()
+                db.getReference("profiles/${FirebaseAuth.getInstance().currentUser?.uid}/lostItems/${myRef.key}")
+
             imageUris.forEach { uri ->
                 val fileName = uri.lastPathSegment ?: "image.jpg" // Get file name or use a default
                 val imageRef =

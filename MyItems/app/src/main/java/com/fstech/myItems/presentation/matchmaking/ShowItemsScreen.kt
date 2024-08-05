@@ -165,7 +165,7 @@ fun ShowItemsScreen(goToMatchMakingScreen: () -> Unit, viewModel: MatchMakingVie
                             .fillMaxWidth()
                     ) {
                         items(data.size) { index ->
-                            ItemRow(data[index], index + 1, goToMatchMakingScreen, viewModel)
+                            ItemRow(data[index], index, goToMatchMakingScreen, viewModel)
                         }
                     }
                 }
@@ -190,7 +190,7 @@ fun ItemRow(
             .clip(RoundedCornerShape(16.dp))
             .clickable { }) {
         Text(
-            text = "$index",
+            text = "${index +1}",
             modifier = Modifier.padding(16.dp),
             color = Color.Black
         )

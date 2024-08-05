@@ -21,9 +21,10 @@ class ChatRepositoryImpl @Inject constructor(private val fbs: FirebaseChatServic
         message: String,
         sender: String,
         receiver: String,
-        foundItemID: String
+        foundItemID: String,
+        lostItemID: String,
     ): Flow<UiState> {
-       return  fbs.createChatRoom(message, sender, receiver, foundItemID)
+       return  fbs.createChatRoom(message, sender, receiver, foundItemID, lostItemID)
     }
 
     override suspend fun getChatRooms(): Flow<UiState> {

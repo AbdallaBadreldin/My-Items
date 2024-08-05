@@ -1,5 +1,6 @@
 package com.fstech.myItems.presentation.matchmaking
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstech.myItems.BuildConfig.apiKey
@@ -8,6 +9,7 @@ import com.google.ai.client.generativeai.type.content
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.jetawy.domain.models.get.found.ItemFoundResponse
+import com.jetawy.domain.models.get.lost.ItemLostResponse
 import com.jetawy.domain.repository.ChatRepository
 import com.jetawy.domain.repository.FoundItemsRepository
 import com.jetawy.domain.repository.LostItemsRepository
@@ -28,6 +30,7 @@ class MatchMakingViewModel @Inject constructor(
     private val lostItemsRepo: LostItemsRepository,
     private val chatRepo: ChatRepository,
 ) : ViewModel() {
+    lateinit var lostItemId: String
     var itemIndex = 0
     var detailIndex = 0
 
@@ -91,9 +94,14 @@ class MatchMakingViewModel @Inject constructor(
                         text(prompt)
                     }
                 )
+                Log.e("TAG", "sendPrompt: $prompt")
                 response.text?.let { outputContent ->
+                    Log.e("TAG", "sendPrompt: $outputContent")
+
                     // Handle the generated text
                     val data = parseJsonArray(outputContent)
+                    Log.e("TAG", "sendPrompt:\n $data")
+
                     _promptState.value = UiState.Success<List<ItemFoundResponse>>(data)
                 }
             } catch (e: Exception) {
@@ -136,13 +144,15 @@ class MatchMakingViewModel @Inject constructor(
         message: String,
         sender: String,
         receiver: String,
-        foundItemID: String
+        foundItemID: String,
+        lostItemID: String
     ) {
         viewModelScope.launch {
             chatRepo.createChatRoom(
                 message,
                 sender,
                 receiver,
+                foundItemID,
                 foundItemID
             ).collect {
                 _createChatRoom.emit(it)

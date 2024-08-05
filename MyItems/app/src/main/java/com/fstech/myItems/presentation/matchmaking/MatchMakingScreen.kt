@@ -46,7 +46,7 @@ fun MatchMakingScreen(goToMatchDetailsScreen: () -> Unit, viewModel: MatchMaking
         mutableStateOf("")
     }
     val currentItem =
-        (viewModel.lostUiState.value as UiState.Success<MutableList<ItemLostResponse>>).outputData[viewModel.itemIndex]
+        (viewModel.lostUiState.collectAsState().value as UiState.Success<MutableList<ItemLostResponse>>).outputData[viewModel.itemIndex]
 
     when (getFoundUiStateByCountry.value) {
         is UiState.Error -> {
@@ -102,7 +102,8 @@ fun MatchMakingScreen(goToMatchDetailsScreen: () -> Unit, viewModel: MatchMaking
         }
 
         is UiState.Success<*> -> {
-            val listOfFoundItems =viewModel.getFoundUiStateByCountry.value as UiState.Success<MutableList<ItemFoundResponse>>
+            val listOfFoundItems =
+                viewModel.getFoundUiStateByCountry.value as UiState.Success<MutableList<ItemFoundResponse>>
             val listOfFoundItems2 = listOfFoundItems.outputData
             if (listOfFoundItems2.isEmpty()) {
                 Text(
@@ -123,14 +124,15 @@ fun MatchMakingScreen(goToMatchDetailsScreen: () -> Unit, viewModel: MatchMaking
                     )
                 }
                 return
-            }
-            val currentItemJson = Gson().toJson(currentItem)
-            val listOfFoundItemsJson = Gson().toJson(listOfFoundItems)
-            LaunchedEffect("startTheMainTasks") {
-                viewModel.sendPrompt(
-                    prompt = "can you make the best matching item for next item $currentItemJson with the following list of items $listOfFoundItemsJson return best matching $topItemsCount items as json array and don't return the item with the returned list"
-                )
-            }
+            } else
+                LaunchedEffect("startTheMainTasks") {
+                    viewModel.lostItemId = currentItem.objectID.toString()
+                    val currentItemJson = Gson().toJson(currentItem)
+                    val listOfFoundItemsJson = Gson().toJson(listOfFoundItems)
+                    viewModel.sendPrompt(
+                        prompt = "can you make the best matching item for next item $currentItemJson with the following list of items $listOfFoundItemsJson return best matching $topItemsCount items as json array and don't return the item with the returned list"
+                    )
+                }
         }
     }
     when (prompt.value) {
@@ -177,7 +179,7 @@ fun MatchMakingScreen(goToMatchDetailsScreen: () -> Unit, viewModel: MatchMaking
                 items(listOfMatchedItems.size) { index ->
                     ItemColumn(
                         listOfMatchedItems[index],
-                        index + 1,
+                        index,
                         goToMatchDetailsScreen,
                         viewModel
                     )
@@ -202,7 +204,7 @@ fun ItemColumn(
             .clip(RoundedCornerShape(16.dp))
             .clickable { }) {
         Text(
-            text = "$index",
+            text = "${index + 1}",
             modifier = Modifier.padding(16.dp),
             color = Color.Black
         )
