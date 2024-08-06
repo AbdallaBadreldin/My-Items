@@ -104,4 +104,6 @@
     <string name="your_lost_item">your lost item</string>
     <string name="message_received">Message Recieved</string>
     <string name="someone_lost_item">Someone lost item</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="verification_code">Verification Code</string>
 </resources>
