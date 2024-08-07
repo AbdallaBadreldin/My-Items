@@ -1,11 +1,9 @@
 package com.fstech.myItems.presentation.found
 
 import android.Manifest
-import android.content.ContentResolver
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -35,6 +33,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -64,23 +65,22 @@ fun FoundItemScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
-    val file = context.createImageFile()
-    val uri = FileProvider.getUriForFile(
-        context,
-        BuildConfig.APPLICATION_ID + ".provider", file
-    )
-
+    var currentPhotoUri by remember { mutableStateOf(value = Uri.EMPTY) }
+    var tempPhotoUri by remember { mutableStateOf(value = Uri.EMPTY) }
     val cameraLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
-            if (!it || uri == null || uri == Uri.EMPTY || uri.path == null || uri.path?.isEmpty() == true || uri.path == "null" || uri.path == "content://" || uri.path == "file://" || uri.path == "android.resource://" || uri.path == "com.android.providers.media.documents")
-                return@rememberLauncherForActivityResult
-            else {
-                viewModel.resetStates()
-                if (viewModel.list.size < maxImagesToScan) {
-                    viewModel.addItem(uri)
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.TakePicture(), onResult = {
+                if (!it)
+                    return@rememberLauncherForActivityResult
+                else {
+                    currentPhotoUri = tempPhotoUri
+                    viewModel.resetStates()
+                    if (viewModel.list.size < maxImagesToScan) {
+                        viewModel.addItem(tempPhotoUri)
+                    }
                 }
             }
-        }
+        )
 
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -91,7 +91,8 @@ fun FoundItemScreen(
                 context.getString(R.string.permission_granted), Toast.LENGTH_SHORT
             ).show()
             if (viewModel.list.size < maxImagesToScan) {
-                cameraLauncher.launch(uri)
+                tempPhotoUri = context.createTempPictureUri()
+                cameraLauncher.launch(tempPhotoUri)
             } else {
                 Toast.makeText(
                     context,
@@ -106,13 +107,13 @@ fun FoundItemScreen(
     }
 
 
-
     fun openCameraRoutine() {
         val permissionCheckResult =
             ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
         if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
             if (viewModel.list.size < maxImagesToScan) {
-                cameraLauncher.launch(uri)
+                tempPhotoUri = context.createTempPictureUri()
+                cameraLauncher.launch(tempPhotoUri)
             } else {
                 Toast.makeText(
                     /* context = */ context,
@@ -223,7 +224,10 @@ fun FoundItemScreen(
                 val response = (uiState as UiState.Success<*>).outputData as ItemFound
                 Column {
                     Text(
-                        text = stringResource(R.string.the_item_is, response.nameLocalLanguage?:""),
+                        text = stringResource(
+                            R.string.the_item_is,
+                            response.nameLocalLanguage ?: ""
+                        ),
                         Modifier
                             .fillMaxWidth()
                             .align(Alignment.CenterHorizontally)
@@ -325,4 +329,18 @@ fun circularProgressIndicator() {
         color = MaterialTheme.colorScheme.secondary,
         trackColor = MaterialTheme.colorScheme.surfaceVariant,
     )
+}
+
+fun Context.createTempPictureUri(
+    provider: String = "${BuildConfig.APPLICATION_ID}.provider",
+    fileName: String = "picture_${System.currentTimeMillis()}",
+    fileExtension: String = ".png"
+): Uri {
+    val tempFile = File.createTempFile(
+        fileName, fileExtension, cacheDir
+    ).apply {
+        createNewFile()
+    }
+
+    return FileProvider.getUriForFile(applicationContext, provider, tempFile)
 }
