@@ -108,4 +108,5 @@
     <string name="verification_code">Verification Code</string>
     <string name="enter_message">Enter message</string>
     <string name="send">Send</string>
+    <string name="no_description">No Description</string>
 </resources>

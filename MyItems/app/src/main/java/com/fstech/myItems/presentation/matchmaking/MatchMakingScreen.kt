@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -129,7 +130,8 @@ fun MatchMakingScreen(goToMatchDetailsScreen: () -> Unit, viewModel: MatchMaking
                 return
             } else
                 LaunchedEffect("startTheMainTasks") {
-                    viewModel.lostItemId = currentItem.objectID.toString() //should be current item lost id
+                    viewModel.lostItemId =
+                        currentItem.objectID.toString() //should be current item lost id
                     Log.e("TAG لا", "MatchMakingScreen: ${currentItem}")
                     Log.e("TAG لا", "MatchMakingScreen: ${listOfFoundItems}")
                     val currentItemJson = Gson().toJson(currentItem)
@@ -179,7 +181,8 @@ fun MatchMakingScreen(goToMatchDetailsScreen: () -> Unit, viewModel: MatchMaking
             LazyColumn(
                 modifier = Modifier
                     .padding(16.dp)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 items(listOfMatchedItems.size) { index ->
                     ItemColumn(
@@ -205,9 +208,12 @@ fun ItemColumn(
         Modifier
             .padding(64.dp)
             .border(2.dp, Color.Red)
+            .fillMaxWidth()
             .background(Color.White)
             .clip(RoundedCornerShape(16.dp))
-            .clickable { }) {
+            .clickable { },
+        verticalArrangement = Arrangement.Center
+    ) {
         Text(
             text = "${index + 1}",
             modifier = Modifier.padding(16.dp),
@@ -218,15 +224,23 @@ fun ItemColumn(
             modifier = Modifier.padding(16.dp),
             color = Color.Black
         )
-        Text(
-            text = (stringResource(R.string.description) + data.aiResponse?.userDescription),
-            modifier = Modifier.padding(16.dp),
-            color = Color.Black
-        )
+        if (!data.aiResponse?.userDescription.isNullOrEmpty())
+            Text(
+                text = (stringResource(R.string.description) + data.aiResponse?.userDescription),
+                modifier = Modifier.padding(16.dp),
+                color = Color.Black
+            )
+        else
+            Text(
+                text = stringResource(R.string.no_description),
+                modifier = Modifier.padding(16.dp),
+                color = Color.Black
+            )
         if (!data.images.isNullOrEmpty()) {
             AsyncImage(
                 model = data.images?.get(0),
-                contentDescription = data.aiResponse?.userDescription ?: "",
+                contentDescription = data.aiResponse?.userDescription
+                    ?: stringResource(id = R.string.no_description),
                 modifier = Modifier
                     .padding(16.dp)
                     .size(128.dp)
@@ -234,16 +248,17 @@ fun ItemColumn(
                         RoundedCornerShape(16.dp)
                     )
             )
+        } else {
+            Text(
+                text = stringResource(id = R.string.no_images),
+                modifier = Modifier.padding(16.dp),
+                color = Color.Black
+            )
         }
-        Text(
-            text = stringResource(id = R.string.no_images),
-            modifier = Modifier.padding(16.dp),
-            color = Color.Black
-        )
         Button(onClick = {
             viewModel.detailIndex = index
             goToMatchDetailsScreen()
-        }, modifier = Modifier) {
+        }, modifier = Modifier.padding(16.dp)) {
             Text(
                 text = stringResource(R.string.view_item_details),
                 modifier = Modifier

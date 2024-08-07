@@ -132,7 +132,7 @@ fun ShowItemsScreen(goToMatchMakingScreen: () -> Unit, viewModel: MatchMakingVie
                     CircularProgressIndicator(
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
-                            .size(128.dp)
+                            .size(64.dp)
                     )
                 }
             }
@@ -187,10 +187,11 @@ fun ItemRow(
             .padding(64.dp)
             .border(2.dp, Color.Red)
             .background(Color.White)
+            .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .clickable { }) {
         Text(
-            text = "${index +1}",
+            text = "${index + 1}",
             modifier = Modifier.padding(16.dp),
             color = Color.Black
         )
@@ -207,7 +208,8 @@ fun ItemRow(
         if (!data.images.isNullOrEmpty()) {
             AsyncImage(
                 model = data.images?.get(0),
-                contentDescription = data.aiResponse?.userDescription ?: "",
+                contentDescription = data.aiResponse?.userDescription
+                    ?: stringResource(id = R.string.no_description),
                 modifier = Modifier
                     .padding(16.dp)
                     .size(64.dp)
@@ -215,12 +217,12 @@ fun ItemRow(
                         RoundedCornerShape(16.dp)
                     )
             )
-        }
-        Text(
-            text = stringResource(id = R.string.no_images),
-            modifier = Modifier.padding(16.dp),
-            color = Color.Black
-        )
+        } else
+            Text(
+                text = stringResource(id = R.string.no_images),
+                modifier = Modifier.padding(16.dp),
+                color = Color.Black
+            )
         Button(onClick = {
             viewModel.itemIndex = index
             goToMatchMakingScreen()
@@ -231,7 +233,6 @@ fun ItemRow(
             )
         }
     }
-
 }
 
 @Composable
@@ -240,6 +241,7 @@ fun ItemRow(data: ItemFoundResponse, index: Int) {
         Modifier
             .padding(64.dp)
             .border(1.dp, Color.Red)
+            .fillMaxWidth()
             .background(Color.White)
             .clip(RoundedCornerShape(16.dp))
             .clickable { }) {
@@ -253,15 +255,23 @@ fun ItemRow(data: ItemFoundResponse, index: Int) {
             modifier = Modifier.padding(16.dp),
             color = Color.Black
         )
-        Text(
-            text = (stringResource(R.string.description) + data.aiResponse?.userDescription),
-            modifier = Modifier.padding(16.dp),
-            color = Color.Black
-        )
+        if (!data.aiResponse?.userDescription.isNullOrEmpty())
+            Text(
+                text = (stringResource(R.string.description) + data.aiResponse?.userDescription),
+                modifier = Modifier.padding(16.dp),
+                color = Color.Black
+            )
+        else
+            Text(
+                text = stringResource(R.string.no_description),
+                modifier = Modifier.padding(16.dp),
+                color = Color.Black
+            )
         if (!data.images.isNullOrEmpty()) {
             AsyncImage(
                 model = data.images?.get(0),
-                contentDescription = data.aiResponse?.userDescription ?: "",
+                contentDescription = data.aiResponse?.userDescription
+                    ?: stringResource(id = R.string.no_description),
                 modifier = Modifier
                     .padding(16.dp)
                     .size(64.dp)
@@ -269,11 +279,12 @@ fun ItemRow(data: ItemFoundResponse, index: Int) {
                         RoundedCornerShape(16.dp)
                     )
             )
+        } else {
+            Text(
+                text = stringResource(R.string.no_images),
+                modifier = Modifier.padding(16.dp),
+                color = Color.Black
+            )
         }
-        Text(
-            text = stringResource(R.string.no_images),
-            modifier = Modifier.padding(16.dp),
-            color = Color.Black
-        )
     }
 }

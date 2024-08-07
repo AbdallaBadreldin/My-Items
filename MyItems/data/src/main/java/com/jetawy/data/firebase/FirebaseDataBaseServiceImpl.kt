@@ -113,6 +113,7 @@ class FirebaseDataBaseServiceImpl @Inject constructor(
         try {
             val ref = db.getReference("/foundItems/$country").get().await()
             ref.children.forEach {
+                if (it.getValue(ItemFoundResponse::class.java) != null && it.getValue(ItemFoundResponse::class.java)?.user != FirebaseAuth.getInstance().currentUser?.uid) // as we should filter our own items
                 list.add(it.getValue(ItemFoundResponse::class.java)!!)
             }
             _getFoundItemsByCountry.emit(UiState.Success(list))

@@ -3,7 +3,7 @@ package com.fstech.myItems.presentation.matchmaking
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
@@ -64,12 +64,12 @@ fun MatchDetailsScreen(goToMatchMakingSuccessScreen: () -> Unit, viewModel: Matc
             Column(
                 Modifier
                     .verticalScroll(state = rememberScrollState())
-                    .fillMaxSize()
+                    .wrapContentSize()
             ) {
                 Row(
                     modifier = Modifier
                         .weight(1f)
-                        .fillMaxWidth()
+                        .wrapContentSize()
                 ) {
                     if (currentItem.images != null) {
                         if ((currentItem.images?.size ?: 0) >= 1) {
@@ -96,9 +96,9 @@ fun MatchDetailsScreen(goToMatchMakingSuccessScreen: () -> Unit, viewModel: Matc
                     }
                 }
                 Text("Type: ${currentItem.aiResponse?.type}")
-                Text("Description: ${currentItem.aiResponse?.userDescription}")
+                Text("Description: ${currentItem.aiResponse?.userDescription ?: stringResource(R.string.no_description)}")
 //        Text("Image Description: ${currentItem.imageDescription}")
-                Text("Item State: ${currentItem.aiResponse?.itemState}")
+//                Text("Item State: ${currentItem.aiResponse?.itemState}")
 //        Text("Translated Description: ${currentItem.aiResponse?.translatedDescription}")
                 Text("Model: ${currentItem.aiResponse?.model}")
                 Text("Category: ${currentItem.aiResponse?.category}")
@@ -123,12 +123,14 @@ fun MatchDetailsScreen(goToMatchMakingSuccessScreen: () -> Unit, viewModel: Matc
         is UiState.Error -> {
             Text(text = stringResource(id = R.string.retry))
         }
+
         UiState.Initial -> {
         }
 
         UiState.Loading -> {
             CircularProgressIndicator()
         }
+
         is UiState.Success<*> -> {
             goToMatchMakingSuccessScreen()
         }
