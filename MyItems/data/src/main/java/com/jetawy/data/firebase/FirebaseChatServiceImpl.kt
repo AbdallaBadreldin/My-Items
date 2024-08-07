@@ -72,7 +72,7 @@ class FirebaseChatServiceImpl(private val db: FirebaseDatabase) : FirebaseChatSe
             ref.child("receiver").setValue(receiver)
             ref.child("foundItemID").setValue(foundItemID)
             ref.child("lostItemId").setValue(lostItemID)
-            ref.child("itemType").push().setValue(itemType)
+            ref.child("itemType").setValue(itemType)
             ref.child("timestamp").setValue(System.currentTimeMillis())
 //            ref.child("isSeen").setValue(false)
             //room created successfully

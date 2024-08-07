@@ -106,4 +106,6 @@
     <string name="someone_lost_item">Someone lost item</string>
     <string name="phone_number">Phone Number</string>
     <string name="verification_code">Verification Code</string>
+    <string name="enter_message">Enter message</string>
+    <string name="send">Send</string>
 </resources>

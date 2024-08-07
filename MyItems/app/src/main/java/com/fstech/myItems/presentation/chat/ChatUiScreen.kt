@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -101,23 +102,35 @@ fun ChatUiScreen(viewModel: ChatViewModel) {
 @Composable
 fun ChatScreen(messages: List<MessageModel>, onSendMessage: (String) -> Unit) {
     var messageText by remember { mutableStateOf("") }
-
+    val scrollState = rememberScrollState()
+    val listState = rememberLazyListState()
+    var firstTime = true
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(scrollState)
     ) {
         LazyColumn(
             modifier = Modifier.weight(1f),
-            reverseLayout = false
+            reverseLayout = false,
+            state = listState
         ) {
             items(messages.size) { index ->
                 val message = messages[index]
                 MessageCard(message)
+                LaunchedEffect(key1 = Unit) {
+                    if (!listState.isScrollInProgress && firstTime) {
+                        firstTime = false
+                        listState.scrollToItem(listState.layoutInfo.totalItemsCount - 1)
+                    }
+                }
             }
         }
 
+        LaunchedEffect("scroll") {
+            scrollState.animateScrollTo(scrollState.maxValue)
+        }
         Row(modifier = Modifier.wrapContentSize()) {
             OutlinedTextField(
                 value = messageText,
@@ -125,7 +138,7 @@ fun ChatScreen(messages: List<MessageModel>, onSendMessage: (String) -> Unit) {
                 modifier = Modifier
                     .weight(1f)
                     .padding(end = 8.dp),
-                placeholder = { Text("Enter message") }
+                placeholder = { Text(stringResource(R.string.enter_message)) }
             )
             IconButton(onClick = {
                 if (messageText.isNotBlank()) {
@@ -133,7 +146,10 @@ fun ChatScreen(messages: List<MessageModel>, onSendMessage: (String) -> Unit) {
                     messageText = ""
                 }
             }) {
-                Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Send")
+                Icon(
+                    Icons.AutoMirrored.Filled.Send,
+                    contentDescription = stringResource(R.string.send)
+                )
             }
         }
     }
@@ -143,6 +159,11 @@ fun ChatScreen(messages: List<MessageModel>, onSendMessage: (String) -> Unit) {
 @Composable
 fun MessageCard(message: MessageModel) {
     Column(
+        horizontalAlignment = if (Firebase.auth.currentUser?.uid == message.sender) {
+            Alignment.Start
+        } else {
+            Alignment.End
+        },
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth()

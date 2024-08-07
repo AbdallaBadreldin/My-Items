@@ -19,6 +19,7 @@ class AuthViewModel @Inject constructor(private val firebase: FirebaseAuthServic
 
     fun signIn(phoneNumber: String, language: String) {
         viewModelScope.launch {
+            _codeSent.postValue(AuthState.Loading)
             firebase.signIn(phoneNumber, language).collect { req ->
                 _codeSent.postValue(req)
             }
@@ -27,6 +28,7 @@ class AuthViewModel @Inject constructor(private val firebase: FirebaseAuthServic
 
     fun verifyCode(code: String) {
         viewModelScope.launch {
+            _codeSent.postValue(AuthState.Loading)
             firebase.verifyCode(code).collect { req ->
                 _codeSent.postValue(req)
             }

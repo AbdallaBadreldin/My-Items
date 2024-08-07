@@ -60,4 +60,10 @@ class ChatViewModel @Inject constructor(private val repo: ChatRepository) : View
             }
         }
     }
+
+    fun resetMessagesList() {
+        viewModelScope.launch {
+            _getMessages.emit(UiState.Initial)
+        }
+    }
 }

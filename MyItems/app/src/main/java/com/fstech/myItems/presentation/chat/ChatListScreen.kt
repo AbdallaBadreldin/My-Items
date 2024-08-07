@@ -83,23 +83,24 @@ fun ChatRoomItem(chatRoom: ChatRoom, viewModel: ChatViewModel, goToChatUiScreen:
             .border(1.dp, androidx.compose.ui.graphics.Color.Red)
             .clickable {
                 viewModel.currentItemRoom = chatRoom
+                viewModel.resetMessagesList()
                 goToChatUiScreen()
 //we need to go to chat screen
             }
     ) {
         Text(
             text = chatRoom.itemType.toString(),
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+            modifier = Modifier.align(Alignment.CenterHorizontally).padding(8.dp)
         )
         Spacer(modifier = Modifier.height(8.dp))
         if (chatRoom.sender.toString() == Firebase.auth.currentUser?.uid) {
-            Text(text = stringResource(R.string.your_lost_item))
+            Text(text = stringResource(R.string.your_lost_item), Modifier.padding(8.dp))
         } else {
-            Text(text = stringResource(R.string.someone_lost_item))
+            Text(text = stringResource(R.string.someone_lost_item), Modifier.padding(8.dp))
         }
         Spacer(modifier = Modifier.height(8.dp))
         Row {
-            if (chatRoom.lastSender?.sender.toString() == Firebase.auth.currentUser?.uid) {
+            if (chatRoom.lastMessage?.sender.toString() == Firebase.auth.currentUser?.uid) {
                 Text(text = stringResource(R.string.message_sent), Modifier.padding(8.dp))
             } else {
                 Text(text = stringResource(R.string.message_received), Modifier.padding(8.dp))
@@ -115,7 +116,7 @@ fun ChatRoomItem(chatRoom: ChatRoom, viewModel: ChatViewModel, goToChatUiScreen:
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = convertTimestampToDate(chatRoom.lastSender?.timestamp ?: 0L),
+                text = convertTimestampToDate(chatRoom.lastMessage?.timestamp ?: 0L),
                 modifier = Modifier
                     .fillMaxWidth()
             )
