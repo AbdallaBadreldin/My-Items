@@ -70,7 +70,7 @@ fun ShowItemsScreen(goToMatchMakingScreen: () -> Unit, viewModel: MatchMakingVie
                     CircularProgressIndicator(
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
-                            .size(128.dp)
+                            .size(64.dp)
                     )
                 }
             }
@@ -152,7 +152,7 @@ fun ShowItemsScreen(goToMatchMakingScreen: () -> Unit, viewModel: MatchMakingVie
                         text = stringResource(R.string.no_lost_items),
                         modifier = Modifier
                             .padding(0.dp, 64.dp)
-                            .wrapContentSize()
+                            .fillMaxWidth()
                             .align(Alignment.CenterHorizontally),
                         color = Color.Red,
                         fontSize = 24.sp,

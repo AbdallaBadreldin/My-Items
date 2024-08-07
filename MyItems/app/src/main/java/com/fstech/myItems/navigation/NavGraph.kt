@@ -166,7 +166,9 @@ fun openShowItemsScreen(
     navGraphBuilder.composable(
         route = NavRoute.ShowItemsNavRoute.path
     ) {
-        ShowItemsScreen({ navController.navigate(NavRoute.MatchMakingNavRoute.path) }, viewModel)
+        ShowItemsScreen({ navController.navigate(NavRoute.MatchMakingNavRoute.path){
+            popUpTo(NavRoute.ShowItemsNavRoute.path)
+        } }, viewModel)
     }
 }
 

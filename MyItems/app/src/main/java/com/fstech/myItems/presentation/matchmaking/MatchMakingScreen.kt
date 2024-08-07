@@ -168,7 +168,7 @@ fun MatchMakingScreen(goToMatchDetailsScreen: () -> Unit, viewModel: MatchMaking
                 CircularProgressIndicator(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
-                        .size(128.dp)
+                        .size(64.dp)
                 )
             }
         }
