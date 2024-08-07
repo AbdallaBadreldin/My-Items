@@ -1,5 +1,6 @@
 package com.fstech.myItems.presentation.matchmaking
 
+import android.app.Activity
 import android.location.Geocoder
 import android.os.Build
 import android.util.Log
@@ -20,8 +21,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,6 +44,7 @@ const val topItemsCount = 10
 
 @Composable
 fun MatchMakingScreen(goToMatchDetailsScreen: () -> Unit, viewModel: MatchMakingViewModel) {
+    var showMatchMakingScreen by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val getFoundUiStateByCountry = viewModel.getFoundUiStateByCountry.collectAsState()
     val prompt = viewModel.promptState.collectAsState()
@@ -48,7 +52,11 @@ fun MatchMakingScreen(goToMatchDetailsScreen: () -> Unit, viewModel: MatchMaking
         mutableStateOf("")
     }
     val currentItem =
-        (viewModel.lostUiState.collectAsState().value as UiState.Success<MutableList<ItemLostResponse>>).outputData[viewModel.itemIndex] //details and index of current found lost item
+        if (viewModel.lostUiState.value is UiState.Success<*>)
+            (viewModel.lostUiState.collectAsState().value as UiState.Success<MutableList<ItemLostResponse>>).outputData[viewModel.itemIndex] //details and index of current found lost item
+        else {
+            null
+        }
 
     when (getFoundUiStateByCountry.value) {
         is UiState.Error -> {
@@ -64,7 +72,7 @@ fun MatchMakingScreen(goToMatchDetailsScreen: () -> Unit, viewModel: MatchMaking
 
         UiState.Initial -> {
             LaunchedEffect(key1 = "dataFetchKey") {
-                val location = currentItem.location
+                val location = currentItem?.location
                 val locations = location?.split(",")
                 val lat = locations?.get(0)?.toDouble() ?: 0.0
                 val lng = locations?.get(1)?.toDouble() ?: 0.0
@@ -131,7 +139,7 @@ fun MatchMakingScreen(goToMatchDetailsScreen: () -> Unit, viewModel: MatchMaking
             } else
                 LaunchedEffect("startTheMainTasks") {
                     viewModel.lostItemId =
-                        currentItem.objectID.toString() //should be current item lost id
+                        currentItem?.objectID.toString() //should be current item lost id
                     Log.e("TAG لا", "MatchMakingScreen: ${currentItem}")
                     Log.e("TAG لا", "MatchMakingScreen: ${listOfFoundItems}")
                     val currentItemJson = Gson().toJson(currentItem)

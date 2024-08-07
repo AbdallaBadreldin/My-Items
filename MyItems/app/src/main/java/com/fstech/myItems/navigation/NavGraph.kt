@@ -108,7 +108,7 @@ fun openChatListScreen(
     navGraphBuilder.composable(
         route = NavRoute.ChatListNavRoute.path
     ) {
-        ChatListScreen({ navController.navigate(NavRoute.ChatUiNavRoute.path) },viewModel)
+        ChatListScreen({ navController.navigate(NavRoute.ChatUiNavRoute.path) }, viewModel)
     }
 }
 
@@ -133,7 +133,11 @@ fun openMatchDetailsScreen(
         route = NavRoute.MatchDetailsNavRoute.path
     ) {
         MatchDetailsScreen(
-            { navController.navigate(NavRoute.MatchMakingSuccessNavRoute.path) },
+            {
+                navController.navigate(NavRoute.MatchMakingSuccessNavRoute.path) {
+                    popUpTo(NavRoute.MatchDetailsNavRoute.path)
+                }
+            },
             viewModel
         )
     }
@@ -166,9 +170,11 @@ fun openShowItemsScreen(
     navGraphBuilder.composable(
         route = NavRoute.ShowItemsNavRoute.path
     ) {
-        ShowItemsScreen({ navController.navigate(NavRoute.MatchMakingNavRoute.path){
-            popUpTo(NavRoute.ShowItemsNavRoute.path)
-        } }, viewModel)
+        ShowItemsScreen({
+            navController.navigate(NavRoute.MatchMakingNavRoute.path) {
+                popUpTo(NavRoute.ShowItemsNavRoute.path)
+            }
+        }, viewModel)
     }
 }
 
