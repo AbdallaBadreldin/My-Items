@@ -48,19 +48,4 @@ object FirebaseModule {
 
     @Provides
     fun providesFirebaseStorage() = Firebase.storage
-
-    /* @Provides
-     @Singleton
-     fun provideSharedPreference(@ApplicationContext context: Context): Firebase =
-         context.getSharedPreferences(sharedPreferencesFileName, Context.MODE_PRIVATE)
-
-     @Provides
-     @Singleton
-     fun provideAuthSP(sp: SharedPreferences): AuthSharedPreference =
-         SharedPreferenceImpl(sp)
-
-     @Provides
-     @Singleton
-     fun provideProfileSP(sp: SharedPreferences): ProfileSharedPreference =
-         SharedPreferenceImpl(sp)*/
 }

@@ -52,4 +52,8 @@ class WelcomeViewModel : ViewModel() {
             }
         }
     }
+
+    fun noInternetConnection(error:String) {
+        _uiState.value = UiState.Error(error)
+    }
 }

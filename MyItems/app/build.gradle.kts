@@ -14,12 +14,12 @@ plugins {
 
 android {
     namespace = "com.fstech.myItems"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.fstech.myItems"
         minSdk = 23
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -103,6 +103,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
 
     implementation(libs.androidx.navigation.compose)
 
@@ -141,32 +142,10 @@ dependencies {
 
     implementation(libs.androidx.hilt.navigation.fragment)
 
-    /* //retrofit
-     implementation(libs.retrofit)
-     implementation(libs.converter.gson)
-     implementation(group = "com.squareup.okhttp3", name = "okhttp", version = "4.12.0")
-
-     //interceptor
-     implementation(libs.logging.interceptor)
- */
-    //room database
-//    implementation(libs.androidx.room.ktx)
-//    kapt(libs.androidx.room.compiler)
-//    androidTestImplementation(libs.androidx.room.testing)
-//    annotationProcessor(libs.compiler)
 
     //pinview for verifying otp
     implementation(libs.pinview)
-
-    //shimmer and glide and glide compiler
-//    implementation(libs.shimmer)
-//    implementation(libs.glide)
-//    annotationProcessor(libs.glide.compiler)
-
     implementation(libs.kotlinx.serialization.json)
 
 }
-/*apply{
-    plugin("com.google.gms.google-services")
-}*/
 

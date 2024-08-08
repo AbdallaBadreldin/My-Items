@@ -23,6 +23,7 @@ import java.util.Locale
 class FirstFragment : Fragment() {
     private val viewModel: AuthViewModel by activityViewModels()
     private var _binding: FragmentFirstBinding? = null
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -79,13 +80,13 @@ class FirstFragment : Fragment() {
                 }
 
                 is AuthState.Initial -> {
-                    binding.buttonFirst.visibility = View.VISIBLE
-                    binding.buttonFirst.isEnabled = true
+                    binding.buttonFirst.visibility = View.INVISIBLE
+                    binding.buttonFirst.isEnabled = false
                 }
 
                 is AuthState.Loading -> {
-                    binding.buttonFirst.visibility = View.INVISIBLE
-                    binding.buttonFirst.isEnabled = false
+                    binding.buttonFirst.visibility = View.VISIBLE
+                    binding.buttonFirst.isEnabled = true
                 }
 
                 is AuthState.OnCodeSent -> {

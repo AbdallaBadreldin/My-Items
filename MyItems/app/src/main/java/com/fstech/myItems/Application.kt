@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.res.Resources
 import com.google.firebase.Firebase
 import com.google.firebase.appcheck.appCheck
-import com.google.firebase.appcheck.ktx.appCheck
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
 import com.google.firebase.initialize
 import dagger.hilt.android.HiltAndroidApp
@@ -22,6 +21,12 @@ class Application : Application() {
         Firebase.appCheck.installAppCheckProviderFactory(
             PlayIntegrityAppCheckProviderFactory.getInstance(),
         )
+//
+//        Firebase.initialize(context = this)
+//        Firebase.appCheck.installAppCheckProviderFactory(
+//            DebugAppCheckProviderFactory.getInstance(),
+//        )
+
 //        isAppUpdated()
         res = resources
 //        createNotificationChannel()

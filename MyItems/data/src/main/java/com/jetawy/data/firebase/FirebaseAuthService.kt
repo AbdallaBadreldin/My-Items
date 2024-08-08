@@ -8,4 +8,5 @@ interface FirebaseAuthService {
     fun signOut()
     fun isLoggedIn(): Boolean
     fun verifyCode(code:String): Flow<AuthState>
+    suspend fun deleteAccount(): Flow<AuthState>
 }

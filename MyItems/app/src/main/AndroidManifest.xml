@@ -2,10 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera.any" />
+
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
 
     <application
@@ -28,6 +36,7 @@
         <activity android:name=".presentation.lost.LostItemActivity" />
         <activity android:name=".presentation.matchmaking.MatchMakingActivity" />
         <activity android:name=".presentation.chat.ChatActivity" />
+        <activity android:name=".presentation.settings.SettingsActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

@@ -28,7 +28,7 @@ import com.fstech.myItems.presentation.welcome.WelcomeScreen
 
 @Composable
 fun NavGraph(
-    navController: NavHostController
+    navController: NavHostController,
 ) {
     NavHost(navController = navController, startDestination = NavRoute.WelcomeNavRoute.path) {
         openWelcomeScreen(navController = navController, this)
@@ -273,7 +273,10 @@ fun openMapScreen(navController: NavHostController, navGraphBuilder: NavGraphBui
     }
 }
 
-fun openHomeScreen(navController: NavHostController, navGraphBuilder: NavGraphBuilder) {
+fun openHomeScreen(
+    navController: NavHostController,
+    navGraphBuilder: NavGraphBuilder,
+) {
     navGraphBuilder.composable(route = NavRoute.HomeNavRoute.path) {
         HomeScreen(
             navController = navController
@@ -281,7 +284,10 @@ fun openHomeScreen(navController: NavHostController, navGraphBuilder: NavGraphBu
     }
 }
 
-fun openMainScreen(navController: NavHostController, navGraphBuilder: NavGraphBuilder) {
+fun openMainScreen(
+    navController: NavHostController,
+    navGraphBuilder: NavGraphBuilder,
+) {
     navGraphBuilder.composable(route = NavRoute.MainNavRoute.path) {
         HomeScreen(
             navController = navController

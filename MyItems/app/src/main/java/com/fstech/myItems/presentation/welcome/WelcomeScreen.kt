@@ -20,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -30,6 +31,7 @@ import com.fstech.myItems.R
 import com.fstech.myItems.navigation.NavRoute
 import com.fstech.myItems.presentation.getAppLanguage
 import com.jetawy.domain.utils.UiState
+import com.jetawy.domain.utils.Utils
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -37,7 +39,7 @@ fun WelcomeScreen(
     viewModel: WelcomeViewModel = viewModel(), navController: NavHostController
 ) {
     val uiState by viewModel.uiState.collectAsState()
-
+    val context = LocalContext.current
     FlowColumn(
         verticalArrangement = Arrangement.spacedBy(32.dp),
         modifier = Modifier
@@ -52,19 +54,22 @@ fun WelcomeScreen(
                 .align(Alignment.CenterHorizontally),
         )
         Image(
-            modifier = Modifier.clip(RoundedCornerShape(16.dp)),
+            modifier = Modifier.align(Alignment.CenterHorizontally).clip(RoundedCornerShape(16.dp)),
             painter = painterResource(id = R.drawable.welcome_screen),
             contentDescription = stringResource(id = R.string.welcome)
         )
         if (uiState is UiState.Initial) {
-            viewModel.run {
-                sendPrompt(
-                    stringResource(
-                        R.string.generate_only_one_random_quote_to_help_people_to_take_care_of_their_items_or_money_that_can_lose_it_or_being_stole_for_my_items_finder_android_app_in_language,
-                        getAppLanguage()
+            if (Utils.isInternetAvailable(context = context))
+                viewModel.run {
+                    sendPrompt(
+                        stringResource(
+                            R.string.generate_only_one_random_quote_to_help_people_to_take_care_of_their_items_or_money_that_can_lose_it_or_being_stole_for_my_items_finder_android_app_in_language,
+                            getAppLanguage()
+                        )
                     )
-                )
-            }
+                }
+            else
+                viewModel.noInternetConnection(stringResource(id = R.string.no_internet_connection))
         }
         when (uiState) {
             is UiState.Error -> {

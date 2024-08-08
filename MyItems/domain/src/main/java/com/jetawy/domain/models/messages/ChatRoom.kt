@@ -14,4 +14,7 @@ data class ChatRoom(
     val isSeen: Boolean? = false,
     var lostItemId: String? = "",
     var itemType: String? = "",
+    var isSenderBlocked: Boolean? = false,
+    var isRecieverBlocked: Boolean? = false,
+    var isDeleted: Boolean? = false,
 )

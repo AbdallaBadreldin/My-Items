@@ -66,4 +66,14 @@ class ChatViewModel @Inject constructor(private val repo: ChatRepository) : View
             _getMessages.emit(UiState.Initial)
         }
     }
+
+    fun noInternetConnection(error:String) {
+        _getChatRooms.value = UiState.Error(error)
+    }
+
+    fun deleteFoundItem(foundItemID: String?) {
+        viewModelScope.launch {
+//        repo.deleteFoundItem(foundItemID)
+        }
+    }
 }
