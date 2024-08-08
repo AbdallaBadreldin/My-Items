@@ -75,6 +75,8 @@ class FirstFragment : Fragment() {
         viewModel.codeSent.observe(viewLifecycleOwner) {
             when (it) {
                 is AuthState.Error -> {
+                    binding.buttonFirst.visibility = View.VISIBLE
+                    binding.buttonFirst.isEnabled = true
                     Snackbar.make(binding.root, it.error?.message.toString(), Snackbar.LENGTH_SHORT)
                         .show()
                 }
