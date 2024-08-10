@@ -20,7 +20,7 @@ android {
         applicationId = "com.fstech.myItems"
         minSdk = 23
         targetSdk = 35
-        versionCode = 1
+        versionCode = 3
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -138,10 +138,7 @@ dependencies {
     implementation(libs.pinview)
 
     implementation(libs.google.gson)
-
-
     implementation(libs.androidx.hilt.navigation.fragment)
-
 
     //pinview for verifying otp
     implementation(libs.pinview)

@@ -127,31 +127,28 @@ class FirebaseAuthServiceImpl @Inject constructor(private val auth: FirebaseAuth
             // 4-lostItems
             try {
                 auth.currentUser?.uid?.let {
-                    Firebase.database.getReference("/profiles/$it/lostItems").child(it).get()
-                        .await().children.forEach {
-                            val ref = it.ref
-                            Firebase.database.getReference("/lostItems/${ref.key}").removeValue()
-                            Firebase.storage.getReference("/LostItemsImages/${ref.key}").delete()
-                            ref.removeValue()
+                    Firebase.database.getReference("/profiles/$it/lostItems").get()
+                        .await().children.forEach { profileItem->
+                            Firebase.database.getReference("/lostItems/${profileItem.key}").removeValue()
+                            Firebase.storage.getReference("/LostItemsImages/${profileItem.key}").delete()
+                            profileItem.ref.removeValue()
                         }
                 }
 
                 auth.currentUser?.uid?.let {
-                    Firebase.database.getReference("/profiles/$it/foundItems").child(it).get()
-                        .await().children.forEach {
-                            val ref = it.ref
-                            Firebase.database.getReference("/foundItems/${ref.key}").removeValue()
-                            Firebase.storage.getReference("/FoundItemsImages/${ref.key}").delete()
-                            ref.removeValue()
+                    Firebase.database.getReference("/profiles/$it/foundItems").get()
+                        .await().children.forEach {profileItem->
+                            Firebase.database.getReference("/foundItems/${profileItem.key}").removeValue()
+                            Firebase.storage.getReference("/FoundItemsImages/${profileItem.key}").delete()
+                            profileItem.ref.removeValue()
                         }
                 }
                 auth.currentUser?.uid?.let {
-                    Firebase.database.getReference("/profiles/$it/chatRooms").child(it).get()
-                        .await().children.forEach {
-                            val ref = it.ref
-                            Firebase.database.getReference("/chatRooms/${ref.key}/isDeleted")
+                    Firebase.database.getReference("/profiles/$it/chatRooms").get()
+                        .await().children.forEach { profileItem->
+                            Firebase.database.getReference("/chatRooms/${profileItem.key}/isDeleted")
                                 .setValue(true)
-                            ref.removeValue()
+                            profileItem.ref.removeValue()
                         }
                 }
 

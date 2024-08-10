@@ -76,7 +76,7 @@ fun FoundItemScreen(
                     currentPhotoUri = tempPhotoUri
                     viewModel.resetStates()
                     if (viewModel.list.size < maxImagesToScan) {
-                        viewModel.addItem(tempPhotoUri)
+                        viewModel.addItem(currentPhotoUri)
                     }
                 }
             }

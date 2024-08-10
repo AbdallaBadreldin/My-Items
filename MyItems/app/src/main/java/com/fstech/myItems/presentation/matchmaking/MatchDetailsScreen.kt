@@ -2,7 +2,8 @@ package com.fstech.myItems.presentation.matchmaking
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -16,8 +17,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.fstech.myItems.R
 import com.google.firebase.auth.ktx.auth
@@ -68,8 +71,8 @@ fun MatchDetailsScreen(goToMatchMakingSuccessScreen: () -> Unit, viewModel: Matc
             ) {
                 Row(
                     modifier = Modifier
-                        .weight(1f)
                         .wrapContentSize()
+                        .align(Alignment.CenterHorizontally)
                 ) {
                     if (currentItem.images != null) {
                         if ((currentItem.images?.size ?: 0) >= 1) {
@@ -95,6 +98,7 @@ fun MatchDetailsScreen(goToMatchMakingSuccessScreen: () -> Unit, viewModel: Matc
                         }
                     }
                 }
+                Spacer(modifier = Modifier.padding(16.dp))
                 Text("Type: ${currentItem.aiResponse?.type}")
                 Text("Description: ${currentItem.aiResponse?.userDescription ?: stringResource(R.string.no_description)}")
 //        Text("Image Description: ${currentItem.imageDescription}")
@@ -104,7 +108,9 @@ fun MatchDetailsScreen(goToMatchMakingSuccessScreen: () -> Unit, viewModel: Matc
                 Text("Category: ${currentItem.aiResponse?.category}")
                 Text("Brand: ${currentItem.aiResponse?.brand}")
                 Text("Colors: ${currentItem.aiResponse?.colors?.joinToString(", ")}")
-                Button(onClick = { showDialog = true }
+                Button(
+                    onClick = { showDialog = true },
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
                 ) {
                     Text(text = stringResource(R.string.it_s_mine))
                 }

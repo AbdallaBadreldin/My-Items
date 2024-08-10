@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,12 +37,14 @@ import com.fstech.myItems.presentation.theme.MyItemsTheme
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.jetawy.domain.utils.AuthState
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
 class SettingsActivity : ComponentActivity() {
     lateinit var navController: NavHostController
+    val viewModel: SettingsViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this)
@@ -55,13 +59,14 @@ class SettingsActivity : ComponentActivity() {
                             .padding(innerPadding),
                         color = MaterialTheme.colorScheme.background,
                     ) {
+                        val uiState = viewModel.deleteAccount.collectAsState()
                         var showDialog by remember { mutableStateOf(false) }
                         ConfirmDialog(
                             showDialog = showDialog,
                             onDismiss = { showDialog = false },
                             onConfirm = {
                                 // Perform confirm deleting action
-
+                                viewModel.deleteAccount()
                                 showDialog = false
                             }
                         )
@@ -83,7 +88,7 @@ class SettingsActivity : ComponentActivity() {
                                 Text(stringResource(R.string.logout))
                             }
 
-                            Spacer(modifier = Modifier.height(16.dp))
+                            Spacer(modifier = Modifier.height(64.dp))
 
                             Text(text = stringResource(R.string.delete_account),
                                 color = Color.Red,
@@ -96,6 +101,22 @@ class SettingsActivity : ComponentActivity() {
                                         showDialog = true
                                     }
                             )
+                        }
+                        when (uiState.value) {
+                            is AuthState.Error -> {
+                                Toast.makeText(
+                                    this@SettingsActivity,
+                                    (uiState.value as AuthState.Error).error?.message.toString(),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+
+                            AuthState.Initial -> {}
+                            AuthState.Loading -> {}
+                            AuthState.OnCodeSent -> {}
+                            AuthState.OnSuccess -> {
+                                this.finish()
+                            }
                         }
                     }
                 }

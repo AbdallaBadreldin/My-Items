@@ -4,13 +4,19 @@ import android.location.Geocoder
 import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.fstech.myItems.R
 import com.fstech.myItems.presentation.found.circularProgressIndicator
 import com.jetawy.domain.models.ItemLost
@@ -57,7 +63,14 @@ fun LostItemEnterDataScreen(function: () -> Unit, viewModel: LostItemViewModel) 
 
             UiState.Loading -> {
                 Text(text = stringResource(R.string.checking_entries))
-                CircularProgressIndicator()
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .width(64.dp)
+                        .fillMaxWidth()
+                        .align(Alignment.CenterHorizontally),
+                    color = MaterialTheme.colorScheme.secondary,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                )
             }
 
             is UiState.Success<*> -> {
