@@ -34,7 +34,6 @@ fun NavGraph(
         openWelcomeScreen(navController = navController, this)
         openMainScreen(navController = navController, this)
         openHomeScreen(navController = navController, this)
-        openMapScreen(navController = navController, this)
     }
 }
 
@@ -261,14 +260,6 @@ fun openFoundItemEnterDataScreen(
                 }
             },
             viewModel = viewModel
-        )
-    }
-}
-
-fun openMapScreen(navController: NavHostController, navGraphBuilder: NavGraphBuilder) {
-    navGraphBuilder.composable(route = NavRoute.MapNavRoute.path) {
-        MapScreen(
-            navController = navController
         )
     }
 }
