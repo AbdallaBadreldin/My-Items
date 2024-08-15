@@ -20,6 +20,14 @@ now the app is ready to be built
 if you want to try it without building it you can install this APK directly:
 https://drive.google.com/file/d/1G1ThHDhv6N31t4rCYAkmm7jIs9xjSCNj/view?usp=sharing
 
+Don't forget to use one of those accounts for auth 
+Egypt || +20 11 11111111 verification code : 123456
+Egypt || +20 11 11111112 verification code : 123456
+Egypt || +20 11 11111113 verification code : 123456
+Egypt || +20 11 11111114 verification code : 123456
+Egypt || +20 11 11111115 verification code : 123456
+Egypt || +20 11 11111117 verification code : 123456
+
 
 
 
