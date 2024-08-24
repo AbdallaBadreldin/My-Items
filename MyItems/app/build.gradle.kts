@@ -20,7 +20,7 @@ android {
         applicationId = "com.fstech.myItems"
         minSdk = 23
         targetSdk = 35
-        versionCode = 3
+        versionCode = 4
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -107,7 +107,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
     implementation(libs.maps.compose)
-    implementation (libs.play.services.maps)
+    implementation(libs.play.services.maps)
     //For rememberLauncherForActivityResult()
     implementation(libs.androidx.activity.compose)
 
@@ -125,7 +125,7 @@ dependencies {
     implementation(libs.play.services.safetynet)
     implementation(libs.androidx.browser)
     implementation(libs.firebase.appcheck.safetynet)
-    implementation (libs.firebase.storage)
+    implementation(libs.firebase.storage)
     //hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
@@ -141,6 +141,6 @@ dependencies {
     //pinview for verifying otp
     implementation(libs.pinview)
     implementation(libs.kotlinx.serialization.json)
-
+    implementation(libs.androidx.browser)
 }
 

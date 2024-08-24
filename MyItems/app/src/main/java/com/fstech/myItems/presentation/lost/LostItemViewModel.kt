@@ -145,7 +145,7 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
                 if (color1.value.toString().isNotEmpty()) {
 
                     val checkColor1 =
-                        "is word \"${color1.value.toString()}\" a color ? return with true or if false return the reason and translate it to ${getAppLanguage()}"
+                        "check if the word \"${color1.value.toString()}\" a color with right spell return true else if the word \"${color1.value.toString()}\" is not color  return false return the reason and translate it to ${getAppLanguage()}"
 
                     val checkColor1Response = generativeModel.generateContent(
                         content {
@@ -167,7 +167,7 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
                 if (color2.value.toString().isNotEmpty()) {
 
                     val checkColor2 =
-                        "is word \"${color2.value.toString()}\" a color ? return with true or if false return the reason in ${getAppLanguage()}"
+                        "check if the word \"${color2.value.toString()}\" a color with right spell return true else if the word \"${color2.value.toString()}\" is not color  return false return the reason and translate it to ${getAppLanguage()}"
 
                     val checkColor2Response = generativeModel.generateContent(
                         content {
@@ -187,7 +187,7 @@ class LostItemViewModel @Inject constructor(private val lostItemsRepositoryImpl:
                 }
                 if (color3.value.toString().isNotEmpty()) {
                     val checkColor3 =
-                        "is word \"${color3.value.toString()}\" a color ? return with true or if false return the reason and translate it to ${getAppLanguage()}"
+                        "check if the word \"${color3.value.toString()}\" a color with right spell return true else if the word \"${color3.value.toString()}\" is not color  return false return the reason and translate it to ${getAppLanguage()}"
 
                     val checkColor3Response = generativeModel.generateContent(
                         content {
