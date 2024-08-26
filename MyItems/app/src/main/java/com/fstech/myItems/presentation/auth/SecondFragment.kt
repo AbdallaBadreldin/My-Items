@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.fstech.myItems.R
+import com.fstech.myItems.base.BaseFragment
 import com.fstech.myItems.databinding.FragmentSecondBinding
 import com.google.android.material.snackbar.Snackbar
 import com.jetawy.domain.utils.AuthState
@@ -18,7 +19,7 @@ import com.jetawy.domain.utils.AuthState
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
-class SecondFragment : Fragment() {
+class SecondFragment : BaseFragment() {
     private val viewModel: AuthViewModel by activityViewModels()
     private var _binding: FragmentSecondBinding? = null
 

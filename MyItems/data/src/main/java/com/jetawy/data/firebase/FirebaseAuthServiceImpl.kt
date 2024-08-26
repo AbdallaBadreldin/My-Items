@@ -35,9 +35,7 @@ class FirebaseAuthServiceImpl @Inject constructor(private val auth: FirebaseAuth
 
     val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-            CoroutineScope(Dispatchers.IO).launch {
-                _signIn.emit(AuthState.OnSuccess)
-            }
+            signInWithPhoneAuthCredential(credential)
         }
 
         override fun onVerificationFailed(e: FirebaseException) {

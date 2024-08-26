@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.fstech.myItems.R
+import com.fstech.myItems.base.BaseFragment
 import com.fstech.myItems.databinding.FragmentFirstBinding
 import com.google.android.material.snackbar.Snackbar
 import com.jetawy.domain.utils.AuthState
@@ -20,7 +21,7 @@ import java.util.Locale
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 @AndroidEntryPoint
-class FirstFragment : Fragment() {
+class FirstFragment : BaseFragment() {
     private val viewModel: AuthViewModel by activityViewModels()
     private var _binding: FragmentFirstBinding? = null
 
@@ -75,6 +76,7 @@ class FirstFragment : Fragment() {
         viewModel.codeSent.observe(viewLifecycleOwner) {
             when (it) {
                 is AuthState.Error -> {
+                    hideLoading()
                     binding.buttonFirst.visibility = View.VISIBLE
                     binding.buttonFirst.isEnabled = true
                     Snackbar.make(binding.root, it.error?.message.toString(), Snackbar.LENGTH_SHORT)
@@ -82,6 +84,7 @@ class FirstFragment : Fragment() {
                 }
 
                 is AuthState.Initial -> {
+                    hideLoading()
                     binding.buttonFirst.visibility = View.INVISIBLE
                     binding.buttonFirst.isEnabled = false
                 }
@@ -89,13 +92,16 @@ class FirstFragment : Fragment() {
                 is AuthState.Loading -> {
                     binding.buttonFirst.visibility = View.VISIBLE
                     binding.buttonFirst.isEnabled = true
+                    showLoading()
                 }
 
                 is AuthState.OnCodeSent -> {
+                    hideLoading()
                     findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
                 }
 
                 is AuthState.OnSuccess -> {
+                    hideLoading()
                     requireActivity().finish()
                 }
             }
