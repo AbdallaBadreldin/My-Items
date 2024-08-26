@@ -64,6 +64,7 @@ class FirstFragment : BaseFragment() {
                 ).show()
                 return@setOnClickListener
             } else {
+                showLoading()
                 viewModel.signIn(
                     "+${binding.countryCode.defaultCountryCode}${phone}",
                     Locale.getDefault().language
@@ -85,14 +86,14 @@ class FirstFragment : BaseFragment() {
 
                 is AuthState.Initial -> {
                     hideLoading()
-                    binding.buttonFirst.visibility = View.INVISIBLE
-                    binding.buttonFirst.isEnabled = false
+                    binding.buttonFirst.visibility = View.VISIBLE
+                    binding.buttonFirst.isEnabled = true
                 }
 
                 is AuthState.Loading -> {
-                    binding.buttonFirst.visibility = View.VISIBLE
-                    binding.buttonFirst.isEnabled = true
                     showLoading()
+                    binding.buttonFirst.visibility = View.INVISIBLE
+                    binding.buttonFirst.isEnabled = false
                 }
 
                 is AuthState.OnCodeSent -> {

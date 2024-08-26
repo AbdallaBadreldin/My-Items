@@ -6,9 +6,9 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization")
     id("kotlin-parcelize")
     id("androidx.navigation.safeargs.kotlin")
-    id("com.google.dagger.hilt.android")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
+    id("com.google.dagger.hilt.android")
     kotlin("kapt")
 }
 
@@ -20,7 +20,7 @@ android {
         applicationId = "com.fstech.myItems"
         minSdk = 23
         targetSdk = 35
-        versionCode = 8
+        versionCode = 9
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -31,6 +31,9 @@ android {
 
     buildTypes {
         release {
+            ndk.debugSymbolLevel = "FULL"
+//            ndk.abiFilters.addAll(listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64"))
+            isDebuggable = false
             isShrinkResources = true
             isMinifyEnabled = true
             proguardFiles(

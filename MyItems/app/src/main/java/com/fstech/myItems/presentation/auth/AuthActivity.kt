@@ -30,13 +30,13 @@ class AuthActivity : BaseActivity() {
         }
         binding = ActivityAuthBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        hideLoading()
 
         setSupportActionBar(binding.toolbar)
 
         val navController = findNavController(R.id.nav_host_fragment_content_auth)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
-        hideLoading()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -48,7 +48,6 @@ class AuthActivity : BaseActivity() {
     override fun showLoading() {
         binding.loadingContainer.visibility = View.VISIBLE
         binding.loadingIcon.visibility = View.VISIBLE
-//        Glide.with(this).asGif().load(R.raw.loading).into(binding.loadingIcon)
         binding.root.isUserInteractionEnabled(false)
     }
 

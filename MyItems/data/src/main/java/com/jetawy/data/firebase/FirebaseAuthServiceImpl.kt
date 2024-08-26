@@ -87,6 +87,7 @@ class FirebaseAuthServiceImpl @Inject constructor(private val auth: FirebaseAuth
     }
 
     override fun signIn(phoneNumber: String, lang: String): Flow<AuthState> {
+        _signIn.value = AuthState.Loading
         auth.setLanguageCode(lang)
         val options = PhoneAuthOptions.newBuilder(Firebase.auth)
             .setPhoneNumber(phoneNumber) // Phone number to verify
