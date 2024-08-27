@@ -17,8 +17,9 @@ MAPS_API_KEY= -google maps api key-
 
 now the app is ready to be built
 
-if you want to try it without building it you can install this APK directly:
-https://drive.google.com/file/d/1G1ThHDhv6N31t4rCYAkmm7jIs9xjSCNj/view?usp=sharing
+if you want to try it without building it you can install it from google play store directly:<br/>
+on Android : [https://play.google.com/apps/testing/com.fstech.myItems](https://play.google.com/store/apps/details?id=com.fstech.myItems) <br/>
+on Web: [https://play.google.com/store/apps/details?id=com.fstech.myItems](https://play.google.com/apps/testing/com.fstech.myItems) <br/>
 
 Don't forget to use one of those accounts for auth  <br/>
 Egypt || +20 11 11111111 verification code : 123456 <br/>
