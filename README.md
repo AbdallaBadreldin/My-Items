@@ -1,7 +1,7 @@
 # My Items Android App - powerd by Gemini Api 
 ## Gemini Api Competition 
-
-App Preview : https://www.youtube.com/watch?v=hvmQV1BtzJU
+# Vote for me : [https://ai.google.dev/competition/projects/my-items](https://ai.google.dev/competition/projects/my-items)
+# App Preview : https://www.youtube.com/watch?v=hvmQV1BtzJU
 
 ### for starting compiling the code you will need to do following steps first:
 
